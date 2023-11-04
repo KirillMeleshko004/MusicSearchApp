@@ -1,0 +1,51 @@
+@use "navPanel.scss";
+@use "dataPanel.scss";
+@use "colors.scss";
+@use 'values';
+
+$block-gap: 20px;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: colors.$font-color;
+    font-family: 'Lucida Console', sans-serif;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    background-color: colors.$backround-color;
+    display: flex;
+    flex-direction: column;
+    padding: $block-gap;
+    gap: $block-gap;
+}
+
+//container for nav and data blocks
+#main {
+    display: flex;
+    height: calc(762/972) * 100%;
+    width: 100%;
+    gap: $block-gap;
+}
+
+#play-bar {
+    width: 100%;
+    height: calc(150/972) * 100%;
+    flex: 1;
+    min-height: 170px;
+    border-radius: values.$border-radius;
+    background-color: #2b192e;
+}
+
+
+

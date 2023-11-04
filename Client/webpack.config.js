@@ -15,8 +15,10 @@ module.exports = {
         level: "info"
     },
 
-    
-    entry: './src/index.jsx',
+
+    entry: [
+        './src/jsx/index.jsx',
+    ],
 
     output: {
         path: path.resolve(__dirname, 'build'),
@@ -28,9 +30,11 @@ module.exports = {
         port: 8081,
         open: true
     },
+    
     module: {
         rules: [
             {
+                //for jsx files
                 test: /\.jsx/,
                 exclude: /node_modules/, // не обрабатываем файлы из node_modules
                 use: {
@@ -40,6 +44,20 @@ module.exports = {
                         // при каждом запуске
                     },
                 },
+            },
+            {
+                //for svg files
+                test: /\.svg$/,
+                use: "file-loader",
+            },
+            {
+                //for scss and sass files
+                test: /\.s[ac]ss$/,
+                use: [
+                    "style-loader", //adds css To dom
+                    "css-loader", //resolve all devendecies and translate to js
+                    "sass-loader", // Compiles Sass to CSS
+                ],
             },
         ],
     }

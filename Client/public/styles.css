@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  color: #F5E8DA;
 }
 
 html,
@@ -79,4 +80,17 @@ body,
   height: 14%; 
   border: 3px solid #F5E8DA;
   border-radius: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-text
+{
+  text-transform: uppercase;
+}
+
+.nav-icon
+{
+  height: 50%;
+  margin: 1%;
 }
