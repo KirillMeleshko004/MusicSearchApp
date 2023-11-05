@@ -1,0 +1,46 @@
+@use 'colors';
+@use 'values';
+@use 'player';
+
+
+#play-bar {
+    width: 100%;
+    height: calc(150/972) * 100%;
+    border-radius: values.$border-radius;
+    background-color: #2b192e;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 20px;
+
+    #curr-play-image
+    {
+        user-select: none;
+        -webkit-user-drag: none;
+        height: calc(120/150) * 100%;
+        border-radius: values.$border-radius;
+    }
+
+    .track-info
+    {
+        display: flex;
+        flex-direction: column;
+        min-width: calc(570/1150) * 100%;
+        font-size: 20px;
+        user-select: none;  
+        flex: 1;
+
+        .track-name
+        {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+    }
+
+    #player
+    {
+        width: calc(974/1770) * 100%;
+        display: flex;
+        justify-content: center;
+    }
+}

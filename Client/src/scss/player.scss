@@ -1,0 +1,6 @@
+@use 'colors';
+@use 'values';
+
+audio::-webkit-media-controls-panel {
+    background-color: colors.$border-color;
+}

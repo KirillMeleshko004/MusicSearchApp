@@ -1,7 +1,9 @@
-@use "navPanel.scss";
-@use "dataPanel.scss";
-@use "colors.scss";
+@use "navPanel";
+@use "dataPanel";
+@use "colors";
 @use 'values';
+@use 'scrollbar';
+@use 'playbar';
 
 $block-gap: 20px;
 
@@ -36,15 +38,7 @@ body,
     height: calc(762/972) * 100%;
     width: 100%;
     gap: $block-gap;
-}
-
-#play-bar {
-    width: 100%;
-    height: calc(150/972) * 100%;
     flex: 1;
-    min-height: 170px;
-    border-radius: values.$border-radius;
-    background-color: #2b192e;
 }
 
 

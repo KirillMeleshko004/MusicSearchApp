@@ -1,5 +1,6 @@
-@use "colors.scss";
+@use "colors";
 @use "values";
+@use "newsBlock";
 
 #data {
     height: 100%;
@@ -31,6 +32,7 @@
     }
     #search-input:placeholder-shown {
         letter-spacing: values.$title-letter-spacing;
+        user-select: none;
     }
 
     #search-icon {
@@ -45,8 +47,12 @@
 }
 
 #data-panel {
+    height: calc(627 / 762) * 100%;
     padding: 20px;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     background-color: colors.$panel-color;
     border-radius: values.$border-radius;
     border: values.$border-width solid colors.$border-color;
