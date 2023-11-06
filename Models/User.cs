@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace MusicSearchApp.Models
 {
@@ -27,6 +25,7 @@ namespace MusicSearchApp.Models
         public bool IsBlocked { get; set; }
 
         
+        #region Navigation properties
 
         public ICollection<Song> Songs { get; set; } = null!;
         public ICollection<Album> Albums { get; set; } = null!;
@@ -37,5 +36,7 @@ namespace MusicSearchApp.Models
         public ICollection<Subscription> Subscriptions { get; set; } = null!;
         public ICollection<Subscription> Subsribers { get; set; } = null!;
         public ICollection<Action> Actions { get; set; } = null!;
+
+        #endregion
     }
 }

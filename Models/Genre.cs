@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MusicSearchApp.Models
 {
     public class Genre
@@ -6,6 +8,10 @@ namespace MusicSearchApp.Models
         // public string Description { get; set; } = null!;
         public int SongCount { get; set; }
         
+        #region Navigation properties
+
         public ICollection<Song> Songs { get; set; } = null!;
+
+        #endregion
     }
 }
