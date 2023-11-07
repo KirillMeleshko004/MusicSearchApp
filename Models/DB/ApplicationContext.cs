@@ -1,10 +1,11 @@
-using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 
 namespace MusicSearchApp.Models.DB
 {
     public class ApplicationContext : DbContext
     {
+        #region DbSets
+
         public DbSet<User> Users { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<Album> Albums { get; set; }
@@ -16,6 +17,7 @@ namespace MusicSearchApp.Models.DB
         public DbSet<PublishRequest> PublishRequests { get; set; }
         public DbSet<Action> Actions { get; set; }
 
+        #endregion
 
         public ApplicationContext()
         {
@@ -43,7 +45,7 @@ namespace MusicSearchApp.Models.DB
                 .HasKey(g => g.Name);
             modelBuilder.Entity<PublishRequest>()
                 .HasKey(r => r.RequestId);
-                
+  
             #endregion
             
             #region FK configuration
@@ -128,13 +130,6 @@ namespace MusicSearchApp.Models.DB
 
             #endregion
 
-            //Genre - Song 
-            modelBuilder.Entity<Genre>()
-                .HasMany(g => g.Songs)
-                .WithOne(s => s.Genre)
-                .HasForeignKey(s => s.GenreName)
-                .OnDelete(DeleteBehavior.SetNull);
-
             #region Album FK
 
             //Album - Song
@@ -158,6 +153,20 @@ namespace MusicSearchApp.Models.DB
                 .HasForeignKey<PublishRequest>(r => r.AlbumId);
 
             #endregion
+ 
+            //Genre - Song 
+            modelBuilder.Entity<Genre>()
+                .HasMany(g => g.Songs)
+                .WithOne(s => s.Genre)
+                .HasForeignKey(s => s.GenreName)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            #endregion
+        
+            #region Unique configuration
+
+            modelBuilder.Entity<User>().HasIndex(u => u.UserName).IsUnique();
+            modelBuilder.Entity<Song>().HasIndex(s => s.FilePath).IsUnique();
 
             #endregion
         }

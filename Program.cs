@@ -12,19 +12,44 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSpaStaticFiles(configuration =>
 {
-    configuration.RootPath = "Client/dict";
+    configuration.RootPath = "Client/build";
 });
 
 var app = builder.Build();
 
 app.UseSpaStaticFiles();
-app.MapGet("/", () => "Hello World!");
+app.MapControllers();
 
+//Array of path strings
+var excludedPaths = new PathString[] { "/api" };
 
-app.UseSpa(spa =>
-{
-    spa.Options.SourcePath="Client";
-    spa.UseReactDevelopmentServer("start");
-});
+app.UseWhen(
+    //if path is not excluded
+    (ctx) =>
+    {
+        var path = ctx.Request.Path;
+        return !Array.Exists(excludedPaths, excluded => path.StartsWithSegments(excluded, StringComparison.OrdinalIgnoreCase));
+    }, 
+    //then use spa services
+    then =>
+    {
+        //use static files from Client build folder in production
+        if (builder.Environment.IsProduction())
+        {
+            then.UseSpaStaticFiles();
+        }
+
+        then.UseSpa(cfg =>
+        {
+            //while development start React app
+            if (builder.Environment.IsDevelopment())
+            {
+                cfg.Options.SourcePath = "Client";
+                cfg.UseReactDevelopmentServer("start");
+            }
+        });
+    }
+);
+
 
 app.Run();

@@ -16,8 +16,7 @@ namespace MusicSearchApp.Models
         public string? Description { get; set; }
 
         
-        [MaxLength(300)]
-        public string? ImgUrl { get; set; }
+        public byte[] Image { get; set; } = null!;
         public int SubscriptionsCount { get; set; }
 
         [MaxLength(10)]

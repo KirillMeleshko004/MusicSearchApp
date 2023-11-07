@@ -20,7 +20,7 @@ namespace MusicSearchApp.Models
 
         public bool Downloadable { get; set; }
         public int ListenCount { get; set; }
-        public string FileName { get; set; } = null!;
+        public string FilePath { get; set; } = null!;
         public bool IsPublic { get; set; }
 
         #region Navigation properties

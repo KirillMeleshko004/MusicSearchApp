@@ -11,6 +11,6 @@ namespace MusicSearchApp.Models
         public User Artist { get; set; } = null!;
         
         public DateTime StartDate { get; set; }
-        public long SubscriberNumber { get; set; }
+        public int SubscriberNumber { get; set; }
     }
 }
