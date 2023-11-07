@@ -1,7 +1,7 @@
 using MusicSearchApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models.DB;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MusicSearchApp.Services.Interfaces;
 
 namespace MusicSearchApp.Controllers
 {
@@ -9,9 +9,12 @@ namespace MusicSearchApp.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationContext _context;
-        public AccountController(ApplicationContext context)
+        private readonly IAuthTokenGenerator _tokenGen;
+
+        public AccountController(ApplicationContext context, IAuthTokenGenerator tokenGen)
         {
             _context = context;
+            _tokenGen = tokenGen;
         }
 
 
@@ -29,8 +32,20 @@ namespace MusicSearchApp.Controllers
         {  
             if(!ModelState.IsValid) 
                 return Unauthorized(new { status = 401, isSuccess = false, message = "Invalid data"});
+            
+            userData.Role = "Admin";
+
+            var token = _tokenGen.GenerateToken(userData);
                 
-            return Ok(new { status = 200, isSuccess = true, message = "Not implemented"} );
+            return Ok(new {token = token, user = userData});
         }  
+
+        [HttpGet]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        [Route("{action}")]
+        public IActionResult Test()
+        {
+            return Ok( new { info = "Authorized" });
+        }
     }
 }
