@@ -11,10 +11,9 @@ module.exports = {
     infrastructureLogging:
     {
         stream: process.stdout,
-        colors: false,
-        level: "info"
+        colors: true,
+        level: 'warn'
     },
-
 
     entry: [
         './src/jsx/index.jsx',
@@ -26,11 +25,11 @@ module.exports = {
         filename: "bundle.js"
     },
     devServer: {
+        historyApiFallback: true,
         hot: true,
         port: 8081,
-        open: true
+        open: false,
     },
-    
     module: {
         rules: [
             {
@@ -39,10 +38,7 @@ module.exports = {
                 exclude: /node_modules/, // не обрабатываем файлы из node_modules
                 use: {
                     loader: 'babel-loader',
-                    options: {
-                        cacheDirectory: true, // Использование кэша для избежания рекомпиляции
-                        // при каждом запуске
-                    },
+                    
                 },
             },
             {
@@ -60,5 +56,6 @@ module.exports = {
                 ],
             },
         ],
-    }
+    },
+    stats: 'errors-only',
 }

@@ -41,5 +41,9 @@ namespace MusicSearchApp.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
+        public void Logout()
+        {
+        }
     }
 }

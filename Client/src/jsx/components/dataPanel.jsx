@@ -31,13 +31,13 @@ newsList.push(
     trackName: "Nakakapagpabagabag",
     artistName: "Dasu",
     releaseDate: "May 27, 2016",
-    id: 4});
+    id: 5});
 newsList.push(
     {imgSrc: "temp/nakaka.png", 
     trackName: "Nakakapagpabagabag",
     artistName: "Dasu",
     releaseDate: "May 27, 2016",
-    id: 4});
+    id: 6});
 
 function DataPanel({title})
 {
