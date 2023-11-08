@@ -18,32 +18,22 @@ namespace MusicSearchApp.Services
             _config = config;
         }
 
-        public string GenerateToken(AuthorizationViewModel userData)
+        public string GenerateToken(IEnumerable<Claim> claims)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            
-            var claims = new[]
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]!));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                new Claim(ClaimTypes.NameIdentifier, userData.UserName),
-                new Claim(ClaimTypes.Role, userData.Role!)
+                Issuer = _config["JWT:ValidIssuer"],
+                Audience = _config["JWT:ValidAudience"],
+                Expires = DateTime.UtcNow.AddMinutes(EXPIRATION_TIME),
+                SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
+                Subject = new ClaimsIdentity(claims)
             };
-            
-            //create jwt token
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(EXPIRATION_TIME),
-                signingCredentials: credentials);
 
-            //return encoded jwt
-            return new JwtSecurityTokenHandler().WriteToken(token);
-
-        }
-
-        public void Logout()
-        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

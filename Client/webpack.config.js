@@ -12,7 +12,7 @@ module.exports = {
     {
         stream: process.stdout,
         colors: true,
-        level: 'warn'
+        level: 'info'
     },
 
     entry: [
@@ -34,7 +34,7 @@ module.exports = {
         rules: [
             {
                 //for jsx files
-                test: /\.jsx/,
+                test: /\.jsx?/,
                 exclude: /node_modules/, // не обрабатываем файлы из node_modules
                 use: {
                     loader: 'babel-loader',

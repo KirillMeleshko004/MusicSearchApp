@@ -1,12 +1,14 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MusicSearchApp.Models.DB
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         #region DbSets
 
-        public DbSet<User> Users { get; set; }
+        // public DbSet<User> Users { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Genre> Genres { get; set; }
@@ -19,11 +21,7 @@ namespace MusicSearchApp.Models.DB
 
         #endregion
 
-        public ApplicationContext()
-        {
-            
-        }
-        public ApplicationContext(DbContextOptions options) : base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
             
         }
@@ -45,13 +43,13 @@ namespace MusicSearchApp.Models.DB
                 .HasKey(g => g.Name);
             modelBuilder.Entity<PublishRequest>()
                 .HasKey(r => r.RequestId);
+            modelBuilder.Entity<User>().Property(u => u.Id).HasColumnName("UserId");
   
             #endregion
             
             #region FK configuration
 
             #region User FK
-
             //User - Song
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Songs)
@@ -169,6 +167,10 @@ namespace MusicSearchApp.Models.DB
             modelBuilder.Entity<Song>().HasIndex(s => s.FilePath).IsUnique();
 
             #endregion
+ 
+            modelBuilder.Entity<User>().Property(u => u.UserName).HasMaxLength(30);
+            base.OnModelCreating(modelBuilder);
+            
         }
     }
 }

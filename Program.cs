@@ -6,20 +6,27 @@ using MusicSearchApp.Models.DB;
 using System.Text;
 using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.Services;
-using System.Net;
+using MusicSearchApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region Configure services
 
 //Receiving connection string from appsettings.json
-string connection = builder.Configuration.GetConnectionString("DefaultConnection")!;
+string connection = builder.Configuration.GetConnectionString("DevConnection")!;
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+  
 
-builder.Services.AddAuthorization();
+builder.Services.AddIdentity<User, IdentityRole<int>>()
+    .AddEntityFrameworkStores<ApplicationContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options => 
     {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuer = true,
@@ -32,7 +39,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:Key"]!)),
         };
     });
-
+    
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllersWithViews();
 
@@ -45,6 +53,7 @@ builder.Services.AddSpaStaticFiles(configuration =>
 #region Configure custom services
 
 builder.Services.AddSingleton<IAuthTokenGenerator, JWTTokenGenerator>();
+builder.Services.AddTransient<IAuthService, AuthService>();
 
 #endregion
 
@@ -66,27 +75,14 @@ app.UseSpaStaticFiles(new StaticFileOptions
         }
     }
 });
+
 app.UseAuthentication();
 
-app.UseStatusCodePages(async context => 
-    {
-        var request = context.HttpContext.Request;
-        var response = context.HttpContext.Response;
-
-        if (response.StatusCode == (int)HttpStatusCode.Unauthorized)   
-        {
-            response.Redirect("/login");
-        }
-    }
-);
+//Authenticated, but not authorized HERE
 
 app.UseAuthorization();
 
-
-
-
 app.MapControllers();
-
 
 
 //Array of path strings

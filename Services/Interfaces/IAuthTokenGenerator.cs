@@ -1,9 +1,9 @@
-using MusicSearchApp.ViewModels;
+using System.Security.Claims;
 
 namespace MusicSearchApp.Services.Interfaces
 {
     public interface IAuthTokenGenerator
     {
-        public string GenerateToken(AuthorizationViewModel userData);
+        public string GenerateToken(IEnumerable<Claim> claims);
     }
 }

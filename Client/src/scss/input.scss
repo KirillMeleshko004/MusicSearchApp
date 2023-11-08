@@ -1,0 +1,19 @@
+@use "colors";
+@use "values";
+
+input[type=text]
+{
+    letter-spacing: values.$text-letter-spacing;
+    width: 80%;
+    border: 0;
+    outline: 0;
+    background-color: colors.$panel-color;
+    font-size: 22px;
+    height: 2em;
+}
+
+input[type=text]:placeholder-shown
+{
+    letter-spacing: values.$title-letter-spacing;
+    user-select: none;
+}

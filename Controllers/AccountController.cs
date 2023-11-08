@@ -5,6 +5,7 @@ using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MusicSearchApp.Models.Static;
 
 namespace MusicSearchApp.Controllers
 {
@@ -12,65 +13,70 @@ namespace MusicSearchApp.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationContext _context;
-        private readonly IAuthTokenGenerator _tokenGen;
 
-        public AccountController(ApplicationContext context, IAuthTokenGenerator tokenGen)
+        private readonly IAuthService _authService;
+
+
+        public AccountController(ApplicationContext context, IAuthService authService)
         {
             _context = context;
-            _tokenGen = tokenGen;
+            _authService = authService;
         }
 
 
         [HttpPost]
         [Route("{action}")] 
-        public object Register(RegistrationViewModel userData)
+        public async Task<IActionResult> Register(RegistrationViewModel userData)
         {
-            if(!ModelState.IsValid) return new { info = "Invalid Data" };
-            return userData;
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("Invalid payload");
+
+                var (isSucceed, message) = await _authService.Registration(userData, UserRoles.User);
+
+                if (!isSucceed)
+                {
+                    return BadRequest(message);
+                }
+
+                return CreatedAtAction(nameof(Register), userData);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
-        private IEnumerable<User> _db = new List<User>()
-        {
-            new() { UserId = 1, UserName = "FirstUser", Password = "qwerty", Role = "User" },
-            new() { UserId = 2, UserName = "SecondUser", Password = "asdfg", Role = "User" },
-            new() { UserId = 3, UserName = "Admin", Password = "admin", Role = "Admin" },
-        };
+        // private IEnumerable<User> _db = new List<User>()
+        // {
+        //     new() { UserId = 1, UserName = "FirstUser", Password = "qwerty", Role = "User" },
+        //     new() { UserId = 2, UserName = "SecondUser", Password = "asdfg", Role = "User" },
+        //     new() { UserId = 3, UserName = "Admin", Password = "admin", Role = "Admin" },
+        // };
 
         [HttpPost]  
         [Route("{action}")]  
-        public IActionResult Login(AuthorizationViewModel userData)  
+        public async Task<IActionResult> Login(AuthorizationViewModel userData)  
         {  
-            System.Console.WriteLine(ControllerContext.HttpContext.User.Identity?.IsAuthenticated);
-            System.Console.WriteLine(ControllerContext.HttpContext.User.Identity?.AuthenticationType);
-            if(!ModelState.IsValid) 
-                return BadRequest(new { status = 400, isSuccess = false, message = "Invalid user data"});
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("Invalid payload");
 
-            // AuthorizationViewModel? user = _context.Users
-            //     .Where(u => u.UserName == userData.UserName)
-            //     .Select(u => new AuthorizationViewModel() 
-            //     { 
-            //         UserName = u.UserName,
-            //         Password = u.Password,
-            //         Role = u.Role
-            //     }).FirstOrDefault();
-            AuthorizationViewModel? user = _db
-                .Where(u => u.UserName == userData.UserName)
-                .Select(u => new AuthorizationViewModel() 
-                { 
-                    UserName = u.UserName,
-                    Password = u.Password,
-                    Role = u.Role
-                }).FirstOrDefault();
+                //token should be renamed
+                var (isSucceed, token) = await _authService.Login(userData);
+                if (!isSucceed)
+                    return BadRequest(token);
 
-            if(user == null)
-                return Unauthorized(new { status = 401, isSuccess = false, message = "User not found"});
-
-            if(user.Password != userData.Password)
-                return Unauthorized(new { status = 401, isSuccess = false, message = "Incorrect password"});
-
-            var token = _tokenGen.GenerateToken(user);
-                
-            return Ok(new { token, user});
+                return Ok(token);
+            }
+            catch(Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpGet]
@@ -86,6 +92,11 @@ namespace MusicSearchApp.Controllers
         [Route("{action}")]
         public IActionResult Test()
         {
+            
+            // System.Console.WriteLine(ControllerContext.HttpContext.User.Identity!.AuthenticationType);
+            // System.Console.WriteLine();
+            // foreach(var claim in ControllerContext.HttpContext.User.Claims) System.Console.WriteLine(claim.Value);
+            // System.Console.WriteLine();
             return Ok( new { info = "Authorized" });
         }
     }

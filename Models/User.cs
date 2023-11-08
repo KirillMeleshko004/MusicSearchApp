@@ -1,26 +1,26 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace MusicSearchApp.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int UserId { get; set; }
+        // public int UserId { get; set; }
 
-        [MaxLength(30)]
-        public string UserName { get; set; } = null!;
+        // [MaxLength(30)]
+        // public string UserName { get; set; } = null!;
 
-        [MaxLength(30)]
-        public string Password { get; set; } = null!;
+        // [MaxLength(30)]
+        // public string Password { get; set; } = null!;
         
         [MaxLength(300)]
         public string? Description { get; set; }
 
-        
-        public byte[] Image { get; set; } = null!;
+        public byte[]? Image { get; set; }
         public int SubscriptionsCount { get; set; }
 
-        [MaxLength(10)]
-        public string Role { get; set; } = null!;
+        // [MaxLength(10)]
+        // public string Role { get; set; } = null!;
         public bool IsBlocked { get; set; }
 
         
