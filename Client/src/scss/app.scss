@@ -1,32 +1,19 @@
 @use "navPanel";
 @use "dataPanel";
-@use "colors";
-@use 'values';
+@use "defaults/colors";
+@use 'defaults/values';
 @use 'scrollbar';
 @use 'playbar';
 @use 'input';
 
 $block-gap: 20px;
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    color: colors.$font-color;
-    font-family: 'Lucida Console', sans-serif;
-}
 
-html,
-body,
-#root {
-    height: 100%;
-    width: 100%;
-}
 
 #app {
     width: 100%;
     height: 100%;
-    background-color: colors.$backround-color;
+    background-color: colors.$background-color;
     display: flex;
     flex-direction: column;
     padding: $block-gap;

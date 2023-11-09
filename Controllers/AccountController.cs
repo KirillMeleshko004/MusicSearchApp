@@ -72,7 +72,7 @@ namespace MusicSearchApp.Controllers
         }
 
         [HttpGet]
-        [Microsoft.AspNetCore.Authorization.Authorize]
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin, User")]
         public IActionResult Logout(AuthorizationViewModel user)
         {
             ControllerContext.HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);

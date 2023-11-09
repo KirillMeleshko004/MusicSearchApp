@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Services.Interfaces;
-using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Services
 {

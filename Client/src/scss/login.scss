@@ -1,0 +1,71 @@
+@use "defaults/colors";
+@use 'defaults/values';
+@use 'defaults/fonts';
+@use 'input';
+
+
+#login-container
+{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: colors.$background-color;
+    padding: 105px 290px;
+}
+
+#login
+{
+    background-color: colors.$panel-color;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border-radius: values.$border-radius;
+    padding: 30px;
+
+    #logo
+    {
+        width: 20%;
+    }
+}
+
+#form-container
+{
+    #title
+    {
+        margin: 65px 0 60px 0;
+        font-size: fonts.$title-large;
+    }
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+
+    #signup-redirect
+    {
+        margin-left: -180px;
+        margin-bottom: 10px;
+
+        a:hover
+        {
+            color: colors.$selected-color;
+        }
+    }
+
+    #inputs-container
+    {
+        width: calc(556/1230) * 100%;
+        height: calc(292/762) * 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+    }
+}
+
+#username, #password
+{
+    height: calc(80/292) * 100%;
+    padding: 0 40px;
+}

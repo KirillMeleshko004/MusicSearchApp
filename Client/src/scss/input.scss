@@ -1,5 +1,6 @@
-@use "colors";
-@use "values";
+@use "defaults/colors";
+@use "defaults/values";
+@use 'defaults/fonts';
 
 input[type=text]
 {
@@ -8,7 +9,7 @@ input[type=text]
     border: 0;
     outline: 0;
     background-color: colors.$panel-color;
-    font-size: 22px;
+    font-size: fonts.$normal;
     height: 2em;
 }
 
@@ -16,4 +17,12 @@ input[type=text]:placeholder-shown
 {
     letter-spacing: values.$title-letter-spacing;
     user-select: none;
+}
+
+.input-box
+{
+    border: values.$border-width solid colors.$border-color;
+    border-radius: values.$border-radius;
+    display: flex;
+    align-items: center;
 }

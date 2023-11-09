@@ -1,5 +1,6 @@
-@use "colors";
-@use "values";
+@use "defaults/colors";
+@use "defaults/values";
+@use 'defaults/fonts';
 @use "newsBlock";
 
 #data {
@@ -28,7 +29,7 @@
         border: 0;
         outline: 0;
         background-color: colors.$panel-color;
-        font-size: 22px;
+        font-size: fonts.$normal-large;
     }
     #search-input:placeholder-shown {
         letter-spacing: values.$title-letter-spacing;
@@ -59,7 +60,7 @@
 
     #data-title {
         user-select: none;
-        font-size: 35px;
+        font-size: fonts.$title-large;
         letter-spacing: values.$title-letter-spacing;
         margin-left: 20px;
     }

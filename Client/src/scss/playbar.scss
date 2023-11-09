@@ -1,7 +1,8 @@
-@use 'colors';
-@use 'values';
-@use 'player';
+@use 'defaults/colors';
+@use 'defaults/values';
+@use 'defaults/fonts';
 
+@use 'player';
 
 #play-bar {
     width: 100%;
@@ -26,13 +27,13 @@
         display: flex;
         flex-direction: column;
         min-width: calc(570/1150) * 100%;
-        font-size: 20px;
+        font-size: fonts.$normal;
         user-select: none;  
         flex: 1;
 
         .track-name
         {
-            font-size: 30px;
+            font-size: fonts.$title;
             margin-bottom: 5px;
         }
     }

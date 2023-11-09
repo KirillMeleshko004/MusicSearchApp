@@ -1,5 +1,6 @@
-@use "colors.scss";
-@use 'values';
+@use "defaults/colors";
+@use 'defaults/values';
+@use 'defaults/fonts';
 
 #nav-panel {
     height: 100%;
@@ -12,15 +13,17 @@
     flex-direction: column;
     align-items: center;
     row-gap: calc(65/762) * 100%;
+
+    #logo {
+        height: calc(95/752) * 100%;
+        max-width: 100%;
+        margin-top: 30px;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
 }
 
-#logo {
-    height: calc(95/752) * 100%;
-    max-width: 100%;
-    margin-top: 30px;
-    user-select: none;
-    -webkit-user-drag: none;
-}
+
 
 .nav-option {
     width: 100%;
@@ -41,7 +44,7 @@
     letter-spacing: values.$title-letter-spacing;
     text-transform: uppercase;
     user-select: none;
-    font-size: 20px;
+    font-size: fonts.$normal;
     text-overflow: ellipsis;
     word-wrap: break-word;
 }

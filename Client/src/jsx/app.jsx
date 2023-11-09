@@ -12,7 +12,7 @@ const trackInfo ={
 
 function App()
 {
-    getData().then(res => console.log(res));
+    // getData().then(res => console.log(res));
     return (
         <div id="app">
             <div id="main">
