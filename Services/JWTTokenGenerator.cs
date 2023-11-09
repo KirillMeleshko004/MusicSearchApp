@@ -20,12 +20,12 @@ namespace MusicSearchApp.Services
 
         public string GenerateToken(IEnumerable<Claim> claims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]!));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["jwt:Key"]!));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = _config["JWT:ValidIssuer"],
-                Audience = _config["JWT:ValidAudience"],
+                Issuer = _config["jwt:Issuer"],
+                Audience = _config["jwt:Audience"],
                 Expires = DateTime.UtcNow.AddMinutes(EXPIRATION_TIME),
                 SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
                 Subject = new ClaimsIdentity(claims)

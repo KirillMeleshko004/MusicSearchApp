@@ -11,6 +11,7 @@ namespace MusicSearchApp.ViewModels
         public string Password { get; set; } = null!;
  
         [Required]
+        [Compare("Password", ErrorMessage = "Passwords are not same")]
         public string PasswordConfirm { get; set; } = null!;
     }
 }

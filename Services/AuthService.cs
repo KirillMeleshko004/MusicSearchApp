@@ -46,14 +46,22 @@ namespace MusicSearchApp.Services
 
             var createUserResult = await userManager.CreateAsync(user, model.Password);
 
+            //if creation fails
             if (!createUserResult.Succeeded)
+            {
+                foreach(var error in createUserResult.Errors)
+                {
+                    System.Console.WriteLine(error.Description);
+                }
                 return (false ,"User creation failed! Please check user details and try again.");
+            }
 
+            //If role doesn't exist
             if (!await roleManager.RoleExistsAsync(role))
                 await roleManager.CreateAsync(new IdentityRole<int>(role));
 
-            if (await roleManager.RoleExistsAsync(UserRoles.User))
-                await userManager.AddToRoleAsync(user, role);
+            //Assign role to user
+            await userManager.AddToRoleAsync(user, role);
 
             return (true ,"User created successfully!");
         }
@@ -65,11 +73,11 @@ namespace MusicSearchApp.Services
                 return (false, "Invalid username");
             if (!await userManager.CheckPasswordAsync(user, model.Password))
                 return (false, "Invalid password");
-            
+                
             var userRoles = await userManager.GetRolesAsync(user);
             var authClaims = new List<Claim>
             {
-               new Claim(ClaimTypes.Name, user.UserName),
+               new Claim(ClaimTypes.Name, user.UserName!),
                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 

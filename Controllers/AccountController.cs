@@ -2,7 +2,6 @@ using MusicSearchApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Services.Interfaces;
-using MusicSearchApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MusicSearchApp.Models.Static;
@@ -48,13 +47,6 @@ namespace MusicSearchApp.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
-        // private IEnumerable<User> _db = new List<User>()
-        // {
-        //     new() { UserId = 1, UserName = "FirstUser", Password = "qwerty", Role = "User" },
-        //     new() { UserId = 2, UserName = "SecondUser", Password = "asdfg", Role = "User" },
-        //     new() { UserId = 3, UserName = "Admin", Password = "admin", Role = "Admin" },
-        // };
 
         [HttpPost]  
         [Route("{action}")]  

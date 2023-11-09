@@ -17,12 +17,24 @@ var builder = WebApplication.CreateBuilder(args);
 string connection = builder.Configuration.GetConnectionString("DevConnection")!;
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
   
-
-builder.Services.AddIdentity<User, IdentityRole<int>>()
+//Configure Identity Services
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+    {
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireDigit = false;
+    })
     .AddEntityFrameworkStores<ApplicationContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options => 
     {
         options.SaveToken = true;
@@ -63,6 +75,14 @@ var app = builder.Build();
 
 #region Configure application
 
+app.UseAuthentication();
+
+//Authenticated, but not authorized HERE
+
+app.UseAuthorization();
+
+
+
 app.UseStaticFiles();
 app.UseSpaStaticFiles(new StaticFileOptions
 {
@@ -75,12 +95,6 @@ app.UseSpaStaticFiles(new StaticFileOptions
         }
     }
 });
-
-app.UseAuthentication();
-
-//Authenticated, but not authorized HERE
-
-app.UseAuthorization();
 
 app.MapControllers();
 
@@ -104,6 +118,7 @@ app.UseWhen(
             then.UseSpaStaticFiles();
         }
 
+        
         then.UseSpa(cfg =>
         {
             cfg.Options.SourcePath = "Client";
