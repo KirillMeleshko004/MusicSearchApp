@@ -1,10 +1,13 @@
-@use "navPanel";
-@use "dataPanel";
+
 @use "defaults/colors";
 @use 'defaults/values';
+
 @use 'scrollbar';
 @use 'playbar';
 @use 'input';
+
+@use "newsBlock";
+@use "navPanel";
 
 $block-gap: 20px;
 
@@ -13,20 +16,24 @@ $block-gap: 20px;
 #app {
     width: 100%;
     height: 100%;
-    background-color: colors.$background-color;
-    display: flex;
-    flex-direction: column;
-    padding: $block-gap;
-    gap: $block-gap;
+    min-height: 600px;
+    min-width: 1000px;
 }
 
 //container for nav and data blocks
 #main {
-    display: flex;
     height: calc(762/972) * 100%;
     width: 100%;
-    gap: $block-gap;
-    flex: 1;
+}
+
+
+
+#data-panel {
+    height: calc(627 / 762) * 100%;
+
+    #data-title {
+        margin-left: 20px;
+    }
 }
 
 

@@ -1,0 +1,38 @@
+@use "defaults/colors";
+@use "defaults/values";
+@use 'defaults/fonts';
+
+.large-spaced
+{
+    letter-spacing: values.$title-letter-spacing;
+}
+
+.medium-spaced
+{
+    letter-spacing: values.$text-letter-spacing;
+}
+
+.uppercase
+{
+    text-transform: uppercase;
+}
+
+.unselectable
+{
+    user-select: none;
+}
+
+.normal
+{
+    font-size: fonts.$normal;
+}
+
+.above-normal
+{
+    font-size: fonts.$normal-large;
+}
+
+.largest
+{
+    font-size: fonts.$title-large;
+}

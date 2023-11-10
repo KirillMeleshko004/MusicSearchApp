@@ -1,0 +1,122 @@
+@use "defaults/colors";
+@use "defaults/values";
+
+
+$block-gap: 20px;
+
+@mixin rounded-block
+{
+    border-radius: values.$border-radius
+}
+
+.bordered-block
+{
+    @include rounded-block;
+    border: values.$border-width solid colors.$border-color;
+}
+
+.panel
+{
+    @include rounded-block;
+    background-color: colors.$panel-color;
+}
+
+.background
+{
+    background-color: colors.$background-color;
+}
+
+@mixin y-padded($val)
+{
+    padding-top: $val;
+    padding-bottom: $val;
+}
+
+@mixin x-padded($val)
+{
+    padding-left: $val;
+    padding-right: $val;
+}
+
+.large-padded
+{
+    @include x-padded(30px);
+    @include y-padded(30px);
+}
+
+.medium-padded
+{
+    @include x-padded(20px);
+    @include y-padded(20px);
+}
+
+.x-medium-padded
+{
+    @include x-padded(20px);
+}
+
+.medium-gaped
+{
+    gap: 20px;
+}
+
+.xx-small-gaped
+{
+    gap: 5px;
+}
+
+.horizontal
+{
+    display: flex;
+}
+
+.vertical
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.center-aligned
+{
+    align-items: center;
+}
+
+.start-aligned
+{
+    align-items: start;
+}
+
+.center-justified
+{
+    justify-content: center;
+}
+
+.fill-space
+{
+    flex-grow: 1;
+}
+
+.hidden-overflow
+{
+    overflow: hidden;
+}
+
+.equal-gaps-sibling
+{
+    margin: auto;
+}
+
+.full-height
+{
+    height: 100%;
+}
+
+.half-hieght
+{
+    height: 50%;
+}
+
+.red-border-on-hover:hover
+{
+    border: values.$border-width solid colors.$selected-color;
+}

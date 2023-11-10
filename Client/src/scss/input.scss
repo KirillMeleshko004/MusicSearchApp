@@ -4,17 +4,12 @@
 
 input[type=text]
 {
-    letter-spacing: values.$text-letter-spacing;
-    width: 80%;
     border: 0;
     outline: 0;
     background-color: colors.$panel-color;
-    font-size: fonts.$normal;
-    height: 2em;
 }
 
-input[type=text]:placeholder-shown
-{
+input:placeholder-shown {
     letter-spacing: values.$title-letter-spacing;
     user-select: none;
 }

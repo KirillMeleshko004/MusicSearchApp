@@ -1,0 +1,7 @@
+@use "defaults/colors";
+@use "defaults/values";
+@use 'defaults/fonts';
+
+#search {
+    height: calc(75 / 762) * 100%;
+}

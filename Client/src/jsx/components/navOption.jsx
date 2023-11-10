@@ -4,9 +4,9 @@ function NavOption({icon, text})
 {
     const fullPath = "svg/" + icon;
     return (
-        <div className="nav-option">
+        <div className="nav-option bordered-block center-aligned horizontal hidden-overflow equal-gaps-sibling x-medium-padded medium-gaped red-border-on-hover">
             <img className="nav-icon" src={fullPath} alt={text}/>
-            <p className="nav-text">{text}</p>
+            <p className="large-spaced uppercase unselectable normal">{text}</p>
         </div>
     )
 }

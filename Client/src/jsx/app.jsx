@@ -1,6 +1,6 @@
 import React from "react";
 import Navigation from "./components/navigation.jsx";
-import Data from "./components/data.jsx";
+import DataBlock from "./components/dataBlock.jsx";
 import PlayBar from "./components/playBar.jsx";
 
 const trackInfo ={
@@ -14,10 +14,10 @@ function App()
 {
     // getData().then(res => console.log(res));
     return (
-        <div id="app">
-            <div id="main">
+        <div id="app" className="background medium-padded medium-gaped vertical">
+            <div id="main" className="background medium-gaped horizontal fill-space">
                 <Navigation></Navigation>
-                <Data></Data>
+                <DataBlock></DataBlock>
             </div>
             <PlayBar trackInfo={trackInfo}></PlayBar>
         </div>

@@ -68,4 +68,34 @@
 {
     height: calc(80/292) * 100%;
     padding: 0 40px;
+
+    input
+    {  
+        width: 100%;
+    }
+}
+
+#submit
+{
+    height: calc(80/292) * 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+
+    input
+    {
+        height: 100%;
+        width: 100%;
+        flex: 1;
+        background-color: #00000000;
+        border: 0px;
+        font-size: fonts.$normal-large;
+    }
+
+    
+}
+
+#submit:hover
+{
+    border: values.$border-width solid colors.$selected-color;
 }

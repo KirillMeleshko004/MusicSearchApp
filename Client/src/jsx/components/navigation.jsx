@@ -5,9 +5,9 @@ import NavOption from "./navOption.jsx";
 function Navigation()
 {
     return (
-        <nav id="nav-panel">
+        <nav id="nav-panel" className="panel vertical center-aligned medium-padded">
             <Logo></Logo>
-            <div id="options-list">
+            <div id="options-list" className="vertical center-aligned fill-space">
                 <NavOption icon="Search.svg" text="Explore"></NavOption>
                 <NavOption icon="Profile.svg" text="Profile"></NavOption>
                 <NavOption icon="Favourites.svg" text="My Library"></NavOption>

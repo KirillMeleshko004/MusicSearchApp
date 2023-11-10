@@ -1,0 +1,10 @@
+@use "defaults/colors";
+@use "defaults/values";
+@use 'defaults/fonts';
+
+@mixin bordered-block
+{
+    border: values.$border-width solid colors.$border-color;
+    border-radius: values.$border-radius;
+}
+
