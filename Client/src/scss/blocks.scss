@@ -9,6 +9,11 @@ $block-gap: 20px;
     border-radius: values.$border-radius
 }
 
+.rounded
+{
+    @include rounded-block;
+}
+
 .bordered-block
 {
     @include rounded-block;
@@ -55,6 +60,11 @@ $block-gap: 20px;
     @include x-padded(20px);
 }
 
+.x-large-padded
+{
+    @include x-padded(40px);
+}
+
 .medium-gaped
 {
     gap: 20px;
@@ -63,6 +73,11 @@ $block-gap: 20px;
 .xx-small-gaped
 {
     gap: 5px;
+}
+
+.xx-large-gaped
+{
+    gap: 50px;
 }
 
 .horizontal
@@ -116,7 +131,27 @@ $block-gap: 20px;
     height: 50%;
 }
 
+.full-width
+{
+    width: 100%;
+}
+
+.half-width
+{
+    width: 50%;;
+}
+
 .red-border-on-hover:hover
 {
     border: values.$border-width solid colors.$selected-color;
+}
+
+.scrollable-y
+{
+    overflow-y: scroll;
+}
+
+.gap-from-scroll
+{
+    margin-right: 10px;
 }

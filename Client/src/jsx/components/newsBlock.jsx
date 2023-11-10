@@ -4,13 +4,13 @@ import News from "./news.jsx";
 function NewsBlock({newsList})
 {
     const newsItems = newsList.map(news =>
-            <li key={news.id}>
+            <li key={news.id} className="gap-from-scroll">
                 <News newsData={news}></News>
             </li>
         );
     return (
         <article id="news-block">
-            <ul>{newsItems}</ul>
+            <ul className="scrollable-y">{newsItems}</ul>
         </article>
     )
 }

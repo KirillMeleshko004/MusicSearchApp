@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import "../scss/index.scss";
 import App from "./app.jsx";
 import Login from "./login.jsx";
+import Register from "./register.jsx";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -14,6 +15,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App/>}/>
         <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
       </Routes>
 
     </BrowserRouter>

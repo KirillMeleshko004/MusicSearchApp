@@ -36,3 +36,18 @@
 {
     font-size: fonts.$title-large;
 }
+
+.title
+{
+    font-size: fonts.$title;
+}
+
+.sub-title
+{
+    font-size: fonts.$subtitle;
+}
+
+.highlight-on-hover:hover
+{
+    color: colors.$selected-color;
+}
