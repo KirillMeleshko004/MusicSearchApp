@@ -2,7 +2,7 @@
 @use "defaults/values";
 @use 'defaults/fonts';
 
-input[type=text]
+input[type=text], input[type=password]
 {
     border: 0;
     outline: 0;

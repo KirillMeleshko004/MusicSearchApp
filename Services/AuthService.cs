@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using MusicSearchApp.Models;
-using MusicSearchApp.Models.Static;
 using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.ViewModels;
 
@@ -42,6 +41,9 @@ namespace MusicSearchApp.Services
             {
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.UserName,
+                DisplayedName = model.UserName,
+                ProfileImage = "default_profile_img",
+                Role = role
             };
 
             var createUserResult = await userManager.CreateAsync(user, model.Password);
@@ -73,7 +75,7 @@ namespace MusicSearchApp.Services
                 return (false, "Invalid username");
             if (!await userManager.CheckPasswordAsync(user, model.Password))
                 return (false, "Invalid password");
-                
+
             var userRoles = await userManager.GetRolesAsync(user);
             var authClaims = new List<Claim>
             {

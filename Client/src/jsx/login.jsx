@@ -1,16 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Logo from "./components/logo.jsx";
 import { postLoginData } from "./components/services/AccessAPI.js";
 import SessionManager from "./components/services/sessionManager.js";
 
 function Login()
 {
-    function handleSubmit(e)
+    const usernameField = useRef(null);
+    const passwordField = useRef(null);
+    const errorLine = useRef(null);
+
+
+     
+    
+    function login() 
     {
-        e.preventDefault();
-        let form = e.target;
-        let user = { userName: form.username.value, password: form.password.value};
-        login(user);
+        const userData = {username: usernameField.current.value, password: passwordField.current.value};
+
+        postLoginData(userData).then(result =>{
+            if(result?.token)
+            {
+                console.log("success");
+                SessionManager.setToken(result.token);
+            }
+            else{
+                console.log("fail");
+                console.log(result?.errorMessage);
+
+                usernameField.current.parentElement.classList.add("error-border");
+                passwordField.current.parentElement.classList.add("error-border");
+                errorLine.current.classList.remove("non-displayed");
+            }
+        })
     }
 
     return (
@@ -21,11 +41,14 @@ function Login()
                     <p id="title" className="largest unselectable">Login</p>
                     <div id="form-container" className="fill-space vertical full-width xx-small-gaped">
                         <div id="signup-redirect" className="unselectable">New To Solar Sound? <a className="highlight-on-hover" href="/register">Sign Up</a></div>
-                        <form onSubmit={handleSubmit} id="auth-form" className="full-width vertical fill-space medium-gaped">
-                            <div className="input-box x-large-padded red-border-on-hover"><input id="username" className="full-width full-height above-normal" type="text" autoComplete="off" name="login" placeholder="login"/></div>
-                            <div className="input-box x-large-padded red-border-on-hover"><input id="password" className="full-width full-height above-normal" type="text" autoComplete="off" name="password" placeholder="password"/></div> 
-                            <input id="submit" type="submit" value="Log In" className="panel bordered-block above-normal center-justified red-border-on-hover"/>
-                        </form> 
+                        <div id="auth-form" className="full-width vertical fill-space medium-gaped">
+                            <div className="input-box x-large-padded red-border-on-hover"><input ref={usernameField} className="full-width full-height above-normal" type="text" autoComplete="off" placeholder="login"/></div>
+                            <div className="input-box x-large-padded red-border-on-hover"><input ref={passwordField} className="full-width full-height above-normal" type="password" autoComplete="off" placeholder="password"/></div>
+                            <div ref={errorLine} className="error non-displayed">Incorrect username or password</div>
+                            <button onClick={login} id="submit" className="panel bordered-block center-justified red-border-on-hover">
+                                <p className="above-normal">Log In</p>
+                            </button>
+                        </div> 
                     </div>  
                 </div>
             </div>
@@ -35,18 +58,3 @@ function Login()
 }
 
 export default Login;
-
-async function login(userData) 
-{
-    postLoginData(userData).then(result =>{
-        if(result?.token)
-        {
-            console.log("success");
-            SessionManager.setToken(result.token);
-        }
-        else{
-            console.log("fail");
-            console.log(result.errors);
-        }
-    })
-}

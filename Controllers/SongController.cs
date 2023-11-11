@@ -9,7 +9,6 @@ namespace MusicSearchApp.Controllers
     [Route("api/{controller}")]
     public class SongController : Controller
     {
-
         private readonly ApplicationContext _context;
 
         public SongController(ApplicationContext context)

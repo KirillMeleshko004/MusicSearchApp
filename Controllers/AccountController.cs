@@ -30,13 +30,13 @@ namespace MusicSearchApp.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest("Invalid payload");
+                    return BadRequest(new { errorMessage = "Invalid payload" });
 
                 var (isSucceed, message) = await _authService.Registration(userData, UserRoles.User);
 
                 if (!isSucceed)
                 {
-                    return BadRequest(message);
+                    return BadRequest(new { errorMessage = message });
                 }
 
                 return CreatedAtAction(nameof(Register), userData);
@@ -44,7 +44,8 @@ namespace MusicSearchApp.Controllers
             catch (Exception ex)
             {
                 System.Console.WriteLine(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, 
+                        new { errorMessage = ex.Message});
             }
         }
 
@@ -55,19 +56,20 @@ namespace MusicSearchApp.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return BadRequest("Invalid payload");
+                    return BadRequest(new { errorMessage = "Invalid payload" });
 
                 //token should be renamed
                 var (isSucceed, token) = await _authService.Login(userData);
                 if (!isSucceed)
-                    return BadRequest(token);
+                    return BadRequest(new { errorMessage = token});
 
                 return Ok(new { token });
             }
             catch(Exception ex)
             {
                 System.Console.WriteLine(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, 
+                        new { errorMessage = ex.Message});
             }
         }
 

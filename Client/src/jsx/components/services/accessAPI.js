@@ -88,3 +88,33 @@ export function postLoginData(userData)
         }
     );     
 }
+
+export function postImage(endPoint, imageData)
+{
+    let token=SessionManager.getToken();
+
+    let payload = {
+        method: 'POST',
+        headers: {   
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(data),
+    }
+    
+    return fetch(serverApiURL + endPoint, payload)
+        .then(response =>{
+            if(!response.ok){
+                throw Error(response.statusText);
+            }
+            return response.json();
+        })
+        .then(result =>{
+            return result;
+        })
+        .catch(error =>{
+            console.log(error);
+        }
+    );
+}

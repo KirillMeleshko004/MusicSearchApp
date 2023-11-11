@@ -66,6 +66,7 @@ builder.Services.AddSpaStaticFiles(configuration =>
 
 builder.Services.AddSingleton<IAuthTokenGenerator, JWTTokenGenerator>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddScoped<ProfileEditService>();
 
 #endregion
 

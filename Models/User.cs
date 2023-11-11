@@ -5,12 +5,15 @@ namespace MusicSearchApp.Models
 {
     public class User : IdentityUser<int>
     {
+        [MaxLength(30)]
+        public string DisplayedName { get; set; } = null!;
         
         [MaxLength(300)]
         public string? Description { get; set; }
 
-        public byte[]? Image { get; set; }
-        public int SubscriptionsCount { get; set; }
+        public string ProfileImage { get; set; } = null!;
+        public string? Role { get; set; }
+        public int SubscribersCount { get; set; }
         public bool IsBlocked { get; set; }
 
         

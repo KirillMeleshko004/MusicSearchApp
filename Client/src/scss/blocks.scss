@@ -146,6 +146,11 @@ $block-gap: 20px;
     border: values.$border-width solid colors.$selected-color;
 }
 
+.error-border
+{
+    border: values.$border-width solid colors.$selected-color;
+}
+
 .scrollable-y
 {
     overflow-y: scroll;
@@ -154,4 +159,9 @@ $block-gap: 20px;
 .gap-from-scroll
 {
     margin-right: 10px;
+}
+
+.non-displayed
+{
+    display: none;
 }

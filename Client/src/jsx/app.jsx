@@ -1,7 +1,9 @@
 import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navigation from "./components/navigation.jsx";
 import DataBlock from "./components/dataBlock.jsx";
 import PlayBar from "./components/playBar.jsx";
+import Profile from "./components/profile.jsx";
 
 const trackInfo ={
     imgSrc: "temp/nakaka.png", 
@@ -17,7 +19,14 @@ function App()
         <div id="app" className="background medium-padded medium-gaped vertical">
             <div id="main" className="background medium-gaped horizontal fill-space">
                 <Navigation></Navigation>
-                <DataBlock></DataBlock>
+
+                <Routes>
+                    <Route path="/" element={<DataBlock/>}/>
+                    <Route path="/profile" element={<Profile/>}/>
+                </Routes>
+                
+                
+
             </div>
             <PlayBar trackInfo={trackInfo}></PlayBar>
         </div>

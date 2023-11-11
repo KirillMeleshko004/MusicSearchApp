@@ -9,7 +9,7 @@ namespace MusicSearchApp.Models
         public User Artist { get; set; } = null!;
 
         public int SongCount { get; set; }
-        public byte[] CoverImage { get; set; } = null!;
+        public string CoverImage { get; set; } = null!;
 
 
         #region Navigation properties
