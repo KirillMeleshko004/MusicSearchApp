@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import Logo from "./components/logo.jsx";
-import { postLoginData } from "./components/services/AccessAPI.js";
+import { postLoginData } from "./components/services/accessAPI";
 import SessionManager from "./components/services/sessionManager.js";
 
 function Login()

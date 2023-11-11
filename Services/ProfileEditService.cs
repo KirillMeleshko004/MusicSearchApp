@@ -12,38 +12,46 @@ namespace MusicSearchApp.Services
             _userManager = userManager;
         }
 
-        public async Task<ProfileViewModel?> ChangeAsync(ProfileViewModel data, int id)
+        public async Task<bool> ChangeAsync(string displayedName, string description, string username)
         {
-            User? user = await _userManager.FindByIdAsync(id.ToString());
-            if(user == null) return null;
-
+            User? user = await _userManager.FindByNameAsync(username);
+            if(user == null) return false;
             
-            user.DisplayedName = data.DisplayedName;
-            user.Description = data.Description;
-            user.ProfileImage = data.ProfileImage;
-            user.SubscribersCount = data.SubscribersCount;
-            user.IsBlocked = data.IsBlocked;
+            user.DisplayedName = displayedName;
+            user.Description = description;
             
             await _userManager.UpdateAsync(user);
 
-            return data;
+            return true;
         }
 
-        public async Task<ProfileViewModel?> DeleteAsync(int id)
+        public async Task<bool> ChangeIconAsync(string username, FileInfo icon)
         {
-            User? user = await _userManager.FindByIdAsync(id.ToString());
+            User? user = await _userManager.FindByNameAsync(username);
+            if(user == null) return false;
+            
+
+            
+            await _userManager.UpdateAsync(user);
+
+            return true;
+        }
+
+        public async Task<ProfileViewModel?> DeleteAsync(string username)
+        {
+            User? user = await _userManager.FindByNameAsync(username);
             if(user == null) return null;
 
             await _userManager.DeleteAsync(user);
             return new ProfileViewModel(user);
         }
 
-        public IEnumerable<ProfileViewModel> Get(int start, int end)
-        {
-            return _userManager.Users.SkipWhile(u => u.Id < start)
-                .TakeWhile(u => u.Id <= end)
-                .Select(u => new ProfileViewModel(u));
-        }
+        // public IEnumerable<ProfileViewModel> Get(int start, int end)
+        // {
+        //     return _userManager.Users.SkipWhile(u => u.Id < start)
+        //         .TakeWhile(u => u.Id <= end)
+        //         .Select(u => new ProfileViewModel(u));
+        // }
 
         public async Task<ProfileViewModel?> GetByIdAsync(int id)
         {

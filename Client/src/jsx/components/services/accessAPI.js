@@ -63,7 +63,6 @@ export function postData(endPoint, data) {
 
 export function postLoginData(userData)
 {
-    console.log("Here");
     let payload = {
         method: 'POST',
         headers: {   
@@ -72,7 +71,7 @@ export function postLoginData(userData)
         },
         body: JSON.stringify(userData),
     }
-    console.log("Here");
+    
     return fetch(serverApiURL + "/Account/Login", payload)
         .then(response =>{
             if(!response.ok){
@@ -89,19 +88,16 @@ export function postLoginData(userData)
     );     
 }
 
-export function postImage(endPoint, imageData)
+export function postFile(endPoint, blob)
 {
     let token=SessionManager.getToken();
 
     let payload = {
-        method: 'POST',
-        headers: {   
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify(data),
+        method: 'PATCH',
+        body: blob
     }
+
+    console.log(payload);
     
     return fetch(serverApiURL + endPoint, payload)
         .then(response =>{
@@ -111,6 +107,7 @@ export function postImage(endPoint, imageData)
             return response.json();
         })
         .then(result =>{
+            console.log(result);
             return result;
         })
         .catch(error =>{

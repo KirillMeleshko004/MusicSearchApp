@@ -8,6 +8,7 @@ using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.Services;
 using MusicSearchApp.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,7 @@ builder.Services.AddSpaStaticFiles(configuration =>
 builder.Services.AddSingleton<IAuthTokenGenerator, JWTTokenGenerator>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddScoped<ProfileEditService>();
+builder.Services.AddScoped<FileService>();
 
 #endregion
 
@@ -84,7 +86,12 @@ app.UseAuthorization();
 
 
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(
+        Directory.GetCurrentDirectory(),
+        "Data")),
+});
 app.UseSpaStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = context =>
