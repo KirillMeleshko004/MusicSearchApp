@@ -50,7 +50,7 @@ namespace MusicSearchApp.Controllers
 
         [HttpPost]  
         [Route("{action}")]  
-        public async Task<IActionResult> Login(AuthorizationViewModel userData)  
+        public async Task<IActionResult> Login([FromBody]AuthorizationViewModel userData)  
         {  
             try
             {
@@ -62,7 +62,7 @@ namespace MusicSearchApp.Controllers
                 if (!isSucceed)
                     return BadRequest(token);
 
-                return Ok(token);
+                return Ok(new { token });
             }
             catch(Exception ex)
             {
