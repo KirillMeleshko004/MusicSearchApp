@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { getData, postFile } from "./services/accessAPI";
+import { changeData, getData, changeFile } from "./services/accessAPI";
 import StatusBadge from "./statusBadge.jsx";
 
 function Profile()
 {
     const [profile, setProfile] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const descriptionField = useRef(null);
     const displayedNameField = useRef(null);
@@ -30,8 +31,27 @@ function Profile()
             ignore = true;
         };
     }, []);
-    
-    const count = 120;
+
+    function saveChanges()
+    {
+        let formData = new FormData();
+        formData.append("displayedName", displayedNameField.current.value);
+        formData.append("description", descriptionField.current.value);
+        if(selectedImage) formData.append("image", selectedImage, selectedImage.name);
+        
+        changeData("/profile/change", formData).then(result =>
+            {
+                alert(result.message);
+            }
+        );
+    }
+
+    function imageChanged(event)
+    {
+        setSelectedImage(event.target.files[0]);
+        let url = URL.createObjectURL(event.target.files[0]);
+        image.current.src = url;
+    }
 
     return (
         <section className="panel large-padded large-gaped vertical fill-space full-height">
@@ -48,6 +68,7 @@ function Profile()
                                     center-justified small-padded">
                                 <img src={profile?.profileImage}
                                     className="rounded full-height full-width"
+                                    style={{objectFit:"cover"}}
                                     ref={image}></img>
                             </div>
                             <label htmlFor="changeImage" id="change-img-btn" 
@@ -60,7 +81,8 @@ function Profile()
                                 type="file"
                                 accept=".jpg, .jpeg, .png"
                                 className="non-displayed"
-                                ref={imageField}/>
+                                ref={imageField}
+                                onChange={imageChanged}/>
                         </div>
                         <div className="xx-small-gaped vertical">
                             <div className="above-normal unselectable"
@@ -88,7 +110,7 @@ function Profile()
                             <label htmlFor="description" 
                                 style={{fontWeight: "bolder"}}
                                 className="unselectable uppercase large-spaced sub-title">Description</label>
-                            <textarea style={{lineHeight: "1.55"}}
+                            <textarea style={{lineHeight: "1.55", textAlign: "justify"}}
                                 id="description" maxLength={550} className="full-height sub-title medium-spaced hidden-overflow"
                                 placeholder="Description..."
                                 defaultValue={profile?.description}
@@ -100,8 +122,11 @@ function Profile()
             <div className="horizontal fill-space space-between center-aligned unselectable">
                 <div className="above-normal" style={{marginLeft:"25px"}}>Subscribers: {profile?.subscribersCount}</div>
                 <div className="bordered-block horizontal center-aligned center-justified
-                                red-border-on-hover normal large-spaced
-                                full-height medium-padded half-width">Save Changes</div>
+                            red-border-on-hover normal large-spaced
+                            full-height medium-padded half-width"
+                    onClick={saveChanges}>
+                                    Save Changes
+                </div>
                 
             </div>
         </section>

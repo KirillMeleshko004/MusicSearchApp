@@ -7,19 +7,31 @@ namespace MusicSearchApp.Services
     public class ProfileEditService
     {
         private readonly UserManager<User> _userManager;
-        public ProfileEditService(UserManager<User> userManager)
+        private readonly FileService _fileService;
+        public ProfileEditService(UserManager<User> userManager,FileService fileService)
         {
             _userManager = userManager;
+            _fileService = fileService;
         }
 
-        public async Task<bool> ChangeAsync(string displayedName, string description, string username)
+        public async Task<bool> ChangeAsync(string displayedName, string description, IFormFile? image, string username)
         {
             User? user = await _userManager.FindByNameAsync(username);
             if(user == null) return false;
             
             user.DisplayedName = displayedName;
             user.Description = description;
-            
+            if(image != null) 
+            {
+
+                string? fileName = await _fileService.SaveFile(image, FileService.FileType.ProfileImage);
+                if(fileName != null)
+                {
+                    _fileService.DeleteFile(user.ProfileImage);
+                    user.ProfileImage = fileName;
+                } 
+            }
+
             await _userManager.UpdateAsync(user);
 
             return true;

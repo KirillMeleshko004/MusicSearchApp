@@ -33,28 +33,14 @@ namespace MusicSearchApp.Controllers
 
         [HttpPatch]
         [Route("change")]
-        public async Task<IActionResult> Change(string displayedName, string description)
+        public async Task<IActionResult> Change(string displayedName, string description, IFormFile image)
         {
             string username = ControllerContext.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
 
-            bool res = await _editService.ChangeAsync(displayedName, description, username);
+            bool res = await _editService.ChangeAsync(displayedName, description, image, username);
             if(!res) return NotFound(new {errorMessage = "Error"});
 
-            return Ok();
+            return Ok(new {message = "changed"});
         } 
-
-        [HttpPatch]
-        [Route("changeicon")]
-        public async Task<IActionResult> ChangeIcon(IFormFile image)
-        {
-            System.Console.WriteLine(ControllerContext.HttpContext.Request.Form.Files[0].FileName);
-            
-            string? fileName = await _fileService.SaveFile(image);
-
-            if(fileName == null) return StatusCode(StatusCodes.Status500InternalServerError, new {errorMessage = "Error"});
-
-            return Ok(new {filename = fileName});
-        } 
-
     }
 }

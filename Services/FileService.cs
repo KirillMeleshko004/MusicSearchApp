@@ -2,18 +2,53 @@ namespace MusicSearchApp.Services
 {
     public class FileService
     {
-        public async Task<string?> SaveFile(IFormFile file)
+        public enum FileType
+        {
+            ProfileImage,
+            AlbumImage,
+            MusicFile
+        }
+
+        private readonly Dictionary<FileType, string> _pathToSave = new Dictionary<FileType, string>()
+        {
+            {FileType.ProfileImage, "Images/Profile"},
+            {FileType.AlbumImage, "Images/Album"},
+            {FileType.MusicFile, "Music"},
+        };
+
+        private const string root = "Data";
+
+        public async Task<string?> SaveFile(IFormFile file, FileType type)
         {
             var fileName = GenerateUniqueFileName(file);
-            var folderName = "Temp";
-            string filePath = "Data";
-            string fullPath = Path.Combine(filePath, folderName, fileName);
+
+
+            string filePath = _pathToSave[type];
+            string fullPath = Path.Combine(root, filePath, fileName);
 
             using (Stream fileStream = new FileStream(fullPath, FileMode.Create)) {
                 await file.CopyToAsync(fileStream);
             }
 
-            return Path.Combine(folderName, fileName);
+            return Path.Combine(filePath, fileName);
+        }
+
+        public bool DeleteFile(string filePath)
+        {
+            try {
+                if (File.Exists(Path.Combine(root, filePath))) {
+                    File.Delete(Path.Combine(root, filePath));
+                    Console.WriteLine("File deleted.");
+                } 
+                else {
+                    Console.WriteLine("File not found");
+                    return false;
+                }
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+            return true;
         }
 
         private string GenerateUniqueFileName(IFormFile file)
