@@ -21,25 +21,14 @@ namespace MusicSearchApp.Controllers
 
         [HttpGet]
         [Route("get")]
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUser()
         {
-            ProfileViewModel? profile = await _editService.GetByIdAsync(id);
+            string username = ControllerContext.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+            ProfileViewModel? profile = await _editService.GetByUsernameAsync(username);
 
             if(profile == null) return NotFound(new {errorMessage = "User not found"});
             
-            return Ok(new 
-                {
-                    userId = profile.UserId, 
-                    username = profile.UserName,
-                    role = profile.Role,
-                    displayedName = profile.DisplayedName,
-                    //To change
-                    profileImage = profile.ProfileImage,
-                    //
-                    idBlocked = profile.IsBlocked,
-                    subscribersCount = profile.SubscribersCount,
-                }
-            );
+            return Ok(new { profile});
         }
 
         [HttpPatch]

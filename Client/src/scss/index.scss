@@ -4,6 +4,7 @@
 @use 'images';
 @use 'text';
 @use 'search';
+@use 'profile';
 @use "defaults/colors";
 
 * {
@@ -12,6 +13,7 @@
     padding: 0;
     color: colors.$font-color;
     font-family: 'Lucida Console', sans-serif;
+    transition: 0.25s;
 }
 
 html,

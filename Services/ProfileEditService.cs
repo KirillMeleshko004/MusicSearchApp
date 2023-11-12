@@ -58,5 +58,10 @@ namespace MusicSearchApp.Services
             User? user = await _userManager.FindByIdAsync(id.ToString());
             return user == null ? null : new ProfileViewModel(user);
         }
+        public async Task<ProfileViewModel?> GetByUsernameAsync(string username)
+        {
+            User? user = await _userManager.FindByNameAsync(username);
+            return user == null ? null : new ProfileViewModel(user);
+        }
     }
 }

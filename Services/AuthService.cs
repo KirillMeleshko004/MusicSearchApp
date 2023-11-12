@@ -42,7 +42,7 @@ namespace MusicSearchApp.Services
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.UserName,
                 DisplayedName = model.UserName,
-                ProfileImage = "default_profile_img",
+                ProfileImage = "Images/Profile/default_profile_img.svg",
                 Role = role
             };
 

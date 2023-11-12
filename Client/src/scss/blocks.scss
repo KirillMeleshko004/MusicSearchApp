@@ -55,6 +55,12 @@ $block-gap: 20px;
     @include y-padded(20px);
 }
 
+.small-padded
+{
+    @include x-padded(10px);
+    @include y-padded(10px);  
+}
+
 .x-medium-padded
 {
     @include x-padded(20px);
@@ -65,9 +71,19 @@ $block-gap: 20px;
     @include x-padded(40px);
 }
 
+.y-large-padded
+{
+    @include y-padded(30px);
+}
+
 .medium-gaped
 {
     gap: 20px;
+}
+
+.large-gaped
+{
+    gap: 30px;
 }
 
 .xx-small-gaped
@@ -106,6 +122,11 @@ $block-gap: 20px;
     justify-content: center;
 }
 
+.space-between
+{
+    justify-content: space-between;
+}
+
 .fill-space
 {
     flex-grow: 1;
@@ -115,6 +136,7 @@ $block-gap: 20px;
 {
     overflow: hidden;
 }
+
 
 .equal-gaps-sibling
 {
@@ -148,7 +170,12 @@ $block-gap: 20px;
 
 .error-border
 {
-    border: values.$border-width solid colors.$selected-color;
+    border: values.$border-width solid colors.$error-color;
+}
+
+.accept-border
+{
+    border: values.$border-width solid colors.$accept-color;
 }
 
 .scrollable-y

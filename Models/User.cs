@@ -8,7 +8,7 @@ namespace MusicSearchApp.Models
         [MaxLength(30)]
         public string DisplayedName { get; set; } = null!;
         
-        [MaxLength(300)]
+        [MaxLength(500)]
         public string? Description { get; set; }
 
         public string ProfileImage { get; set; } = null!;

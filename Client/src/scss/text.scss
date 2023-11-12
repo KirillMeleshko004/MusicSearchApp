@@ -54,7 +54,12 @@
 
 .error
 {
-    color: colors.$selected-color;
+    color: colors.$error-color;
+}
+
+.accept
+{
+    color: colors.$accept-color;
 }
 
 .no-decoration

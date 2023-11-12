@@ -2,14 +2,15 @@
 @use "defaults/values";
 @use 'defaults/fonts';
 
-input[type=text], input[type=password]
+input[type=text], input[type=password], textarea
 {
     border: 0;
     outline: 0;
     background-color: colors.$panel-color;
+    resize: none;
 }
 
-input:placeholder-shown {
+input:placeholder-shown, textarea:placeholder-shown{
     letter-spacing: values.$title-letter-spacing;
     user-select: none;
 }

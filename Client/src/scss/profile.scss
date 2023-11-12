@@ -1,0 +1,17 @@
+@use 'defaults/colors';
+@use 'defaults/values';
+
+#status-badge
+{
+    height: 30px;
+    width: 10%;
+    min-width: 130px;
+}
+
+#profile-image-block
+{
+    max-height: 340px;
+    min-height: 200px;
+    max-width: 340px;
+    min-width: 200px;
+}
