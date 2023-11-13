@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import Logo from "./components/logo.jsx";
 import { OK, postLoginData, Result } from "./components/services/accessAPI";
 import SessionManager from "./components/services/sessionManager.js";
@@ -9,20 +10,30 @@ function Login()
     const passwordField = useRef(null);
     const errorLine = useRef(null);
 
-
-     
+    const navigate = useNavigate();
+    const location = useLocation();
     
     async function login() 
     {
-        const userData = {username: usernameField.current.value, password: passwordField.current.value};
+        const userData = {
+            username: usernameField.current.value, 
+            password: passwordField.current.value,};
 
         let result = new Result();
         result = await postLoginData(userData);
 
         if(result.state == OK)
         {
-            console.log("success");
-            SessionManager.setToken(result.value.data.token);
+            SessionManager.setToken(result.value.data);
+
+            const state = location.state;
+            if (state?.from) {
+                // Redirects back to the previous unauthenticated routes
+                navigate(state?.from);
+            }
+            else {
+                navigate('/');
+            }
         }
         else
         {
@@ -33,22 +44,6 @@ function Login()
             passwordField.current.parentElement.classList.add("error-border");
             errorLine.current.classList.remove("non-displayed");
         }
-
-        // postLoginData(userData).then(result =>{
-        //     if(result?.token)
-        //     {
-        //         console.log("success");
-        //         SessionManager.setToken(result.token);
-        //     }
-        //     else{
-        //         console.log("fail");
-        //         console.log(result?.errorMessage);
-
-        //         usernameField.current.parentElement.classList.add("error-border");
-        //         passwordField.current.parentElement.classList.add("error-border");
-        //         errorLine.current.classList.remove("non-displayed");
-        //     }
-        // })
     }
 
     return (
@@ -58,7 +53,7 @@ function Login()
                 <div className="vertical fill-space center-aligned xx-large-gaped half-width">
                     <p id="title" className="largest unselectable">Login</p>
                     <div id="form-container" className="fill-space vertical full-width xx-small-gaped">
-                        <div id="signup-redirect" className="unselectable">New To Solar Sound? <a className="highlight-on-hover" href="/register">Sign Up</a></div>
+                        <div id="signup-redirect" className="unselectable">New To Solar Sound? <NavLink className="highlight-on-hover" to={"/register"}>Sign Up</NavLink></div>
                         <div id="auth-form" className="full-width vertical fill-space medium-gaped">
                             <div className="input-box x-large-padded red-border-on-hover"><input ref={usernameField} className="full-width full-height above-normal" type="text" autoComplete="off" placeholder="login"/></div>
                             <div className="input-box x-large-padded red-border-on-hover"><input ref={passwordField} className="full-width full-height above-normal" type="password" autoComplete="off" placeholder="password"/></div>

@@ -34,6 +34,7 @@ namespace MusicSearchApp.Controllers
 
         [HttpPatch]
         [Route("change")]
+        [Authorize]
         public async Task<IActionResult> Change(string displayedName, string description, IFormFile image)
         {
             string username = ControllerContext.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;

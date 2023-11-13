@@ -25,7 +25,7 @@ namespace MusicSearchApp.Controllers
 
         [HttpPost]
         [Route("{action}")] 
-        public async Task<IActionResult> Register(RegistrationViewModel userData)
+        public async Task<IActionResult> Register([FromBody]RegistrationViewModel userData)
         {
             try
             {
@@ -39,7 +39,7 @@ namespace MusicSearchApp.Controllers
                     return BadRequest(new { errorMessage = message });
                 }
 
-                return CreatedAtAction(nameof(Register), userData);
+                return CreatedAtAction(nameof(Register), userData.UserName);
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace MusicSearchApp.Controllers
                 if (!isSucceed)
                     return BadRequest(new { errorMessage = token});
 
-                return Ok(new { token });
+                return CreatedAtAction(nameof(Login), token );
             }
             catch(Exception ex)
             {
@@ -71,27 +71,6 @@ namespace MusicSearchApp.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                         new { errorMessage = ex.Message});
             }
-        }
-
-        [HttpGet]
-        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin, User")]
-        public IActionResult Logout(AuthorizationViewModel user)
-        {
-            ControllerContext.HttpContext.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
-            return Ok();
-        }
-
-        [HttpGet]
-        [Microsoft.AspNetCore.Authorization.Authorize]
-        [Route("{action}")]
-        public IActionResult Test()
-        {
-            
-            // System.Console.WriteLine(ControllerContext.HttpContext.User.Identity!.AuthenticationType);
-            // System.Console.WriteLine();
-            // foreach(var claim in ControllerContext.HttpContext.User.Claims) System.Console.WriteLine(claim.Value);
-            // System.Console.WriteLine();
-            return Ok( new { info = "Authorized" });
         }
     }
 }

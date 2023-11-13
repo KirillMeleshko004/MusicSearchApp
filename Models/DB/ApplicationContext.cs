@@ -8,7 +8,6 @@ namespace MusicSearchApp.Models.DB
     {
         #region DbSets
 
-        // public DbSet<User> Users { get; set; }
         public DbSet<Song> Songs { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Genre> Genres { get; set; }

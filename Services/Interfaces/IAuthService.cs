@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Services.Interfaces

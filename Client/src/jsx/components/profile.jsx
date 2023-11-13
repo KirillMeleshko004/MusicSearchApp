@@ -1,21 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
-import { changeData, getData, changeFile, Result, OK } from "./services/accessAPI";
+import { changeData, getData, Result, OK } from "./services/accessAPI";
 import StatusBadge from "./statusBadge.jsx";
-import { Navigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import Logout from "./logout.jsx";
 
 function Profile()
 {
     const [profile, setProfile] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [dataRecieved, setDataRecieved] = useState(false);
-    const [isUnauthorized, setIsUnauthorized] = useState(false);
-    const [failMessage, setFailMessage] = useState(null)
-
+    const [failMessage, setFailMessage] = useState(null);
 
     const descriptionField = useRef(null);
     const displayedNameField = useRef(null);
     const imageField = useRef(null);
     const image = useRef(null);
+
+    
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
     
@@ -33,7 +36,8 @@ function Profile()
                 }
                 else if (result.value.statusCode == 401)
                 {
-                    setIsUnauthorized(true);
+                    const currentPath = location.pathname;
+                    navigate('/login', { state: { from: currentPath } });
                 }
                 else
                 {
@@ -51,18 +55,18 @@ function Profile()
         };
     }, []);
 
-    function saveChanges()
+    async function saveChanges()
     {
         let formData = new FormData();
         formData.append("displayedName", displayedNameField.current.value);
         formData.append("description", descriptionField.current.value);
         if(selectedImage) formData.append("image", selectedImage, selectedImage.name);
         
-        changeData("/profile/change", formData).then(result =>
-            {
-                alert(result.message);
-            }
-        );
+        
+        let result = new Result();
+
+        result = await changeData("/profile/change", formData);
+        alert(result.value.data.message);
     }
 
     function imageChanged(event)
@@ -72,12 +76,6 @@ function Profile()
         image.current.src = url;
     }
 
-    if(isUnauthorized)
-    {
-        return (
-            <Navigate to={'/login'}/>
-        )
-    }
     if(failMessage != null)
     {
         return (
@@ -142,9 +140,13 @@ function Profile()
                     
                 </div>
                 <div className="vertical full-height full-width large-gaped">
-                    <div className="largest" style={{fontWeight:"bold"}}>
-                        {profile?.userName}
+                    <div className="horizontal space-between">
+                        <div className="largest" style={{fontWeight:"bold"}}>
+                            {profile?.userName}
+                        </div>
+                        <Logout></Logout>
                     </div>
+                    
                     <div className="bordered-block full-width full-height y-large-padded x-medium-padded
                         medium-gaped vertical">
                             <label htmlFor="description" 
@@ -174,60 +176,3 @@ function Profile()
 }
 
 export default Profile;
-
-// const [selectedImage, setSelectedImage] = useState(null);
-//     const [imageFromServer, setImageFromServer] = useState(null);
-
-
-
-//     function sendImage()
-//     {
-//         let formData = new FormData();
-//         formData.append("image", selectedImage, selectedImage.name);
-//         console.log(selectedImage);
-        
-//         postFile("/profile/changeicon", formData).then(result =>
-//             {
-//                 setImageFromServer(result.filename);
-//                 console.log(result);
-//             }
-            
-//         );
-//     }
-
-//     return (
-//         <section className="panel large-padded medium-gaped vertical fill-space">
-//             {selectedImage && (
-//                 <div>
-//                     <img
-//                         alt="not found"
-//                         width={"250px"}
-//                         src={URL.createObjectURL(selectedImage)}
-//                     />
-//                     <br />
-//                 </div>
-//             )}
-//             <div>
-//                 <label htmlFor="upload">Choose images to upload (PNG, JPG)</label>
-//                 <input
-//                     id="upload"
-//                     type="file"
-//                     name="myImage"
-//                     accept=".jpg, .jpeg, .png"
-//                     style={{"opacity" : 0, "display" : "none"}}
-//                     onChange={(event) => {
-//                     console.log(event.target.files[0]);
-//                     setSelectedImage(event.target.files[0]);
-//                     }}/>
-//             </div>
-//             <button onClick={sendImage} 
-//                 className="panel bordered-block center-justified red-border-on-hover">
-//                     Send image
-//             </button>
-
-
-//             <div className="bordered-block">
-//                 <img src={imageFromServer} width={"250px"}></img>
-//             </div>
-//         </section>
-//     );

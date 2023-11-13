@@ -8,7 +8,6 @@ namespace MusicSearchApp.Services
 {
     public class JWTTokenGenerator : IAuthTokenGenerator
     {
-        private const int EXPIRATION_TIME = 120;
 
         private IConfiguration _config;
         
@@ -25,7 +24,7 @@ namespace MusicSearchApp.Services
             {
                 Issuer = _config["jwt:Issuer"],
                 Audience = _config["jwt:Audience"],
-                Expires = DateTime.UtcNow.AddMinutes(EXPIRATION_TIME),
+                Expires = DateTime.UtcNow.AddMinutes(Double.Parse(_config["jwt:Expiration"]!)),
                 SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
                 Subject = new ClaimsIdentity(claims)
             };

@@ -15,34 +15,9 @@ export async function getData(endPoint) {
     }
     
     return await sendRequest(serverApiURL + endPoint, payload);
-    // const res = new Result();
-    
-    // return fetch(serverApiURL + endPoint, payload)
-    //     .then(response =>{
-
-    //         res.value.statusCode = response.status;
-    //         res.state = true;
-    //         if(!response.ok){
-    //             res.state = false;
-    //             res.value.errorMessage = response.statusText;
-    //             throw Error(response.statusText);
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(result =>{
-    //         res.value.json = result;
-    //         console.log(result);
-            
-    //         return res;
-    //     })
-    //     .catch(error =>{
-    //         console.log(error);
-    //         return error;
-    //     }
-    // );
 }
 
-export function postData(endPoint, data) {
+export async function postData(endPoint, data) {
 
     let token=SessionManager.getToken();
 
@@ -56,31 +31,7 @@ export function postData(endPoint, data) {
         body: JSON.stringify(data),
     }
     
-    const res = new Result();
-    
-    return fetch(serverApiURL + endPoint, payload)
-        .then(response =>{
-
-            res.value.statusCode = response.status;
-            res.state = true;
-            if(!response.ok){
-                res.state = false;
-                res.value.errorMessage = response.statusText;
-                throw Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then(result =>{
-            res.value.json = result;
-            console.log(result);
-            
-            return res;
-        })
-        .catch(error =>{
-            console.log(error);
-            return error;
-        }
-    );
+    return await sendRequest(serverApiURL + endPoint, payload);
 }
 
 
@@ -96,31 +47,6 @@ export async function postLoginData(userData)
     }
     
     return await sendRequest(serverApiURL + "/Account/Login", payload);
-    // const res = new Result();
-    
-    // return fetch(serverApiURL + "/Account/Login", payload)
-    //     .then(response =>{
-
-    //         res.value.statusCode = response.status;
-    //         res.state = true;
-    //         if(!response.ok){
-    //             res.state = false;
-    //             res.value.errorMessage = response.statusText;
-    //             throw Error(response.statusText);
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(result =>{
-    //         res.value.json = result;
-    //         console.log(result);
-            
-    //         return res;
-    //     })
-    //     .catch(error =>{
-    //         console.log(error);
-    //         return error;
-    //     }
-    // );   
 }
 
 export async function changeData(endPoint, formData)
@@ -137,31 +63,6 @@ export async function changeData(endPoint, formData)
     }
 
     return await sendRequest(serverApiURL + endPoint, payload);
-    // const res = new Result();
-    
-    // return fetch(serverApiURL + endPoint, payload)
-    //     .then(response =>{
-
-    //         res.value.statusCode = response.status;
-    //         res.state = true;
-    //         if(!response.ok){
-    //             res.state = false;
-    //             res.value.errorMessage = response.statusText;
-    //             throw Error(response.statusText);
-    //         }
-    //         return response.json();
-    //     })
-    //     .then(result =>{
-    //         res.value.json = result;
-    //         console.log(result);
-            
-    //         return res;
-    //     })
-    //     .catch(error =>{
-    //         console.log(error);
-    //         return error;
-    //     }
-    // );
 }
 
 async function sendRequest(url, payload)
@@ -172,10 +73,14 @@ async function sendRequest(url, payload)
 
         const response = await fetch(url, payload);
 
+        console.log(response);
         res.value.statusCode = response.status;
-        res.state = OK;
         
-        res.value.data = await response.json();
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1)
+        {
+            res.value.data = await response.json();
+        }
 
         if (!response.ok) 
         {
@@ -184,12 +89,12 @@ async function sendRequest(url, payload)
             console.log(res);
             throw Error(response.statusText);
         }
-
+        
+        res.state = OK;
         return res;
 
     } catch (error) {
 
-        console.log(error.message);
 
         return res;
     }
