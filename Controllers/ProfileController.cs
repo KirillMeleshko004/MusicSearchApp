@@ -21,6 +21,7 @@ namespace MusicSearchApp.Controllers
 
         [HttpGet]
         [Route("get")]
+        [Authorize]
         public async Task<IActionResult> GetUser()
         {
             string username = ControllerContext.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;

@@ -1,11 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
-import { changeData, getData, changeFile } from "./services/accessAPI";
+import { changeData, getData, changeFile, Result, OK } from "./services/accessAPI";
 import StatusBadge from "./statusBadge.jsx";
+import { Navigate } from "react-router";
 
 function Profile()
 {
     const [profile, setProfile] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [dataRecieved, setDataRecieved] = useState(false);
+    const [isUnauthorized, setIsUnauthorized] = useState(false);
+    const [failMessage, setFailMessage] = useState(null)
+
 
     const descriptionField = useRef(null);
     const displayedNameField = useRef(null);
@@ -17,11 +22,25 @@ function Profile()
         let ignore = false;
         
         async function startFetching() {
-            const json = await getData('/profile/get');
+            let result = new Result();
+            result = await getData('/profile/get');
+            
             if (!ignore) {
-              setProfile(json.profile);
+                if(result.state === OK)
+                {
+                    setProfile(result.value.data.profile);
+                    setDataRecieved(true);
+                }
+                else if (result.value.statusCode == 401)
+                {
+                    setIsUnauthorized(true);
+                }
+                else
+                {
+                    setFailMessage(result.value.data.errorMessage);
+                }
             }
-            console.log(json);
+            console.log(result);
         }
 
         startFetching();
@@ -51,6 +70,27 @@ function Profile()
         setSelectedImage(event.target.files[0]);
         let url = URL.createObjectURL(event.target.files[0]);
         image.current.src = url;
+    }
+
+    if(isUnauthorized)
+    {
+        return (
+            <Navigate to={'/login'}/>
+        )
+    }
+    if(failMessage != null)
+    {
+        return (
+            <div>{failMessage}</div>
+        )
+    }
+    if(!dataRecieved)
+    {
+        return (
+            <div>
+                Loading...
+            </div>
+        )
     }
 
     return (

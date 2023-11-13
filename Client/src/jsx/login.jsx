@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import Logo from "./components/logo.jsx";
-import { postLoginData } from "./components/services/accessAPI";
+import { OK, postLoginData, Result } from "./components/services/accessAPI";
 import SessionManager from "./components/services/sessionManager.js";
 
 function Login()
@@ -12,25 +12,43 @@ function Login()
 
      
     
-    function login() 
+    async function login() 
     {
         const userData = {username: usernameField.current.value, password: passwordField.current.value};
 
-        postLoginData(userData).then(result =>{
-            if(result?.token)
-            {
-                console.log("success");
-                SessionManager.setToken(result.token);
-            }
-            else{
-                console.log("fail");
-                console.log(result?.errorMessage);
+        let result = new Result();
+        result = await postLoginData(userData);
 
-                usernameField.current.parentElement.classList.add("error-border");
-                passwordField.current.parentElement.classList.add("error-border");
-                errorLine.current.classList.remove("non-displayed");
-            }
-        })
+        if(result.state == OK)
+        {
+            console.log("success");
+            SessionManager.setToken(result.value.data.token);
+        }
+        else
+        {
+            console.log("fail");
+            console.log(result.value.data.errorMessage);
+
+            usernameField.current.parentElement.classList.add("error-border");
+            passwordField.current.parentElement.classList.add("error-border");
+            errorLine.current.classList.remove("non-displayed");
+        }
+
+        // postLoginData(userData).then(result =>{
+        //     if(result?.token)
+        //     {
+        //         console.log("success");
+        //         SessionManager.setToken(result.token);
+        //     }
+        //     else{
+        //         console.log("fail");
+        //         console.log(result?.errorMessage);
+
+        //         usernameField.current.parentElement.classList.add("error-border");
+        //         passwordField.current.parentElement.classList.add("error-border");
+        //         errorLine.current.classList.remove("non-displayed");
+        //     }
+        // })
     }
 
     return (

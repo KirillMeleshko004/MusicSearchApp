@@ -1,7 +1,7 @@
 import { serverApiURL } from "./constants";
 import SessionManager from "./sessionManager";
 
-export function getData(endPoint) {
+export async function getData(endPoint) {
 
     let token = SessionManager.getToken();
 
@@ -14,20 +14,32 @@ export function getData(endPoint) {
          },
     }
     
-    return fetch(serverApiURL + endPoint, payload)
-        .then(response =>{
-            if(!response.ok){
-                throw Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then(result =>{
-            return result;
-        })
-        .catch(error =>{
-            console.log(error);
-        }
-    );
+    return await sendRequest(serverApiURL + endPoint, payload);
+    // const res = new Result();
+    
+    // return fetch(serverApiURL + endPoint, payload)
+    //     .then(response =>{
+
+    //         res.value.statusCode = response.status;
+    //         res.state = true;
+    //         if(!response.ok){
+    //             res.state = false;
+    //             res.value.errorMessage = response.statusText;
+    //             throw Error(response.statusText);
+    //         }
+    //         return response.json();
+    //     })
+    //     .then(result =>{
+    //         res.value.json = result;
+    //         console.log(result);
+            
+    //         return res;
+    //     })
+    //     .catch(error =>{
+    //         console.log(error);
+    //         return error;
+    //     }
+    // );
 }
 
 export function postData(endPoint, data) {
@@ -44,24 +56,35 @@ export function postData(endPoint, data) {
         body: JSON.stringify(data),
     }
     
+    const res = new Result();
+    
     return fetch(serverApiURL + endPoint, payload)
         .then(response =>{
+
+            res.value.statusCode = response.status;
+            res.state = true;
             if(!response.ok){
+                res.state = false;
+                res.value.errorMessage = response.statusText;
                 throw Error(response.statusText);
             }
             return response.json();
         })
         .then(result =>{
-            return result;
+            res.value.json = result;
+            console.log(result);
+            
+            return res;
         })
         .catch(error =>{
             console.log(error);
+            return error;
         }
     );
 }
 
 
-export function postLoginData(userData)
+export async function postLoginData(userData)
 {
     let payload = {
         method: 'POST',
@@ -72,54 +95,35 @@ export function postLoginData(userData)
         body: JSON.stringify(userData),
     }
     
-    return fetch(serverApiURL + "/Account/Login", payload)
-        .then(response =>{
-            if(!response.ok){
-                throw Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then(result =>{
-            return result;
-        })
-        .catch(error =>{
-            console.log(error);
-        }
-    );     
-}
-
-export function changeFile(endPoint, blob)
-{
-    let token=SessionManager.getToken();
-
-    let payload = {
-        method: 'PATCH',
-        headers: {   
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
-        body: blob
-    }
-
+    return await sendRequest(serverApiURL + "/Account/Login", payload);
+    // const res = new Result();
     
-    return fetch(serverApiURL + endPoint, payload)
-        .then(response =>{
-            if(!response.ok){
-                throw Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then(result =>{
-            console.log(result);
-            return result;
-        })
-        .catch(error =>{
-            console.log(error);
-        }
-    );
+    // return fetch(serverApiURL + "/Account/Login", payload)
+    //     .then(response =>{
+
+    //         res.value.statusCode = response.status;
+    //         res.state = true;
+    //         if(!response.ok){
+    //             res.state = false;
+    //             res.value.errorMessage = response.statusText;
+    //             throw Error(response.statusText);
+    //         }
+    //         return response.json();
+    //     })
+    //     .then(result =>{
+    //         res.value.json = result;
+    //         console.log(result);
+            
+    //         return res;
+    //     })
+    //     .catch(error =>{
+    //         console.log(error);
+    //         return error;
+    //     }
+    // );   
 }
 
-export function changeData(endPoint, formData)
+export async function changeData(endPoint, formData)
 {
     let token=SessionManager.getToken();
 
@@ -131,20 +135,83 @@ export function changeData(endPoint, formData)
         },
         body: formData
     }
+
+    return await sendRequest(serverApiURL + endPoint, payload);
+    // const res = new Result();
     
-    return fetch(serverApiURL + endPoint, payload)
-        .then(response =>{
-            if(!response.ok){
-                throw Error(response.statusText);
-            }
-            return response.json();
-        })
-        .then(result =>{
-            console.log(result);
-            return result;
-        })
-        .catch(error =>{
-            console.log(error);
-        }
-    );
+    // return fetch(serverApiURL + endPoint, payload)
+    //     .then(response =>{
+
+    //         res.value.statusCode = response.status;
+    //         res.state = true;
+    //         if(!response.ok){
+    //             res.state = false;
+    //             res.value.errorMessage = response.statusText;
+    //             throw Error(response.statusText);
+    //         }
+    //         return response.json();
+    //     })
+    //     .then(result =>{
+    //         res.value.json = result;
+    //         console.log(result);
+            
+    //         return res;
+    //     })
+    //     .catch(error =>{
+    //         console.log(error);
+    //         return error;
+    //     }
+    // );
 }
+
+async function sendRequest(url, payload)
+{
+    const res = new Result();
+
+    try {
+
+        const response = await fetch(url, payload);
+
+        res.value.statusCode = response.status;
+        res.state = OK;
+        
+        res.value.data = await response.json();
+
+        if (!response.ok) 
+        {
+            res.state = FAIL;
+            res.value.errorMessage = response.statusText;
+            console.log(res);
+            throw Error(response.statusText);
+        }
+
+        return res;
+
+    } catch (error) {
+
+        console.log(error.message);
+
+        return res;
+    }
+}
+
+
+
+export class Result {
+    constructor() {
+        this.state,
+        this.value = new Value();
+    }
+}
+
+class Value
+{
+    constructor(){
+        this.statusCode,
+        this.data,
+        this.errorMessage;
+    }
+}
+
+export const OK = 'OK';
+export const FAIL = 'FAIL';
