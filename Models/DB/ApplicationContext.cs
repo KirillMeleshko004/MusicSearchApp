@@ -13,7 +13,7 @@ namespace MusicSearchApp.Models.DB
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<News> News { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<RequestStatus> Statuses { get; set; }
         public DbSet<PublishRequest> PublishRequests { get; set; }
         public DbSet<Action> Actions { get; set; }
 
@@ -78,15 +78,6 @@ namespace MusicSearchApp.Models.DB
                 .WithOne(a => a.Artist)
                 .HasForeignKey(a => a.ArtistId);
 
-
-
-            //User - Comment
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Comments)
-                .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserID)
-                .OnDelete(DeleteBehavior.ClientCascade);
-
             //User - Request
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Requests)
@@ -105,13 +96,7 @@ namespace MusicSearchApp.Models.DB
 
             #region Song FK
 
-
             //Song - Comment. Cascade since User - Comment ClientCascade
-            modelBuilder.Entity<Song>()
-                .HasMany(s => s.Comments)
-                .WithOne(c => c.Song)
-                .HasForeignKey(c => c.SongId);
-
             #endregion
 
             #region Album FK
@@ -144,6 +129,12 @@ namespace MusicSearchApp.Models.DB
                 .WithOne(s => s.Genre)
                 .HasForeignKey(s => s.GenreName)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            //Status - Request
+            modelBuilder.Entity<RequestStatus>()
+                .HasMany(s => s.Requests)
+                .WithOne(r => r.Status)
+                .HasForeignKey(r => r.StatusId);
 
             #endregion
         

@@ -20,12 +20,11 @@ namespace MusicSearchApp.Controllers
         }
 
         [HttpGet]
-        [Route("get")]
+        [Route("get/{id}")]
         [Authorize]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetUser(int id)
         {
-            string username = ControllerContext.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
-            ProfileViewModel? profile = await _editService.GetByUsernameAsync(username);
+            ProfileViewModel? profile = await _editService.GetByIdAsync(id);
 
             if(profile == null) return NotFound(new {errorMessage = "User not found"});
             
@@ -33,14 +32,20 @@ namespace MusicSearchApp.Controllers
         }
 
         [HttpPatch]
-        [Route("change")]
+        [Route("change/{id}")]
         [Authorize]
-        public async Task<IActionResult> Change(string displayedName, string description, IFormFile image)
+        public async Task<IActionResult> Change(int id, string displayedName, string description, IFormFile image)
         {
-            string username = ControllerContext.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+            string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
 
-            bool res = await _editService.ChangeAsync(displayedName, description, image, username);
-            if(!res) return NotFound(new {errorMessage = "Error"});
+            bool isAllowed = await _editService.IsChangeAllowed(id, actorName);
+            if(!isAllowed)
+            {
+                return Forbid();
+            }
+            
+            bool res = await _editService.ChangeAsync(id, displayedName, description, image);
+            if(!res) return NotFound();
 
             return Ok(new {message = "changed"});
         } 

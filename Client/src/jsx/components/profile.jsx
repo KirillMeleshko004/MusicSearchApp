@@ -23,12 +23,20 @@ function Profile()
 
     useEffect(() => {
         
-        console.log(SessionManager.getSession())
+        const session = SessionManager.getSession();
+        
+        if(!session)
+        {
+            redirectToLogin();
+            return;
+        }
+
         let ignore = false;
         
         async function startFetching() {
+            
             let result = new Result();
-            result = await getData('/profile/get');
+            result = await getData('/profile/get/' + session.userId);
             
             if (!ignore) {
                 if(result.state === OK)
@@ -38,15 +46,13 @@ function Profile()
                 }
                 else if (result.value.statusCode == 401)
                 {
-                    const currentPath = location.pathname;
-                    navigate('/login', { state: { from: currentPath } });
+                    redirectToLogin();
                 }
                 else
                 {
                     setFailMessage(result.value.data.errorMessage);
                 }
             }
-            console.log(result);
         }
 
         startFetching();
@@ -57,8 +63,16 @@ function Profile()
         };
     }, []);
 
+    function redirectToLogin()
+    {
+        const currentPath = location.pathname;
+        navigate('/login', { state: { from: currentPath } });
+    }
+
     async function saveChanges()
     {
+        const session = SessionManager.getSession();
+
         let formData = new FormData();
         formData.append("displayedName", displayedNameField.current.value);
         formData.append("description", descriptionField.current.value);
@@ -67,8 +81,12 @@ function Profile()
         
         let result = new Result();
 
-        result = await changeData("/profile/change", formData);
-        alert(result.value.data.message);
+        result = await changeData("/profile/change/" + session.userId, formData);
+
+        if(result.state === OK)
+            alert(result.value.data.message);
+        else
+            alert(result.value.errorMessage);
     }
 
     function imageChanged(event)

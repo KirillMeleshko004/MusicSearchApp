@@ -1,9 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Navigation from "./components/navigation.jsx";
-import DataBlock from "./components/dataBlock.jsx";
+import Navigation from "./components/Navigation/navigation.jsx";
 import PlayBar from "./components/playBar.jsx";
-import Profile from "./components/profile.jsx";
 
 const trackInfo ={
     imgSrc: "temp/nakaka.png", 

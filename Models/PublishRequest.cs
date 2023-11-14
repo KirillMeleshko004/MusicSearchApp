@@ -10,5 +10,8 @@ namespace MusicSearchApp.Models
 
         public int AlbumId { get; set; }
         public Album Album { get; set; } = null!;
+
+        public int StatusId { get; set; }
+        public RequestStatus Status { get; set; } = null!;
     }
 }

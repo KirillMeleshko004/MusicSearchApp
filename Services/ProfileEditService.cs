@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using MusicSearchApp.Models;
+using MusicSearchApp.Models.Static;
 using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Services
 {
     public class ProfileEditService
     {
+        private const string defaultProfileImage = "Images/Profile/default_profile_img.svg";
         private readonly UserManager<User> _userManager;
         private readonly FileService _fileService;
         public ProfileEditService(UserManager<User> userManager,FileService fileService)
@@ -14,9 +16,17 @@ namespace MusicSearchApp.Services
             _fileService = fileService;
         }
 
-        public async Task<bool> ChangeAsync(string displayedName, string description, IFormFile? image, string username)
+        public async Task<bool> IsChangeAllowed(int changedId, string actorName)
         {
-            User? user = await _userManager.FindByNameAsync(username);
+            User actor = (await _userManager.FindByNameAsync(actorName))!;
+
+            return actor.Id == changedId || actor.Role == UserRoles.Admin; 
+
+        }
+
+        public async Task<bool> ChangeAsync(int id, string displayedName, string description, IFormFile? image)
+        {
+            User? user = await _userManager.FindByIdAsync(id.ToString());
             if(user == null) return false;
             
             user.DisplayedName = displayedName;
@@ -25,25 +35,13 @@ namespace MusicSearchApp.Services
             {
 
                 string? fileName = await _fileService.SaveFile(image, FileService.FileType.ProfileImage);
-                if(fileName != null)
+                if(fileName != null && fileName != defaultProfileImage)
                 {
                     _fileService.DeleteFile(user.ProfileImage);
                     user.ProfileImage = fileName;
                 } 
             }
 
-            await _userManager.UpdateAsync(user);
-
-            return true;
-        }
-
-        public async Task<bool> ChangeIconAsync(string username, FileInfo icon)
-        {
-            User? user = await _userManager.FindByNameAsync(username);
-            if(user == null) return false;
-            
-
-            
             await _userManager.UpdateAsync(user);
 
             return true;

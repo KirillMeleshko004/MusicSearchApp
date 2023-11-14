@@ -28,8 +28,10 @@ function Login()
 
             const state = location.state;
             if (state?.from) {
+                const from = state?.from;
+                window.history.replaceState({}, document.title)
                 // Redirects back to the previous unauthenticated routes
-                navigate(state?.from);
+                navigate(from);
             }
             else {
                 navigate('/');

@@ -73,7 +73,6 @@ async function sendRequest(url, payload)
 
         const response = await fetch(url, payload);
 
-        console.log(response);
         res.value.statusCode = response.status;
         
         const contentType = response.headers.get("content-type");

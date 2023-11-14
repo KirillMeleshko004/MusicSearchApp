@@ -25,8 +25,6 @@ namespace MusicSearchApp.Models
 
         #region Navigation properties
 
-        public ICollection<Comment> Comments { get; set; } = null!;
-
         #endregion
     }
 }
