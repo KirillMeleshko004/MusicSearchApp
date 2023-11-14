@@ -21,7 +21,7 @@ namespace MusicSearchApp.Models
 
         public ICollection<Song> Songs { get; set; } = null!;
         public ICollection<Album> Albums { get; set; } = null!;
-        public ICollection<Favourite> Favourites { get; set; } = null!;
+
         public ICollection<Comment> Comments { get; set; } = null!;
         public ICollection<PublishRequest> Requests { get; set; } = null!;
         public ICollection<News> News { get; set; } = null!;

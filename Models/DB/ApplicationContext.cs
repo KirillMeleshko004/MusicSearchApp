@@ -13,7 +13,6 @@ namespace MusicSearchApp.Models.DB
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<News> News { get; set; }
-        public DbSet<Favourite> Favourites { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<PublishRequest> PublishRequests { get; set; }
         public DbSet<Action> Actions { get; set; }
@@ -34,8 +33,6 @@ namespace MusicSearchApp.Models.DB
         {
             #region PK configuration
 
-            modelBuilder.Entity<Favourite>()
-                .HasKey(f => new { f.SongId, f.UserId} );
             modelBuilder.Entity<Subscription>()
                 .HasKey(s => new { s.SubscriberId, s.ArtistId} );
             modelBuilder.Entity<Genre>()
@@ -81,12 +78,7 @@ namespace MusicSearchApp.Models.DB
                 .WithOne(a => a.Artist)
                 .HasForeignKey(a => a.ArtistId);
 
-            //User - Favourites
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Favourites)
-                .WithOne(f => f.User)
-                .HasForeignKey(f => f.UserId)
-                .OnDelete(DeleteBehavior.ClientCascade);
+
 
             //User - Comment
             modelBuilder.Entity<User>()
@@ -113,11 +105,6 @@ namespace MusicSearchApp.Models.DB
 
             #region Song FK
 
-            //Song - Favourites. Cascade since User - Favourites ClientCascade
-            modelBuilder.Entity<Song>()
-                .HasMany(s => s.Favourites)
-                .WithOne(f => f.Song)
-                .HasForeignKey(f => f.SongId);
 
             //Song - Comment. Cascade since User - Comment ClientCascade
             modelBuilder.Entity<Song>()

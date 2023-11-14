@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import Logo from "./components/logo.jsx";
-import { OK, postLoginData, Result } from "./components/services/accessAPI";
+import { OK, postData, Result } from "./components/services/accessAPI";
 import SessionManager from "./components/services/sessionManager.js";
 
 function Login()
@@ -20,11 +20,11 @@ function Login()
             password: passwordField.current.value,};
 
         let result = new Result();
-        result = await postLoginData(userData);
+        result = await postData("/Account/Login", userData, false);
 
         if(result.state == OK)
         {
-            SessionManager.setToken(result.value.data);
+            SessionManager.setSession(result.value.data);
 
             const state = location.state;
             if (state?.from) {

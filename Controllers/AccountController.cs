@@ -2,8 +2,6 @@ using MusicSearchApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MusicSearchApp.Models.Static;
 
 namespace MusicSearchApp.Controllers
@@ -14,7 +12,6 @@ namespace MusicSearchApp.Controllers
         private readonly ApplicationContext _context;
 
         private readonly IAuthService _authService;
-
 
         public AccountController(ApplicationContext context, IAuthService authService)
         {
@@ -58,12 +55,11 @@ namespace MusicSearchApp.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(new { errorMessage = "Invalid payload" });
 
-                //token should be renamed
-                var (isSucceed, token) = await _authService.Login(userData);
-                if (!isSucceed)
-                    return BadRequest(new { errorMessage = token});
+                SessionDto? session = await _authService.Login(userData);
+                if (session == null)
+                    return BadRequest(new { errorMessage = "Incorrect login or password"});
 
-                return CreatedAtAction(nameof(Login), token );
+                return CreatedAtAction(nameof(Login), session );
             }
             catch(Exception ex)
             {

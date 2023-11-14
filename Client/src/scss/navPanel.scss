@@ -15,10 +15,14 @@
     }
 }
 
-
 .nav-option {
-    width: 100%;
+    width: 95%;
     height: 14%;
+    min-height: 80px;
+}
+
+.nav-option:not(:last-child) {
+    margin-bottom: 20px;
 }
 
 .nav-icon {

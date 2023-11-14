@@ -3,6 +3,7 @@ import { changeData, getData, Result, OK } from "./services/accessAPI";
 import StatusBadge from "./statusBadge.jsx";
 import { useLocation, useNavigate } from "react-router";
 import Logout from "./logout.jsx";
+import SessionManager from "./services/sessionManager.js";
 
 function Profile()
 {
@@ -21,7 +22,8 @@ function Profile()
     const navigate = useNavigate();
 
     useEffect(() => {
-    
+        
+        console.log(SessionManager.getSession())
         let ignore = false;
         
         async function startFetching() {
@@ -96,7 +98,9 @@ function Profile()
             <div className="horizontal large-gaped full-height">
                 <div className="vertical large-gaped">
                     <div className="horizontal medium-gaped center-aligned">
-                        <StatusBadge status={profile?.isBlocked}></StatusBadge>
+                        <StatusBadge status={profile?.isBlocked}
+                            posStatus={"ACTIVE"}
+                            negStatus={"BLOCKED"}></StatusBadge>
                         <div className="largest unselectable">Profile</div>
                     </div>
                     <div className="vertical full-height space-between">

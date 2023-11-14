@@ -1,6 +1,6 @@
 import React from "react";
 
-function StatusBadge({status})
+function StatusBadge({status, posStatus, negStatus})
 {
 
     return (
@@ -9,14 +9,14 @@ function StatusBadge({status})
                 <div className="accept bordered-block uppercase accept-border unselectable 
                     horizontal center-justified center-aligned full-height full-width normal
                     medium-spaced">
-                    ACTIVE
+                    {posStatus}
                 </div>
             )}
             {status == false && (
                 <div className="error bordered-block uppercase error-border unselectable 
                     horizontal center-justified center-aligned full-height full-width normal
                     medium-spaced">
-                    BLOCKED
+                    {negStatus}
                 </div>
             )}
         </div>

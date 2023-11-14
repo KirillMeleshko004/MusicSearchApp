@@ -43,7 +43,8 @@ namespace MusicSearchApp.Services
                 UserName = model.UserName,
                 DisplayedName = model.UserName,
                 ProfileImage = "Images/Profile/default_profile_img.svg",
-                Role = role
+                Role = role,
+                IsBlocked = false,
             };
 
             var createUserResult = await userManager.CreateAsync(user, model.Password);
@@ -68,13 +69,13 @@ namespace MusicSearchApp.Services
             return (true ,"User created successfully!");
         }
 
-        public async Task<(bool isSucceed, string token)> Login(AuthorizationViewModel model)
+        public async Task<SessionDto?> Login(AuthorizationViewModel model)
         {
             var user = await userManager.FindByNameAsync(model.UserName);
             if (user == null)
-                return (false, "Invalid username");
+                return null;
             if (!await userManager.CheckPasswordAsync(user, model.Password))
-                return (false, "Invalid password");
+                return null;
 
             var userRoles = await userManager.GetRolesAsync(user);
             var authClaims = new List<Claim>
@@ -89,7 +90,16 @@ namespace MusicSearchApp.Services
             }
 
             string token = _tokenGen.GenerateToken(authClaims);
-            return (true, token);
+
+            SessionDto session = new()
+            {
+                UserId = user.Id,
+                Username = user.UserName!,
+                Role = user.Role!,
+                Token = token
+            };
+
+            return session;
         }
        
     }

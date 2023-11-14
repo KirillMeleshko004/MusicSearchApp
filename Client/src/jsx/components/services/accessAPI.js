@@ -17,7 +17,7 @@ export async function getData(endPoint) {
     return await sendRequest(serverApiURL + endPoint, payload);
 }
 
-export async function postData(endPoint, data) {
+export async function postData(endPoint, data, useAuth = true) {
 
     let token=SessionManager.getToken();
 
@@ -26,7 +26,7 @@ export async function postData(endPoint, data) {
         headers: {   
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': (useAuth && 'Bearer ' + token)
         },
         body: JSON.stringify(data),
     }
@@ -35,19 +35,19 @@ export async function postData(endPoint, data) {
 }
 
 
-export async function postLoginData(userData)
-{
-    let payload = {
-        method: 'POST',
-        headers: {   
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData),
-    }
+// export async function postLoginData(userData)
+// {
+//     let payload = {
+//         method: 'POST',
+//         headers: {   
+//             'Accept': 'application/json',
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(userData),
+//     }
     
-    return await sendRequest(serverApiURL + "/Account/Login", payload);
-}
+//     return await sendRequest(serverApiURL + , payload);
+// }
 
 export async function changeData(endPoint, formData)
 {

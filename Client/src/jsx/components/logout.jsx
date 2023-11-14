@@ -9,14 +9,14 @@ function Logout()
 
     function logout()
     {
-        SessionManager.removeToken();
+        SessionManager.removeSession();
         navigate("/");
     }
 
     return (
         <div onClick={logout}
             className="bordered-block  horizontal center-justified center-aligned
-            full-height normal x-medium-padded red-border-on-hover unselectable medium-spaced">
+                full-height normal x-medium-padded red-border-on-hover unselectable medium-spaced">
             Logout
         </div>
     )
