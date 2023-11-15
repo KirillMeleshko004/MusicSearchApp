@@ -3,6 +3,7 @@ import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import Logo from "./components/logo.jsx";
 import { OK, postData, Result } from "./components/services/accessAPI";
 import SessionManager from "./components/services/sessionManager.js";
+import TextInput from "./components/textInput.jsx";
 
 function Login()
 {
@@ -57,8 +58,20 @@ function Login()
                     <div id="form-container" className="fill-space vertical full-width xx-small-gaped">
                         <div id="signup-redirect" className="unselectable">New To Solar Sound? <NavLink className="highlight-on-hover" to={"/register"}>Sign Up</NavLink></div>
                         <div id="auth-form" className="full-width vertical fill-space medium-gaped">
-                            <div className="input-box x-large-padded red-border-on-hover"><input ref={usernameField} className="full-width full-height above-normal" type="text" autoComplete="off" placeholder="login"/></div>
-                            <div className="input-box x-large-padded red-border-on-hover"><input ref={passwordField} className="full-width full-height above-normal" type="password" autoComplete="off" placeholder="password"/></div>
+                            {/* Login field */}
+                            <TextInput ref={usernameField} 
+                                placeholder="login"
+                                addClasses="x-large-padded"
+                                font="above-normal"
+                                height="16%"/>
+                            {/* Password field */}
+                            <TextInput ref={passwordField} 
+                                placeholder="password"
+                                addClasses="x-large-padded"
+                                font="above-normal"
+                                height="16%"
+                                type="password"/>
+                                
                             <div ref={errorLine} className="error non-displayed">Incorrect username or password</div>
                             <button onClick={login} id="submit" className="panel bordered-block center-justified red-border-on-hover">
                                 <p className="above-normal">Log In</p>

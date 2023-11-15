@@ -3,6 +3,7 @@ import Logo from "./components/logo.jsx";
 import { useNavigate } from "react-router";
 import { OK, Result, postData } from "./components/services/accessAPI.js";
 import { NavLink } from "react-router-dom";
+import TextInput from "./components/textInput.jsx";
 
 function Register()
 {
@@ -64,24 +65,34 @@ function Register()
                     <div id="form-container" className="fill-space vertical full-width xx-small-gaped">
                         <div id="signup-redirect" className="unselectable">Already has account? <NavLink className="highlight-on-hover" to={"/login"}>Login</NavLink></div>
                         <div id="auth-form" className="full-width vertical fill-space medium-gaped">
-                            <div className="input-box x-large-padded red-border-on-hover">
-                                <input id="username" className="full-width full-height above-normal" 
-                                    type="text" autoComplete="off" 
-                                    name="login" placeholder="login"
-                                    ref={usernameField}/>
-                            </div>
-                            <div className="input-box x-large-padded red-border-on-hover">
-                                <input id="password" className="full-width full-height above-normal" 
-                                    type="text" autoComplete="off" 
-                                    name="password" placeholder="password"
-                                    ref={passwordField}/>
-                            </div>
-                            <div className="input-box x-large-padded red-border-on-hover">
-                                <input id="repeat-password" className="full-width full-height above-normal" 
-                                    type="text" autoComplete="off" 
-                                    name="repeat-password" placeholder="repeat password"
-                                    ref={repeatPasswordField}/>
-                            </div>  
+                            
+
+                            {/* Login field */}
+                            <TextInput ref={usernameField} 
+                                placeholder="login"
+                                addClasses="x-large-padded"
+                                font="above-normal"
+                                name="login"
+                                height="16%"/>
+
+                            {/* Password field */}
+                            <TextInput ref={passwordField} 
+                                placeholder="password"
+                                addClasses="x-large-padded"
+                                font="above-normal"
+                                height="16%"
+                                type="password"
+                                name="password"/>
+
+                            {/* Repeat password field */}
+                            <TextInput ref={repeatPasswordField} 
+                                placeholder="repeat password"
+                                addClasses="x-large-padded"
+                                font="above-normal"
+                                height="16%"
+                                type="password"
+                                name="repeat-password"/>
+
                             <div ref={errorLine} className="error non-displayed">
                                 </div>
                             <div ref={successLine} className="accept non-displayed">

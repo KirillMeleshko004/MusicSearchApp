@@ -20,6 +20,16 @@ $block-gap: 20px;
     border: values.$border-width solid colors.$border-color;
 }
 
+.no-border
+{
+    border: 0;
+}
+
+.no-border:hover
+{
+    border: 0;
+}
+
 .panel
 {
     @include rounded-block;

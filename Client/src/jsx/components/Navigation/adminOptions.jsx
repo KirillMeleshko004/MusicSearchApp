@@ -10,7 +10,7 @@ function AdminOptions()
             <NavOption icon="Search.svg" text="Explore" link={"/"}></NavOption>
             <NavOption icon="Profile.svg" text="Profile" link={"/profile"}></NavOption>
             <NavOption icon="Favourites.svg" text="My Library"></NavOption>
-            <NavOption icon="Upload.svg" text="Upload Music"></NavOption>
+            <NavOption icon="Upload.svg" text="Upload Music" link={"upload"}></NavOption>
             <NavOption icon="Subscriptions.svg" text="Subscriptions"></NavOption>
             <NavOption icon="AdminUser.svg" text="Users" link={"/users"}></NavOption>
             <NavOption icon="Approve.svg" text="Approve requests"></NavOption>

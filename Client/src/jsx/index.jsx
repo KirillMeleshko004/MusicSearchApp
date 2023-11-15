@@ -8,7 +8,8 @@ import Register from "./register.jsx";
 import DataBlock from "./components/dataBlock.jsx";
 import Profile from "./components/profile.jsx";
 import NotFound from "./notFound.jsx";
-import Users from "./components/Admin/users.jsx";
+import Upload from "./components/Music/upload.jsx";
+import Users from "./components/admin/users.jsx";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -23,6 +24,7 @@ root.render(
         <Route path="/" element={<App/>}>
           <Route index element={<DataBlock/>}/>
           <Route path="profile" element={<Profile/>}/>
+          <Route path="upload" element={<Upload/>}/>
           <Route path="users" element={<Users/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>

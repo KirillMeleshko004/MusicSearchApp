@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { OK, Result, changeData, getData } from "../services/accessAPI";
+import { OK, Result, changeData, getData } from "../services/accessAPI.js";
 import { useNavigate } from "react-router";
 import UsersList from "./usersList.jsx";
 import SessionManager from "../services/sessionManager.js";
@@ -23,7 +23,8 @@ function Users()
         }
         let result = new Result();
         result = await getData('/admin/users/find/' + searchField.current.value);
-        
+            
+        console.log(result.value);
         if(result.state === OK)
         {
             console.log(result.value.data);
@@ -39,7 +40,6 @@ function Users()
         }
         else
         {
-            
             setUsers(null);
         }
     }

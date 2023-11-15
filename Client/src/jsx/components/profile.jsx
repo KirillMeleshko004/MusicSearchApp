@@ -4,6 +4,7 @@ import StatusBadge from "./statusBadge.jsx";
 import { useLocation, useNavigate } from "react-router";
 import Logout from "./logout.jsx";
 import SessionManager from "./services/sessionManager.js";
+import BorderedTextInput from "./textInput.jsx";
 
 function Profile()
 {
@@ -149,14 +150,13 @@ function Profile()
                                 style={{marginLeft:"25px", fontWeight:"bold"}}>
                                     Displayed name:
                             </div>
-                            <div className="bordered-block medium-padded red-border-on-hover">
-                                <input type="text"
-                                    maxLength={24}
-                                    className="full-width normal"
-                                    defaultValue={profile?.displayedName}
-                                    placeholder="name..."
-                                    ref={displayedNameField}></input>
-                            </div>
+
+                            {/* Displayed name field */}
+                            <BorderedTextInput ref={displayedNameField} 
+                                placeholder="name..."
+                                font="normal"
+                                maxLength="24"
+                                defaultValue={profile?.displayedName}/>
                         </div>  
                     </div>
                     
