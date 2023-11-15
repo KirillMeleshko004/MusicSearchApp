@@ -13,7 +13,6 @@ namespace MusicSearchApp.Models
 
         public double Length { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public string? Lyrics { get; set; }
 
         public string? GenreName { get; set; }
         public Genre? Genre { get; set; }

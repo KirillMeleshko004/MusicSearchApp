@@ -4,17 +4,13 @@
 
 input[type=text], input[type=password], textarea
 {
-    outline: 0;
     resize: none;
-    
 }
 
 input:placeholder-shown, textarea:placeholder-shown{
     letter-spacing: values.$title-letter-spacing;
     user-select: none;
 }
-
-
 
 .input-box
 {

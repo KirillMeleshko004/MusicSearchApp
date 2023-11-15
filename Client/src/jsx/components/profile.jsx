@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router";
 import Logout from "./logout.jsx";
 import SessionManager from "./services/sessionManager.js";
 import BorderedTextInput from "./textInput.jsx";
+import ImageInput from "./imageInput.jsx";
 
 function Profile()
 {
@@ -16,8 +17,6 @@ function Profile()
     const descriptionField = useRef(null);
     const displayedNameField = useRef(null);
     const imageField = useRef(null);
-    const image = useRef(null);
-
     
     const location = useLocation();
     const navigate = useNavigate();
@@ -77,8 +76,7 @@ function Profile()
         let formData = new FormData();
         formData.append("displayedName", displayedNameField.current.value);
         formData.append("description", descriptionField.current.value);
-        if(selectedImage) formData.append("image", selectedImage, selectedImage.name);
-        
+        if(selectedImage) formData.append("image", selectedImage, selectedImage.name); 
         
         let result = new Result();
 
@@ -93,8 +91,6 @@ function Profile()
     function imageChanged(event)
     {
         setSelectedImage(event.target.files[0]);
-        let url = URL.createObjectURL(event.target.files[0]);
-        image.current.src = url;
     }
 
     if(failMessage != null)
@@ -123,28 +119,10 @@ function Profile()
                         <div className="largest unselectable">Profile</div>
                     </div>
                     <div className="vertical full-height space-between">
-                        <div className="vertical medium-gaped">
-                            <div id="profile-image-block"
-                                className="bordered-block horizontal center-aligned 
-                                    center-justified small-padded">
-                                <img src={profile?.profileImage}
-                                    className="rounded full-height full-width"
-                                    style={{objectFit:"cover"}}
-                                    ref={image}></img>
-                            </div>
-                            <label htmlFor="changeImage" id="change-img-btn" 
-                                className="bordered-block horizontal center-aligned center-justified
-                                red-border-on-hover normal large-spaced unselectable medium-padded">
-                                    Change Image
-                            </label>
+                        
+                        <ImageInput imgwidth={"340px"} onChange={imageChanged}
+                            ref={imageField} image={profile?.profileImage}/>
 
-                            <input id="changeImage"
-                                type="file"
-                                accept=".jpg, .jpeg, .png"
-                                className="non-displayed"
-                                ref={imageField}
-                                onChange={imageChanged}/>
-                        </div>
                         <div className="xx-small-gaped vertical">
                             <div className="above-normal unselectable"
                                 style={{marginLeft:"25px", fontWeight:"bold"}}>
@@ -174,8 +152,10 @@ function Profile()
                             <label htmlFor="description" 
                                 style={{fontWeight: "bolder"}}
                                 className="unselectable uppercase large-spaced sub-title">Description</label>
-                            <textarea style={{lineHeight: "1.55", textAlign: "justify"}}
-                                id="description" maxLength={550} className="full-height sub-title medium-spaced hidden-overflow"
+                            <textarea style={{lineHeight: "1.55", textAlign: "justify",
+                                 borderRadius:"0", overflowY:"auto"}}
+                                id="description" maxLength={550} 
+                                className="no-border no-outline gap-from-scroll panel full-height sub-title medium-spaced hidden-overflow"
                                 placeholder="Description..."
                                 defaultValue={profile?.description}
                                 ref={descriptionField}> 
