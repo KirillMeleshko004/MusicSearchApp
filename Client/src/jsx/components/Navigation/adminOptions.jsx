@@ -1,5 +1,7 @@
 import React from "react";
 import NavOption from "./navOption.jsx";
+import SessionManager from "../services/sessionManager.js";
+
 
 function AdminOptions()
 {
@@ -12,9 +14,16 @@ function AdminOptions()
             <NavOption icon="Favourites.svg" text="My Library"></NavOption>
             <NavOption icon="Upload.svg" text="Upload Music" link={"upload"}></NavOption>
             <NavOption icon="Subscriptions.svg" text="Subscriptions"></NavOption>
-            <NavOption icon="AdminUser.svg" text="Users" link={"/users"}></NavOption>
-            <NavOption icon="Approve.svg" text="Approve requests"></NavOption>
-            <NavOption icon="Actions.svg" text="Actions"></NavOption>
+            {SessionManager.getRole() == "User" && 
+                (
+                    <>
+                    <NavOption icon="AdminUser.svg" text="Users" link={"/users"}></NavOption>
+                    <NavOption icon="Approve.svg" text="Approve requests"></NavOption>
+                    <NavOption icon="Actions.svg" text="Actions"></NavOption>
+                    </>
+                )
+            }
+           
         </div>
     )
 }

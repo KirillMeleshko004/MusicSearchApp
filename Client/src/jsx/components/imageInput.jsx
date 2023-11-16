@@ -26,24 +26,15 @@ const ImageInput = forwardRef(function (props, ref)
                 </div>
                 
                 <div className="vertical center-aligned">
-                    {props?.required ? 
-                    (
-                        <input id="changeImage"
+                                
+                    <input id="changeImage"
                         type="file"
                         accept=".jpg, .jpeg, .png"
                         style={{width:"1px", height:"1px", opacity:"0"}}
                         ref={ref}
-                        required
+                        required={props?.required}
                         onChange={imageChanged}/>
-                    ) : (
-                        <input id="changeImage"
-                        type="file"
-                        accept=".jpg, .jpeg, .png"
-                        className="non-displayed"
-                        ref={ref}
-                        onChange={imageChanged}/>
-                    )}
-
+                    
                     <label htmlFor="changeImage" id="change-img-btn" 
                         className={"bordered-block horizontal center-aligned center-justified "+
                         "red-border-on-hover full-width large-spaced unselectable medium-padded " 

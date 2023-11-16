@@ -4,6 +4,8 @@ namespace MusicSearchApp.Models
     {
         public int AlbumId { get; set; }
         public string Title { get; set; } = null!;
+        public bool IsPublic { get; set; }
+        public bool Downloadable { get; set; }
 
         public int ArtistId { get; set; }
         public User Artist { get; set; } = null!;

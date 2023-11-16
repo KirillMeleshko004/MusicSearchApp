@@ -1,6 +1,5 @@
 import React from "react";
 import Logo from "../logo.jsx";
-import NavOption from "./navOption.jsx";
 import AdminOptions from "./adminOptions.jsx";
 
 function Navigation()

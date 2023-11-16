@@ -10,7 +10,7 @@ function User({user, changeStatus})
             medium-padded"
             style={{maxHeight:"100%", height:"150px"}}>
                 <img className="rounded" src={user?.profileImage} alt="cover image"
-                    style={{height:"100px"}}/>
+                    style={{height:"100px", width:"100px", objectFit:"cover"}}/>
                 <div className="unselectable title xx-small-gaped"
                     style={{width:"30%"}}>
                     <NavLink>{user?.userName}</NavLink>

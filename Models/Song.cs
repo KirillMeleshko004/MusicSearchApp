@@ -17,10 +17,8 @@ namespace MusicSearchApp.Models
         public string? GenreName { get; set; }
         public Genre? Genre { get; set; }
 
-        public bool Downloadable { get; set; }
         public int ListenCount { get; set; }
         public string FilePath { get; set; } = null!;
-        public bool IsPublic { get; set; }
 
         #region Navigation properties
 

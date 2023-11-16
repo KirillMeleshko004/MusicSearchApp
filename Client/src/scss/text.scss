@@ -47,6 +47,11 @@
     font-size: fonts.$subtitle;
 }
 
+.small
+{
+    font-size: fonts.$small;
+}
+
 .highlight-on-hover:hover
 {
     color: colors.$selected-color;

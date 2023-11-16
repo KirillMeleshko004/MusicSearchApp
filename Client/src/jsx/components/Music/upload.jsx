@@ -1,11 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BorderedTextInput from "../textInput.jsx";
 import ImageInput from "../imageInput.jsx";
 import TextInput from "../textInput.jsx";
+import AddSong from "./addSong.jsx";
 
 
 function Upload()
 {
+    const [songs, setSongs] = useState(null)
+
     const coverImage = useRef(null);
     const albumTitle = useRef(null);
 
@@ -48,16 +51,25 @@ function Upload()
                                 required={true} placeholder={"title..."}
                                 ref={albumTitle}></TextInput>
                         </div>
-                        <div>
-                            <input id="changeImage"
-                                type="file"
-                                accept=".mp3"
-                                required/>
-
+                        <div className="vertical bordered-block fill-space medium-padded medium-gaped"
+                            style={{height:"200px"}}>
+                            <ol className="scrollable-y">
+                                <li className="gap-from-scroll list-gap bordered-block 
+                                    red-border-on-hover">
+                                    <AddSong/>
+                                        
+                                </li>
+                            </ol>
+                            
+                        </div>
+                        <div className="bordered-block red-border-on-hover medium-padded full-width
+                            normal horizontal center-aligned center-justified unselectable">
+                            Add Song
                         </div>
                     </div>
+
+                    
                 </div>
-                
                 <input type="submit"
                     className="bordered-block horizontal center-aligned center-justified
                     red-border-on-hover sub-title large-spaced
