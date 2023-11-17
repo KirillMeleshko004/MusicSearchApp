@@ -3,11 +3,13 @@ import BorderedTextInput from "../textInput.jsx";
 import ImageInput from "../imageInput.jsx";
 import TextInput from "../textInput.jsx";
 import AddSong from "./addSong.jsx";
+import SongPopup from "./songPopup.jsx";
 
 
 function Upload()
 {
-    const [songs, setSongs] = useState(null)
+    const [songs, setSongs] = useState(null);
+    const [popupShown, setPopupShown] = useState(false)
 
     const coverImage = useRef(null);
     const albumTitle = useRef(null);
@@ -25,6 +27,8 @@ function Upload()
     
     return (
         <section className="panel large-padded large-gaped vertical fill-space full-height">
+            {popupShown && (<SongPopup close={()=>setPopupShown(!popupShown)}/>)}
+            
             <div className="largest horizontal center-justified unselectable">
                 Creating New Album
             </div>
@@ -36,7 +40,7 @@ function Upload()
                         <div className="sub-title horizontal unselectable x-medium-padded">
                             Album cover image
                         </div>
-                        <ImageInput imgwidth={"400px"} required={true} onChange={test} 
+                        <ImageInput imgwidth={"400px"} required={true} onChange={test} name={"coverImage"}
                             ref={coverImage}/>
                     </div>
 
@@ -63,7 +67,8 @@ function Upload()
                             
                         </div>
                         <div className="bordered-block red-border-on-hover medium-padded full-width
-                            normal horizontal center-aligned center-justified unselectable">
+                            normal horizontal center-aligned center-justified unselectable"
+                            onClick={()=>setPopupShown(!popupShown)}>
                             Add Song
                         </div>
                     </div>

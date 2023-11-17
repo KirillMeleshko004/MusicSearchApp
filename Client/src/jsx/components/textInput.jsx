@@ -6,7 +6,7 @@ const TextInput = forwardRef(
     {
         return (
             <input type={props?.type ?? "text"}
-                className={"full-width panel bordered-block " +
+                className={"full-width panel-color bordered-block " +
                     "medium-padded red-border-on-hover no-outline " + (props?.font ?? "normal") + " " +
                     props?.addClasses}
                 
@@ -16,7 +16,7 @@ const TextInput = forwardRef(
                 name={props?.name}
                 ref={ref}
                 autoComplete={props?.autoComplete ?? "off"}
-                style={{height: props?.height}}
+                style={{height: props?.height, width: props?.width}}
                 defaultValue={props?.defaultValue}
                 required={props?.required}>
             </input>

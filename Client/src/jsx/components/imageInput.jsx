@@ -33,7 +33,8 @@ const ImageInput = forwardRef(function (props, ref)
                         style={{width:"1px", height:"1px", opacity:"0"}}
                         ref={ref}
                         required={props?.required}
-                        onChange={imageChanged}/>
+                        onChange={imageChanged}
+                        name={props?.name}/>
                     
                     <label htmlFor="changeImage" id="change-img-btn" 
                         className={"bordered-block horizontal center-aligned center-justified "+
