@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
+using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Controllers
 {
@@ -47,6 +48,13 @@ namespace MusicSearchApp.Controllers
                 .TakeWhile(s => s.SongId <= last);
 
             return Json(songs);
+        }
+
+        [HttpPost]
+        [Route("{action}")]
+        public IActionResult Upload([FromForm]AlbumViewModel album)
+        {
+            return Ok(new {message = ModelState.IsValid});
         }
     }
 }

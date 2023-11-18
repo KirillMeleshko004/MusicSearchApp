@@ -13,9 +13,10 @@ const CheckBox = forwardRef(function (props, ref)
     
 
     return(
-        <label className="normal full-width horizontal center-aligned xx-small-gaped checkbox-container">
+        <label className="normal full-width horizontal center-aligned xx-small-gaped 
+            checkbox-container unselectable">
             <input onChange={checkHandler} ref={ref} type="checkbox" 
-                name="isPublic"
+                name={props?.name}
                 defaultChecked={checked}/>
 
             {checked ? (<BsCheckSquare className="custom-checkbox"/>) :

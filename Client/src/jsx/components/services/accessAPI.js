@@ -34,20 +34,21 @@ export async function postData(endPoint, data, useAuth = true) {
     return await sendRequest(serverApiURL + endPoint, payload);
 }
 
+export async function postFormData(endPoint, data, useAuth = true)
+{
+    let token=SessionManager.getToken();
 
-// export async function postLoginData(userData)
-// {
-//     let payload = {
-//         method: 'POST',
-//         headers: {   
-//             'Accept': 'application/json',
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(userData),
-//     }
+    let payload = {
+        method: 'POST',
+        headers: {   
+            'Accept': 'application/json',
+            'Authorization': (useAuth && 'Bearer ' + token)
+        },
+        body: data,
+    }
     
-//     return await sendRequest(serverApiURL + , payload);
-// }
+    return await sendRequest(serverApiURL + endPoint, payload);
+}
 
 export async function changeData(endPoint, formData)
 {

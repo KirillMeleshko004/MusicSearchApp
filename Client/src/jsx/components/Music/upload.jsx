@@ -5,11 +5,13 @@ import TextInput from "../textInput.jsx";
 import AddSong from "./addSong.jsx";
 import SongPopup from "./songPopup.jsx";
 import CheckBox from "../checkBox.jsx";
+import { OK, Result, postData, postFormData } from "../services/accessAPI.js";
+import SessionManager from "../services/sessionManager.js";
 
 
 function Upload()
 {
-    const [songs, setSongs] = useState(null);
+    const [songs, setSongs] = useState([]);
     const [popupShown, setPopupShown] = useState(false)
 
     const coverImage = useRef(null);
@@ -17,12 +19,57 @@ function Upload()
 
     function addSong(song)
     {
+        setSongs([...songs, song]);
+
         console.log(song);
     }
 
-    function submit(e)
+    function removeSong(song)
     {
+        console.log(song);
+        setSongs(songs.filter((s) => s != song));
+    }
+
+    async function submit(e)
+    {
+        const session = SessionManager.getSession();
         e.preventDefault();
+
+        const form = e.target;
+        let formData = new FormData();
+        
+        formData.append("artistId", session.userId);
+
+        console.log(formData.get("artistId"));
+        formData.append("albumTitle", form["albumTitle"].value);
+        console.log(formData.get("albumTitle"));
+
+        const coverImage =  form["coverImage"].files[0];
+
+        formData.append("coverImage", coverImage, coverImage.name);
+        console.log(formData.get("coverImage"));
+
+        formData.append("isPublic", form["publish"].checked);
+        console.log(formData.get("isPublic"));
+
+        formData.append("downloadable", form["downloadable"].checked);
+        console.log(formData.get("downloadable"));
+
+        songs.forEach(song =>
+        {  
+            formData.append("songNames", song.name);
+            formData.append("genres", song.genre);
+            formData.append("songFiles", song.file, song.file.name);
+        })
+
+        let result = new Result();
+
+        result = await postFormData("/song/upload/", formData);
+
+        if(result.state === OK)
+            alert(result.value.data.message);
+        else
+            alert(result.value.errorMessage);
     }
 
     
@@ -58,28 +105,38 @@ function Upload()
                             </div>
                             <TextInput font={"above-normal"} maxLength={30}
                                 required={true} placeholder={"title..."}
-                                ref={albumTitle}></TextInput>
+                                ref={albumTitle} name={"albumTitle"}></TextInput>
                         </div>
                         <div className="horizontal">
-                            <CheckBox label={"Visible to everyone"} checked={false}/>
-                            <CheckBox label={"Downloadable"} checked={false}/>
+                            <CheckBox name={"publish"} label={"Send publich request"} checked={false}/>
+                            <CheckBox name={"downloadable"} label={"Downloadable"} checked={false}/>
                         </div>
                         <div className="vertical bordered-block fill-space medium-padded medium-gaped"
                             style={{height:"200px"}}>
                             <ol className="scrollable-y fill-space">
-                                <li className="gap-from-scroll list-gap bordered-block 
-                                    red-border-on-hover">
-                                    <AddSong/>
-                                        
-                                </li>
+                                {songs.map((song, index) =>
+                                    (
+                                        <li key={index} className="gap-from-scroll list-gap 
+                                            bordered-block  medium-padded">
+                                                {console.log(song)}
+                                            <AddSong key={index} title={song?.name}
+                                                audio={URL.createObjectURL(song?.file)} 
+                                                onRemove={() => removeSong(song)}/>
+                                        </li>
+                                    )
+                                )}
+                                
                             </ol>
-                            
                         </div>
-                        <div className="bordered-block red-border-on-hover medium-padded full-width
-                            normal horizontal center-aligned center-justified unselectable"
-                            onClick={()=>setPopupShown(!popupShown)}>
-                            Add Song
-                        </div>
+                        {songs.length < 12 &&
+                        (
+                            <div className="bordered-block red-border-on-hover medium-padded full-width
+                                normal horizontal center-aligned center-justified unselectable"
+                                onClick={()=>setPopupShown(!popupShown)}>
+                                Add Song
+                            </div>
+                        )}
+                        
                     </div>
 
                     

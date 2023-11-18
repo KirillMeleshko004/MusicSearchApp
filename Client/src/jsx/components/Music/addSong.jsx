@@ -4,11 +4,20 @@ import TextInput from "../textInput.jsx";
 function AddSong(props)
 {
     return (
-        <div className="small medium-padded horizontal medium-gaped">
-            <div className="medium-padded small half-width">
-                    Song title
+        <div className="small horizontal medium-gaped center-aligned unselectable
+            full-width full-height">
+            <div className="medium-padded small half-width"
+                style={{width:"40%"}}>
+                {props?.title}
             </div>
-            <audio controls></audio>
+            <audio className="fill-space" controls
+                src={props?.audio}
+                controlsList="nodownload"></audio>
+            <div className="medium-padded small full-height bordered-block red-border-on-hover"
+                style={{pointerEvents:"all"}}
+                onClick={props?.onRemove}>
+                Remove
+            </div>
         </div>
     )
 
