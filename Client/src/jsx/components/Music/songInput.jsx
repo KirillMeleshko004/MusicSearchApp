@@ -3,24 +3,28 @@ import React, { forwardRef, useRef, useState } from 'react'
 const SongInput = forwardRef( function(props, ref) {
 
     const audio = useRef(null);
-    const input = useRef(null);
     const [file, setFile] = useState(null);
     
-    function onFileChanged()
+    function onFileChanged(e)
     {
-        if(!input.current.files[0]){ 
+        if(!e.target.files[0]){ 
+            setFile(null);
+            audio.current.src = null;
             return;
         }
-        let url =  URL.createObjectURL(input.current.files[0]);
-        setFile(input.current.files[0].name);
+
+        let url =  URL.createObjectURL(e.target.files[0]);
+        setFile(e.target.files[0].name);
         audio.current.src = url;
 
-        if(props.hasOwnProperty('onChange')) props?.onChange(input);
+        if(props.hasOwnProperty('onChange')) props?.onChange(e.target);
     }
     
     return (
 
-        <div className='vertical center-aligned medium-gaped medium-padded bordered-block fill-space'>
+        <div className={'vertical center-aligned medium-gaped medium-padded bordered-block fill-space ' +
+            (props?.emptyFileError && 'error-border')}
+            style={{transition:"1"}}>
             <div className='normal' style={{height:"30%"}}>
                 {file}
             </div>
@@ -39,7 +43,7 @@ const SongInput = forwardRef( function(props, ref) {
                 type='file'
                 accept=".mp3"
                 className='non-displayed'
-                ref={input}
+                ref={ref}
                 onChange={onFileChanged}/>
                 
         </div>

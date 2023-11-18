@@ -15,9 +15,9 @@ function Upload()
     const coverImage = useRef(null);
     const albumTitle = useRef(null);
 
-    function test()
+    function addSong(song)
     {
-        console.log("aaa");
+        console.log(song);
     }
 
     function submit(e)
@@ -28,7 +28,11 @@ function Upload()
     
     return (
         <section className="panel large-padded large-gaped vertical fill-space full-height">
-            {popupShown && (<SongPopup close={()=>setPopupShown(!popupShown)}/>)}
+
+            {/* Show popup */}
+            {popupShown && (<SongPopup close={()=>setPopupShown(!popupShown)}
+                 addSong={addSong}/>)
+            }
             
             <div className="largest horizontal center-justified unselectable">
                 Creating New Album
@@ -41,7 +45,7 @@ function Upload()
                         <div className="sub-title horizontal unselectable x-medium-padded">
                             Album cover image
                         </div>
-                        <ImageInput imgwidth={"400px"} required={true} onChange={test} name={"coverImage"}
+                        <ImageInput imgwidth={"400px"} required={true} name={"coverImage"}
                             ref={coverImage}/>
                     </div>
 

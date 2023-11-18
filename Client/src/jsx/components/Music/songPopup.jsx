@@ -1,9 +1,62 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import TextInput from "../textInput.jsx";
 import SongInput from "./songInput.jsx";
 
 function SongPopup(props)
 {
+    const [emptyFileError, setEmptyFileError] = useState(false);
+    const [emptyNameError, setEmptyNameError] = useState(false);
+    const [emptyGenreError, setEmptyGenreError] = useState(false);
+
+    const fileField = useRef(null);
+    const nameField = useRef(null);
+    const genreField = useRef(null);
+
+    function checkData()
+    {
+        let correct = true;
+
+        if(!fileField.current.files[0]) 
+        {
+            setEmptyError(setEmptyFileError);
+            correct = false;
+        }
+        if(nameField.current.value == "") 
+        {
+            setEmptyError(setEmptyNameError);
+            correct = false;
+        }
+        if(genreField.current.value == "") 
+        {
+            setEmptyError(setEmptyGenreError);
+            correct = false;
+        }
+
+        return correct;
+    }
+
+    function setEmptyError(handler)
+    {
+        handler(true);
+        setTimeout(() => handler(false), 1500);
+    }
+
+    function addSong()
+    {
+
+        if(!checkData()) return;    
+        
+        const song =
+        {
+            name: nameField.current.value,
+            genre: genreField.current.value,
+            file: fileField.current.files[0]
+        }
+
+        if(props.hasOwnProperty('addSong')) props?.addSong(song);
+        if(props.hasOwnProperty('close')) props?.close();
+    }
+
     return (
         <div style={{position: "absolute", top:"0px", left:"0px", height: "100vh", width: "100vw",
                      zIndex:"999", bottom:"0px", right:"0px"}}
@@ -30,22 +83,23 @@ function SongPopup(props)
                     <div className="horizontal full-width center-aligned">
                         <label className="above-normal"
                             style={{minWidth:"150px"}}>Song name:</label>
-                        <TextInput addClasses={"background"}/>
+                        <TextInput emptyError={emptyNameError} addClasses={"background"} ref={nameField}/>
                     </div>
                     
 
                     <div className="horizontal full-width center-aligned">
                         <label className="above-normal"
                             style={{minWidth:"150px"}}>Genre:</label>
-                        <TextInput addClasses={"background"}/>
+                        <TextInput emptyError={emptyGenreError} addClasses={"background"} ref={genreField}/>
                     </div>
 
-                    <SongInput/>
+                    <SongInput emptyFileError={emptyFileError} ref={fileField}/>
 
                     <div className="vertical " style={{justifyContent:"end",
                         marginBottom:"20px"}}>
                             <div className="bordered-block medium-padded red-border-on-hover
-                                normal horizontal center-aligned center-justified unselectable">
+                                normal horizontal center-aligned center-justified unselectable"
+                                onClick={addSong}>
                                 Add Song
                             </div>
                     </div>

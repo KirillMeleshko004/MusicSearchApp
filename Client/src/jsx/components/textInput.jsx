@@ -7,8 +7,11 @@ const TextInput = forwardRef(
         return (
             <input type={props?.type ?? "text"}
                 className={"full-width panel-color bordered-block " +
-                    "medium-padded red-border-on-hover no-outline " + (props?.font ?? "normal") + " " +
-                    props?.addClasses}
+                    "medium-padded red-border-on-hover no-outline " 
+                    + (props?.font ?? " normal ") + " " +
+                    props?.addClasses + " " +
+                    (props?.emptyError && " error-border ")
+                    }
                 
                 maxLength={props.maxLength}
                 placeholder={props.placeholder}
