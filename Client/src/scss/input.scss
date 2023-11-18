@@ -12,6 +12,42 @@ input:placeholder-shown, textarea:placeholder-shown{
     user-select: none;
 }
 
+input[type=checkbox]
+{
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.custom-checkbox{
+    align-items: center;
+    user-select: none;
+}
+.custom-checkbox{
+    content: '';
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.checkbox-container:hover{
+    .custom-checkbox
+    {
+        -webkit-filter: brightness(80%);
+        filter: brightness(80%);
+    }
+    -webkit-filter: brightness(90%);
+    filter: brightness(90%);
+}
+
+.checkbox-container:active{
+    .custom-checkbox
+    {
+        -webkit-filter: brightness(60%);
+        filter: brightness(60%);
+
+    }
+}
+
 .input-box
 {
     border: values.$border-width solid colors.$border-color;

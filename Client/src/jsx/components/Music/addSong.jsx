@@ -5,11 +5,10 @@ function AddSong(props)
 {
     return (
         <div className="small medium-padded horizontal medium-gaped">
-            <input type="text"
-                className="panel-color medium-padded no-outline no-border 
-                small"
-                placeholder="Song title"/>
-            <div className="bordered-block"></div>
+            <div className="medium-padded small half-width">
+                    Song title
+            </div>
+            <audio controls></audio>
         </div>
     )
 

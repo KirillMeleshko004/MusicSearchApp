@@ -44,7 +44,10 @@ module.exports = {
             {
                 //for svg files
                 test: /\.svg$/,
-                use: "file-loader",
+                use: {     
+                    loader: 'url-loader',
+                    loader: 'file-loader',
+                }
             },
             {
                 //for scss and sass files

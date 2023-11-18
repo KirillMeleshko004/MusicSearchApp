@@ -4,6 +4,7 @@ import ImageInput from "../imageInput.jsx";
 import TextInput from "../textInput.jsx";
 import AddSong from "./addSong.jsx";
 import SongPopup from "./songPopup.jsx";
+import CheckBox from "../checkBox.jsx";
 
 
 function Upload()
@@ -55,9 +56,13 @@ function Upload()
                                 required={true} placeholder={"title..."}
                                 ref={albumTitle}></TextInput>
                         </div>
+                        <div className="horizontal">
+                            <CheckBox label={"Visible to everyone"} checked={false}/>
+                            <CheckBox label={"Downloadable"} checked={false}/>
+                        </div>
                         <div className="vertical bordered-block fill-space medium-padded medium-gaped"
                             style={{height:"200px"}}>
-                            <ol className="scrollable-y">
+                            <ol className="scrollable-y fill-space">
                                 <li className="gap-from-scroll list-gap bordered-block 
                                     red-border-on-hover">
                                     <AddSong/>

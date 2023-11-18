@@ -11,7 +11,8 @@ function SongPopup(props)
             
             <div 
                 style={{position: "absolute", width:"100%", height:"100%", opacity: "0.8    ",
-                    backgroundColor:"black"}}>   
+                    backgroundColor:"black"}}
+                    onClick={()=>props?.close()}>   
             </div>
 
             <div className="background rounded vertical center-aligned medium-padded large-gaped"
@@ -21,7 +22,7 @@ function SongPopup(props)
                     <div className="largest">Adding new song</div>
                     <div className="small bordered-block small-padded red-border-on-hover"
                         style={{position:"absolute", right:"0"}}
-                        onClick={()=>{props?.close()}}>Close</div>
+                        onClick={()=>props?.close()}>Close</div>
                 </div>
             
                 <div className="vertical fill-space large-gaped "
