@@ -69,6 +69,7 @@ builder.Services.AddSingleton<IAuthTokenGenerator, JWTTokenGenerator>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddScoped<ProfileEditService>();
 builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<AlbumUploadingService>();
 
 #endregion
 

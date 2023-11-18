@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
+using MusicSearchApp.Services;
 using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Controllers
@@ -11,10 +12,12 @@ namespace MusicSearchApp.Controllers
     public class SongController : Controller
     {
         private readonly ApplicationContext _context;
+        private readonly AlbumUploadingService _uploadingService;
 
-        public SongController(ApplicationContext context)
+        public SongController(ApplicationContext context, AlbumUploadingService uploadingService)
         {
             _context = context;
+            _uploadingService = uploadingService;
         }
 
         [HttpGet]
@@ -52,8 +55,9 @@ namespace MusicSearchApp.Controllers
 
         [HttpPost]
         [Route("{action}")]
-        public IActionResult Upload([FromForm]AlbumViewModel album)
+        public async Task<IActionResult> Upload([FromForm]AlbumViewModel album)
         {
+            await _uploadingService.UploadAlbum(album);
             return Ok(new {message = ModelState.IsValid});
         }
     }
