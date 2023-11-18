@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-function Player()
+function Player(props)
 {
+
     return (
         <div id="player" className="center-justified horizontal">
-            <audio controls src="https://dl2.mp3party.net/online/10101028.mp3"></audio>
+            <audio controls src={props?.song}></audio>
         </div>
     )
 }

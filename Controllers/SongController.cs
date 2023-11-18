@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
@@ -11,46 +12,26 @@ namespace MusicSearchApp.Controllers
     [Route("api/{controller}")]
     public class SongController : Controller
     {
-        private readonly ApplicationContext _context;
         private readonly AlbumUploadingService _uploadingService;
+        private readonly  MusicPlayService _playService;
 
-        public SongController(ApplicationContext context, AlbumUploadingService uploadingService)
+        public SongController(AlbumUploadingService uploadingService, MusicPlayService playService)
         {
-            _context = context;
             _uploadingService = uploadingService;
+            _playService = playService;
         }
 
         [HttpGet]
-        [Route("{action}")]
-        public IActionResult Play(int SongId)
+        [Route("{action}/{id}")]
+        public async Task<IActionResult> Play(int id)
         {
-            Song? song = _context.Songs.Where(s => s.SongId == SongId).FirstOrDefault();
-
-            if(song == null) return NotFound();
-
-            string path = "../Music/" + song.FilePath;
-
-            byte[] bytes = Array.Empty<byte>();
-
-            using(FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                var br = new BinaryReader(fs);
-                long numBytes = new FileInfo(path).Length;
-                bytes = br.ReadBytes((int)numBytes);
-            }
-
-            return File(bytes, "audio/mpeg");
+            return File((await _playService.Play(id))!, "audio/mpeg");
         }
-
         [HttpGet]
-        [Route("{action}")]
-        public IActionResult Get(int first, int last)
+        [Route("{action}/{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            IEnumerable<Song> songs = _context.Songs
-                .SkipWhile(s => s.SongId != first)
-                .TakeWhile(s => s.SongId <= last);
-
-            return Json(songs);
+            return Ok(await _playService.GetSong(id));
         }
 
         [HttpPost]

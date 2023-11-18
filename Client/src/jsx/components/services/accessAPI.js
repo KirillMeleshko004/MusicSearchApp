@@ -66,6 +66,48 @@ export async function changeData(endPoint, formData)
     return await sendRequest(serverApiURL + endPoint, payload);
 }
 
+export async function getFile(endPoint, accept = "audio/mpeg")
+{
+    let token=SessionManager.getToken();
+
+    let payload = {
+        method: 'GET',
+        headers: {   
+            'Accept': accept,
+            'Authorization': 'Bearer ' + token
+        },
+    }
+    
+    const res = new Result();
+
+    try {
+
+        const response = await fetch(serverApiURL + endPoint, payload);
+
+        res.value.statusCode = response.status;
+        
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("audio/mpeg") !== -1)
+        {
+            res.value.data = await response.blob();
+        }
+
+        if (!response.ok) 
+        {
+            res.state = FAIL;
+            res.value.errorMessage = response.statusText;
+            throw Error(response.statusText);
+        }
+        
+        res.state = OK;
+        return res;
+
+    } catch (error) {
+
+        return res;
+    }
+}
+
 async function sendRequest(url, payload)
 {
     const res = new Result();
