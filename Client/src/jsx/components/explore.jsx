@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import Search from "./search.jsx";
 import SongMinInfo from "./Explore/songMinInfo.jsx";
 import { OK, Result, getData } from "./services/accessAPI.js";
+import { useOutletContext } from "react-router";
 
 function Explore()
 {
-    const [songs, setSongs] = useState(["a", "b", "c", "d", "e"]);
+    const [songs, setSongs] = useState([]);
     const [page, setPage] = useState(0);
+    const props = useOutletContext();
 
     useEffect(() => {
 
@@ -20,8 +22,8 @@ function Explore()
             if (!ignore) {
                 if(result.state === OK)
                 {
-                    console.log(result);
-                    // setSongs([...songs, result.value.data]);
+                    // console.log(result);
+                    setSongs([...songs, ...result.value.data]);
                 }
                 else
                 {
@@ -38,20 +40,32 @@ function Explore()
         };
     }, []);
 
+    function search(searchString)
+    {
+        console.log(searchString);
+    }
     
+    function sendRequest()
+    {
+        
+    }
+
     return (
         <section className="panel large-padded large-gaped vertical fill-space full-height">
-            <Search/>
+            <Search search={search}/>
             <article className="fill-space full-height">
                 <ul className="scrollable-y full-height"
                     style={{maxHeight:"87%"}}>
                     {songs.map((song, index) =>
                     {
                         return(
-                            <li key={index} className="gap-from-scroll list-gap 
+                            <li key={index} className="gap-from-scroll list-gap red-border-on-hover
                                 bordered-block  x-medium-padded"
-                                style={{height:"130px"}}>
-                                <SongMinInfo/>
+                                style={{height:"130px"}}
+                                onClick={() => props?.play(song)}
+                                >
+                                <SongMinInfo title={song.title} artist={song.artist.displayedName}
+                                    coverImage={song.album.coverImage}/>
                             </li>
                         )
                     })}

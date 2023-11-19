@@ -9,7 +9,7 @@ namespace MusicSearchApp.ViewModels
         public bool IsPublic { get; set; }
         public bool Downloadable { get; set; }
 
-        public ProfileViewModel Artist { get; set; } = null!;
+        public ArtistViewModel Artist { get; set; } = null!;
 
         public int SongCount { get; set; }
         public string CoverImage { get; set; } = null!;
@@ -23,7 +23,7 @@ namespace MusicSearchApp.ViewModels
             Title = album.Title;
             IsPublic = album.IsPublic;
             Downloadable = album.Downloadable;
-            Artist = new ProfileViewModel(album.Artist);
+            Artist = new ArtistViewModel(album.Artist);
             SongCount = album.SongCount;
             CoverImage = album.CoverImage;
         }

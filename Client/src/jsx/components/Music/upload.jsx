@@ -42,18 +42,14 @@ function Upload()
 
         console.log(formData.get("artistId"));
         formData.append("albumTitle", form["albumTitle"].value);
-        console.log(formData.get("albumTitle"));
 
         const coverImage =  form["coverImage"].files[0];
 
         formData.append("coverImage", coverImage, coverImage.name);
-        console.log(formData.get("coverImage"));
 
         formData.append("isPublic", form["publish"].checked);
-        console.log(formData.get("isPublic"));
 
         formData.append("downloadable", form["downloadable"].checked);
-        console.log(formData.get("downloadable"));
 
         songs.forEach(song =>
         {  

@@ -8,7 +8,7 @@ namespace MusicSearchApp.ViewModels
         public string Title { get; set; } = null!;
 
         public AlbumInfoViewModel Album { get; set; } = null!;
-        public ProfileViewModel Artist { get; set; } = null!;
+        public ArtistViewModel Artist { get; set; } = null!;
 
         public double Length { get; set; }
         public DateTime ReleaseDate { get; set; }
@@ -25,7 +25,7 @@ namespace MusicSearchApp.ViewModels
             SongId = song.SongId;
             Title = song.Title;
             Album = new AlbumInfoViewModel(song.Album);
-            Artist = new ProfileViewModel(song.Artist);
+            Artist = new ArtistViewModel(song.Artist);
             Length = song.Length;
             ReleaseDate = song.ReleaseDate;
             GenreName = song.GenreName;

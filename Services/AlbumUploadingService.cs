@@ -32,7 +32,6 @@ namespace MusicSearchApp.Services
                 Downloadable = albumInfo.Downloadable,
                 CoverImage = coverImageName!,
                 SongCount = albumInfo.SongFiles.Length,
-
             };
 
             await _context.Albums.AddAsync(album);
@@ -44,7 +43,7 @@ namespace MusicSearchApp.Services
 
             for(int i = 0; i < albumInfo.SongFiles.Length; i++)
             {
-                isSucceed = await CreateSong(albumInfo.SongNames[i], album.AlbumId, album.AlbumId, 
+                isSucceed = await CreateSong(albumInfo.SongNames[i], album.AlbumId, album.ArtistId, 
                     albumInfo.SongFiles[i], albumInfo.Genres[i]);
             }
 
