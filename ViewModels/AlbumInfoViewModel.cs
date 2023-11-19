@@ -1,3 +1,5 @@
+using MusicSearchApp.Models;
+
 namespace MusicSearchApp.ViewModels
 {
     public class AlbumInfoViewModel
@@ -14,5 +16,16 @@ namespace MusicSearchApp.ViewModels
 
 
         public ICollection<SongInfoViewModel> Songs { get; set; } = null!;
+
+        public AlbumInfoViewModel(Album album)
+        {
+            AlbumId = album.AlbumId;
+            Title = album.Title;
+            IsPublic = album.IsPublic;
+            Downloadable = album.Downloadable;
+            Artist = new ProfileViewModel(album.Artist);
+            SongCount = album.SongCount;
+            CoverImage = album.CoverImage;
+        }
     }
 }

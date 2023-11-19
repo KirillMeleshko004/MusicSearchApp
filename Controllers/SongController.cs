@@ -34,6 +34,13 @@ namespace MusicSearchApp.Controllers
             return Ok(await _playService.GetSong(id));
         }
 
+        [HttpGet]
+        [Route("{action}/{page}")]
+        public async Task<IActionResult> GetSongs(int page)
+        {
+            return Ok(_playService.GetSongs(page));
+        }
+
         [HttpPost]
         [Route("{action}")]
         public async Task<IActionResult> Upload([FromForm]AlbumViewModel album)

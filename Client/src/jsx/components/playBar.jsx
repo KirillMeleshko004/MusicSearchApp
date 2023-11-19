@@ -19,7 +19,7 @@ function PlayBar({trackInfo})
                 if(result.state === OK)
                 {
                     console.log(result.value.data);
-                    setSong(result.value.data);
+                    setSong(result);
                 }
             }
         }

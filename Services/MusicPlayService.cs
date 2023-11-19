@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
+using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Services
 {
@@ -34,6 +36,18 @@ namespace MusicSearchApp.Services
             }
 
             return bytes;
+        }
+
+        const int pageCount = 10;
+        public IEnumerable<SongInfoViewModel> GetSongs(int page)
+        {
+            return _context.Songs
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .OrderByDescending(s => s.ListenCount)
+                .Skip(page * pageCount)
+                .Take(pageCount)
+                .Select<Song, SongInfoViewModel>(s => new(s));
         }
     }
 }
