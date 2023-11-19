@@ -2,11 +2,11 @@ import React from "react";
 import Search from "./search.jsx";
 import Data from "./data.jsx";
 
-function DataBlock()
+function DataBlock(props)
 {
     return (
         <section className="panel large-padded medium-gaped vertical fill-space">
-            <Search></Search>
+            {props?.search && (<Search/>)}
             <Data title="News"></Data>
         </section>
     )

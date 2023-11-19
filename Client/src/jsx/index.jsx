@@ -10,6 +10,7 @@ import Profile from "./components/profile.jsx";
 import NotFound from "./notFound.jsx";
 import Upload from "./components/Music/upload.jsx";
 import Users from "./components/admin/users.jsx";
+import Explore from "./components/explore.jsx";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -23,6 +24,7 @@ root.render(
         <Route path="/register" element={<Register/>}/>
         <Route path="/" element={<App/>}>
           <Route index element={<DataBlock/>}/>
+          <Route path="explore" element={<Explore/>}/>
           <Route path="profile" element={<Profile/>}/>
           <Route path="upload" element={<Upload/>}/>
           <Route path="users" element={<Users/>}/>

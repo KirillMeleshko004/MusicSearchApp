@@ -3,6 +3,7 @@ import React from "react";
 function News({newsData})
 {
     return (
+        
         <div className="news bordered-block horizontal center-aligned full-height x-medium-padded medium-gaped">
                 <img className="cover-image rounded" src={newsData.imgSrc} alt="cover image"/>
                 <div className="track-info vertical unselectable normal xx-small-gaped">

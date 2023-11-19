@@ -86,6 +86,11 @@ $block-gap: 20px;
     @include x-padded(20px);
 }
 
+.y-medium-padded
+{
+    @include y-padded(20px);
+}
+
 .x-large-padded
 {
     @include x-padded(40px);
