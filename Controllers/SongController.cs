@@ -36,9 +36,11 @@ namespace MusicSearchApp.Controllers
 
         [HttpGet]
         [Route("{action}/{page}")]
-        public async Task<IActionResult> GetSongs(int page)
+        public async Task<IActionResult> GetSongs(int page, [FromQuery]string searchString)
         {
-            return Ok(_playService.GetSongs(page));
+            System.Console.WriteLine(searchString);
+
+            return Ok(_playService.GetSongs(page, searchString));
         }
 
         [HttpPost]

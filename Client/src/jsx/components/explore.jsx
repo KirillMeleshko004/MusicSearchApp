@@ -8,6 +8,7 @@ function Explore()
 {
     const [songs, setSongs] = useState([]);
     const [page, setPage] = useState(0);
+    const [searchString, setSearchString] = useState('');
     const props = useOutletContext();
 
     useEffect(() => {
@@ -22,7 +23,6 @@ function Explore()
             if (!ignore) {
                 if(result.state === OK)
                 {
-                    // console.log(result);
                     setSongs([...songs, ...result.value.data]);
                 }
                 else
@@ -40,14 +40,30 @@ function Explore()
         };
     }, []);
 
-    function search(searchString)
+    async function search(search)
     {
-        console.log(searchString);
+        setSearchString(search);
+        await sendRequest(search);
     }
     
-    function sendRequest()
+    async function sendRequest(search)
     {
-        
+        let result = new Result();
+            result = await getData('/song/getsongs/' + page +'?' +
+                new URLSearchParams(
+                    {
+                        searchString: search 
+                    }
+                ));
+            
+            if(result.state === OK)
+            {
+                setSongs([...result.value.data]);
+            }
+            else
+            {
+                alert(result.value.data.errorMessage);
+            }
     }
 
     return (

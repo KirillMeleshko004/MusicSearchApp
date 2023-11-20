@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.ViewModels;
@@ -39,15 +40,16 @@ namespace MusicSearchApp.Services
         }
 
         const int pageCount = 10;
-        public IEnumerable<SongInfoViewModel> GetSongs(int page)
+        public IEnumerable<SongInfoViewModel> GetSongs(int page, string? searchString = null)
         {
             return _context.Songs
-                .Include(s => s.Artist)
-                .Include(s => s.Album)
-                .OrderByDescending(s => s.ListenCount)
-                .Skip(page * pageCount)
-                .Take(pageCount)
-                .Select<Song, SongInfoViewModel>(s => new(s));
+                    .Where(s=> searchString.IsNullOrEmpty() || s.Title.Contains(searchString!))
+                    .Include(s => s.Artist)
+                    .Include(s => s.Album).ThenInclude(a => a.Artist)
+                    .OrderByDescending(s => s.ListenCount)
+                    .Skip(page * pageCount)
+                    .Take(pageCount)
+                    .Select<Song, SongInfoViewModel>(s => new(s));
         }
     }
 }
