@@ -85,13 +85,6 @@ namespace MusicSearchApp.Models.DB
                 .HasForeignKey(r => r.ArtistId)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
-            //User - News
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.News)
-                .WithOne(n => n.Publisher)
-                .HasForeignKey(n => n.PublisherId)
-                .OnDelete(DeleteBehavior.ClientCascade);
-
             #endregion
 
             #region Song FK

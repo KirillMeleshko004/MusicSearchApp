@@ -5,9 +5,6 @@ namespace MusicSearchApp.Models
         public int NewsId { get; set; }
         public DateTime Date { get; set; }
 
-        public int PublisherId { get; set; }
-        public User Publisher { get; set; } = null!;
-
         public string Content { get; set; } = null!;
 
         public int AlbumId { get; set; }

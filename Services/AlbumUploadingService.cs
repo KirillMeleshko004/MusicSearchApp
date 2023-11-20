@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
+using MusicSearchApp.Models.Static;
 using MusicSearchApp.ViewModels;
 using NAudio.Wave;
 
@@ -11,12 +12,15 @@ namespace MusicSearchApp.Services
         private readonly UserManager<User> _userManager;
         private readonly ApplicationContext _context;
         private readonly FileService _fileService;
+        private readonly RequestService _requestService;
 
-        public AlbumUploadingService(UserManager<User> userManager, ApplicationContext context, FileService fileService)
+        public AlbumUploadingService(UserManager<User> userManager, ApplicationContext context, 
+            FileService fileService, RequestService requestService)
         {
             _userManager = userManager;
             _context = context;
             _fileService = fileService;
+            _requestService = requestService;
         }
 
         public async Task<bool> UploadAlbum(AlbumViewModel albumInfo)
@@ -28,11 +32,12 @@ namespace MusicSearchApp.Services
             {
                 ArtistId = albumInfo.ArtistId,
                 Title = albumInfo.AlbumTitle,
-                IsPublic = albumInfo.IsPublic,
+                IsPublic = false,
                 Downloadable = albumInfo.Downloadable,
                 CoverImage = coverImageName!,
                 SongCount = albumInfo.SongFiles.Length,
             };
+
 
             await _context.Albums.AddAsync(album);
             await _context.SaveChangesAsync();
@@ -41,17 +46,16 @@ namespace MusicSearchApp.Services
                 .Where(a => a.Title == albumInfo.AlbumTitle && a.ArtistId == albumInfo.ArtistId)
                 .First();
 
+            if(albumInfo.IsPublic) isSucceed = await _requestService.CreatePublishRequest(album);
+
             for(int i = 0; i < albumInfo.SongFiles.Length; i++)
             {
                 isSucceed = await CreateSong(albumInfo.SongNames[i], album.AlbumId, album.ArtistId, 
                     albumInfo.SongFiles[i], albumInfo.Genres[i]);
             }
 
-
             return isSucceed;
         }
-
-
         private async Task<bool> CreateSong(string title, int albumId, int artistId, 
             IFormFile file, string genreName)
         {

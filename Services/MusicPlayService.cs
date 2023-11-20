@@ -46,6 +46,7 @@ namespace MusicSearchApp.Services
                     .Where(s=> searchString.IsNullOrEmpty() || s.Title.Contains(searchString!))
                     .Include(s => s.Artist)
                     .Include(s => s.Album).ThenInclude(a => a.Artist)
+                    .Where(s => s.Album.IsPublic)
                     .OrderByDescending(s => s.ListenCount)
                     .Skip(page * pageCount)
                     .Take(pageCount)

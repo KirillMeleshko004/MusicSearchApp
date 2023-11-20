@@ -71,6 +71,7 @@ builder.Services.AddScoped<ProfileEditService>();
 builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<AlbumUploadingService>();
 builder.Services.AddScoped<MusicPlayService>();
+builder.Services.AddScoped<RequestService>();
 
 #endregion
 
