@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models;
@@ -48,6 +49,16 @@ namespace MusicSearchApp.Controllers
         public async Task<IActionResult> Upload([FromForm]AlbumViewModel album)
         {
             await _uploadingService.UploadAlbum(album);
+            return Ok(new {message = ModelState.IsValid});
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("{action}/{id}")]
+        public async Task<IActionResult> GetSongs(int id)
+        {
+
+            //To implement
             return Ok(new {message = ModelState.IsValid});
         }
     }

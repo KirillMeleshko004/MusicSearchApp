@@ -6,11 +6,12 @@ import App from "./app.jsx";
 import Login from "./login.jsx";
 import Register from "./register.jsx";
 import DataBlock from "./components/dataBlock.jsx";
-import Profile from "./components/profile.jsx";
+import Profile from "./components/Profile/profile.jsx";
 import NotFound from "./notFound.jsx";
 import Upload from "./components/Music/upload.jsx";
 import Users from "./components/admin/users.jsx";
 import Explore from "./components/explore.jsx";
+import Library from "./components/Profile/library.jsx";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -28,6 +29,7 @@ root.render(
           <Route path="profile" element={<Profile/>}/>
           <Route path="upload" element={<Upload/>}/>
           <Route path="users" element={<Users/>}/>
+          <Route path="library" element={<Library/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>
       </Routes>

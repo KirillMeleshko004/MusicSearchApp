@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "../logo.jsx";
-import AdminOptions from "./adminOptions.jsx";
+import NavOptions from "./navOptions.jsx";
 
 function Navigation()
 {
@@ -8,7 +8,7 @@ function Navigation()
     return (
         <nav id="nav-panel" className="panel vertical center-aligned medium-padded">
             <Logo></Logo>
-            <AdminOptions></AdminOptions>
+            <NavOptions/>
         </nav>
     )
 }

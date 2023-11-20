@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { changeData, getData, Result, OK } from "./services/accessAPI";
-import StatusBadge from "./statusBadge.jsx";
+import { changeData, getData, Result, OK } from "../services/accessAPI.js";
+import StatusBadge from "../statusBadge.jsx";
 import { useLocation, useNavigate } from "react-router";
-import Logout from "./logout.jsx";
-import SessionManager from "./services/sessionManager.js";
-import BorderedTextInput from "./textInput.jsx";
-import ImageInput from "./imageInput.jsx";
+import Logout from "../logout.jsx";
+import SessionManager from "../services/sessionManager.js";
+import BorderedTextInput from "../textInput.jsx";
+import ImageInput from "../imageInput.jsx";
 
 function Profile()
 {
