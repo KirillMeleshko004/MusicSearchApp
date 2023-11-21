@@ -1,9 +1,50 @@
-import React, { useState } from "react";
-import SongMinInfo from "../Explore/songMinInfo.jsx";
+import React, { useEffect, useState } from "react";
+import LibSong from "./libSong.jsx";
+import { OK, Result, getData } from "../services/accessAPI.js";
+import SessionManager from "../services/sessionManager.js";
 
 function Library()
 {
-    const [songs, setSongs] = useState(['a']);
+    const [albums, setAlbums] = useState(['a']);
+
+    useEffect(() => {
+
+        const session = SessionManager.getSession();
+        
+        if(!session)
+        {
+            //To implement
+            console.log("Redirect to login")
+            return;
+        }
+
+        let ignore = false;
+        
+        async function startFetching() {
+            
+            let result = new Result();
+            result = await getData('/song/getlibrary/' + session.userId);
+            
+            if (!ignore) {
+                if(result.state === OK)
+                {
+                    console.log(result.value.data);
+                    setAlbums([...result.value.data]);
+                }
+                else
+                {
+                    alert(result.value.data.errorMessage);
+                }
+            }
+        }
+
+        startFetching();
+
+        return ()=>
+        {
+            ignore = true;
+        };
+    }, []);
 
     return(
         <section className="panel large-padded large-gaped vertical fill-space full-height">
@@ -11,16 +52,16 @@ function Library()
                 <h1 className="horizontal title">My Library</h1>
                 <ul className="scrollable-y full-height "
                     style={{maxHeight:"97%"}}>
-                    {songs.map((song, index) =>
+                    {albums.map((album, index) =>
                     {
                         return(
                             <li key={index} className="gap-from-scroll list-gap red-border-on-hover
                                 bordered-block  x-medium-padded"
                                 style={{height:"130px"}}
-                                onClick={() => props?.play(song)}
                                 >
-                                <SongMinInfo title={song?.title} artist={song?.artist?.displayedName}
-                                    coverImage={song?.album?.coverImage}/>
+                                <LibSong title={album?.title ?? "Title"} 
+                                    artist={album?.artist?.displayedName ?? "Artist"}
+                                    coverImage={album?.coverImage}/>
                             </li>
                         )
                     })}

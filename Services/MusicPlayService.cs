@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Models;
@@ -9,9 +10,11 @@ namespace MusicSearchApp.Services
     public class MusicPlayService
     {
         private readonly ApplicationContext _context;
-        public MusicPlayService(ApplicationContext context)
+        private readonly UserManager<User> _userManager;
+        public MusicPlayService(ApplicationContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<Song> GetSong(int id)
@@ -51,6 +54,21 @@ namespace MusicSearchApp.Services
                     .Skip(page * pageCount)
                     .Take(pageCount)
                     .Select<Song, SongInfoViewModel>(s => new(s));
+        }
+
+        
+
+        public async Task<IEnumerable<AlbumInfoViewModel>?> GetLibrary(int userId)
+        {
+            if((await _userManager.FindByIdAsync(userId.ToString())) == null)
+                return null;
+
+            return _context.Albums
+                .Where(a => a.ArtistId == userId)
+                .Include(a => a.Artist)
+                .Include(a => a.Request)
+                .OrderBy(a => a.Request!.Date)
+                .Select<Album, AlbumInfoViewModel>(a => new(a));
         }
     }
 }

@@ -1,4 +1,5 @@
 using MusicSearchApp.Models;
+using MusicSearchApp.Models.Static;
 
 namespace MusicSearchApp.ViewModels
 {
@@ -13,6 +14,7 @@ namespace MusicSearchApp.ViewModels
 
         public int SongCount { get; set; }
         public string CoverImage { get; set; } = null!;
+        public string? RequestStatus { get; set; }
 
 
         public ICollection<SongInfoViewModel> Songs { get; set; } = null!;
@@ -26,6 +28,8 @@ namespace MusicSearchApp.ViewModels
             Artist = new ArtistViewModel(album.Artist);
             SongCount = album.SongCount;
             CoverImage = album.CoverImage;
+            RequestStatus = album.Request?.Status.Status;
         }
+
     }
 }

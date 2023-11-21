@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MusicSearchApp.Models.Static;
 using MusicSearchApp.Services;
 using MusicSearchApp.ViewModels;
+using NAudio.CoreAudioApi;
 
 namespace MusicSearchApp.Controllers
 {

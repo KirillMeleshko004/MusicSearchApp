@@ -52,14 +52,15 @@ namespace MusicSearchApp.Controllers
             return Ok(new {message = ModelState.IsValid});
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         [Route("{action}/{id}")]
-        public async Task<IActionResult> GetSongs(int id)
+        public async Task<IActionResult> GetLibrary(int id)
         {
+            IEnumerable<AlbumInfoViewModel>? library = await _playService.GetLibrary(id);
+            if(library == null) return BadRequest();
 
-            //To implement
-            return Ok(new {message = ModelState.IsValid});
+            return Ok(library);
         }
     }
 }
