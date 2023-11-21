@@ -8,12 +8,15 @@ import Register from "./register.jsx";
 import DataBlock from "./components/dataBlock.jsx";
 import Profile from "./components/Profile/profile.jsx";
 import NotFound from "./notFound.jsx";
-import Upload from "./components/Music/upload.jsx";
+import Upload from "./components/Music/Upload.jsx";
 import Users from "./components/admin/users.jsx";
 import Explore from "./components/explore.jsx";
 import Library from "./components/Profile/library.jsx";
+import AlbumView from "./components/Music/albumView.jsx";
+import { createBrowserHistory } from "history";
 
 const root = createRoot(document.getElementById("root"));
+const hist = createBrowserHistory();
 
 
 
@@ -30,6 +33,7 @@ root.render(
           <Route path="upload" element={<Upload/>}/>
           <Route path="users" element={<Users/>}/>
           <Route path="library" element={<Library/>}/>
+          <Route path="album/:id" element={<AlbumView/>}/>
         </Route>
         <Route path="*" element={<NotFound/>}/>
       </Routes>

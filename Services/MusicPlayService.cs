@@ -17,29 +17,12 @@ namespace MusicSearchApp.Services
             _userManager = userManager;
         }
 
-        public async Task<Song> GetSong(int id)
+        public SongInfoViewModel? GetSong(int id)
         {
-            return (await _context.Songs.FindAsync(id))!;
-        }
-
-        public async Task<byte[]?> Play(int id)
-        {
-            Song? song = await GetSong(id);
-
-            if(song == null) return null;
-
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "Data", song.FilePath);
-
-            byte[] bytes = Array.Empty<byte>();
-
-            using(FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                var br = new BinaryReader(fs);
-                long numBytes = new FileInfo(path).Length;
-                bytes = br.ReadBytes((int)numBytes);
-            }
-
-            return bytes;
+            return _context.Songs.Where(s => s.SongId == id)
+                .Include(s => s.Artist)
+                .Include(s => s.Album).ThenInclude(a => a.Artist)
+                .Select<Song, SongInfoViewModel>(s => new(s)).FirstOrDefault();
         }
 
         const int pageCount = 10;
@@ -54,6 +37,24 @@ namespace MusicSearchApp.Services
                     .Skip(page * pageCount)
                     .Take(pageCount)
                     .Select<Song, SongInfoViewModel>(s => new(s));
+        }
+
+        public AlbumInfoViewModel? GetAlbum(int albumId)
+        {
+            Album? album = _context.Albums
+                .Where(a => a.AlbumId == albumId)
+                .Include(a => a.Artist)
+                .Include(a => a.Songs)
+                .FirstOrDefault();
+
+            if(album == null) return null;
+
+            AlbumInfoViewModel albumViewModel = new(album)
+            {
+                Songs = album.Songs.Select<Song, SongInfoViewModel>(s => new(s))
+            };
+
+            return albumViewModel;
         }
 
         

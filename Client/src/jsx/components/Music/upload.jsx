@@ -60,7 +60,7 @@ function Upload()
 
         let result = new Result();
 
-        result = await postFormData("/song/upload/", formData);
+        result = await postFormData("/album/upload/", formData);
 
         if(result.state === OK)
             alert(result.value.data.message);

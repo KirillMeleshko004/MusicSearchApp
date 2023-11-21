@@ -17,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Receiving connection string from appsettings.json
 string connection = builder.Configuration.GetConnectionString("DevConnection")!;
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
-  
+
 //Configure Identity Services
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
     {
@@ -36,7 +36,7 @@ builder.Services.AddAuthentication(options =>
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    .AddJwtBearer(options => 
+    .AddJwtBearer(options =>
     {
         options.SaveToken = true;
         options.RequireHttpsMetadata = false;
@@ -46,13 +46,13 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = true,
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
-            
+
             ValidIssuer = builder.Configuration["jwt:Issuer"],
             ValidAudience = builder.Configuration["jwt:Audience"],
             IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:Key"]!)),
         };
     });
-    
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllersWithViews();
@@ -79,6 +79,13 @@ builder.Services.AddScoped<RequestService>();
 
 var app = builder.Build();
 
+// app.Use(async (context, next) =>
+// {
+//     System.Console.WriteLine(context.Request.Path);
+//     System.Console.WriteLine(context.Request.PathBase);
+//     await next();
+// });
+
 #region Configure application
 
 app.UseAuthentication();
@@ -87,19 +94,19 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-
-
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(
         Directory.GetCurrentDirectory(),
         "Data")),
+    RequestPath = new PathString("/*")
 });
+
 app.UseSpaStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = context =>
-    {               
-        //disable index.html caching    
+    {
+        //disable index.html caching
         if (context.File.Name == "index.html" ) {
             context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
             context.Context.Response.Headers.Add("Expires", "-1");
@@ -119,7 +126,7 @@ app.UseWhen(
     {
         var path = ctx.Request.Path;
         return !Array.Exists(excludedPaths, excluded => path.StartsWithSegments(excluded, StringComparison.OrdinalIgnoreCase));
-    }, 
+    },
     //then use spa services
     then =>
     {
@@ -129,7 +136,7 @@ app.UseWhen(
             then.UseSpaStaticFiles();
         }
 
-        
+
         then.UseSpa(cfg =>
         {
             cfg.Options.SourcePath = "Client";
@@ -143,7 +150,7 @@ app.UseWhen(
                 cfg.Options.DefaultPageStaticFileOptions = new StaticFileOptions()
                 {
                     OnPrepareResponse = context =>
-                    {                   
+                    {
                         if (context.File.Name == "index.html" ) {
                             context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
                             context.Context.Response.Headers.Add("Expires", "-1");

@@ -10,14 +10,14 @@ namespace MusicSearchApp.ViewModels
         public bool IsPublic { get; set; }
         public bool Downloadable { get; set; }
 
-        public ArtistViewModel Artist { get; set; } = null!;
+        public ArtistViewModel? Artist { get; set; }
 
         public int SongCount { get; set; }
         public string CoverImage { get; set; } = null!;
         public string? RequestStatus { get; set; }
 
 
-        public ICollection<SongInfoViewModel> Songs { get; set; } = null!;
+        public IEnumerable<SongInfoViewModel> Songs { get; set; } = null!;
 
         public AlbumInfoViewModel(Album album)
         {
@@ -25,7 +25,8 @@ namespace MusicSearchApp.ViewModels
             Title = album.Title;
             IsPublic = album.IsPublic;
             Downloadable = album.Downloadable;
-            Artist = new ArtistViewModel(album.Artist);
+            if(album.Artist != null)
+                Artist = new ArtistViewModel(album.Artist);
             SongCount = album.SongCount;
             CoverImage = album.CoverImage;
             RequestStatus = album.Request?.Status.Status;

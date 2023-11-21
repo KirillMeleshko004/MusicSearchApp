@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import LibSong from "./libSong.jsx";
 import { OK, Result, getData } from "../services/accessAPI.js";
 import SessionManager from "../services/sessionManager.js";
+import { useNavigate } from "react-router";
 
 function Library()
 {
     const [albums, setAlbums] = useState(['a']);
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -54,11 +56,13 @@ function Library()
                     style={{maxHeight:"97%"}}>
                     {albums.map((album, index) =>
                     {
+                        const id = album?.albumId;
                         return(
                             <li key={index} className="gap-from-scroll list-gap red-border-on-hover
                                 bordered-block  x-medium-padded"
                                 style={{height:"130px"}}
-                                >
+                                
+                                onClick={async () => navigate(`../album/${id}`)}>
                                 <LibSong title={album?.title ?? "Title"} 
                                     artist={album?.artist?.displayedName ?? "Artist"}
                                     coverImage={album?.coverImage}/>

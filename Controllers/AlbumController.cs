@@ -11,39 +11,36 @@ namespace MusicSearchApp.Controllers
 
     
     [Route("api/{controller}")]
-    public class SongController : Controller
+    public class AlbumController : Controller
     {
         private readonly AlbumUploadingService _uploadingService;
         private readonly  MusicPlayService _playService;
 
-        public SongController(AlbumUploadingService uploadingService, MusicPlayService playService)
+        public AlbumController(AlbumUploadingService uploadingService, MusicPlayService playService)
         {
             _uploadingService = uploadingService;
             _playService = playService;
         }
 
-
+        [HttpPost]
+        [Authorize]
+        [Route("{action}")]
+        public async Task<IActionResult> Upload([FromForm]AlbumViewModel album)
+        {
+            await _uploadingService.UploadAlbum(album);
+            return Ok(new {message = ModelState.IsValid});
+        }
+        
         [HttpGet]
         [Route("{action}/{id}")]
         public IActionResult Get(int id)
         {
-            
-            SongInfoViewModel? albumInfo = _playService.GetSong(id);
+            AlbumInfoViewModel? albumInfo = _playService.GetAlbum(id);
 
             if(albumInfo == null) return BadRequest();
 
             return Ok(albumInfo);
         }
-
-        [HttpGet]
-        [Route("{action}/{page}")]
-        public IActionResult GetSongs(int page, [FromQuery]string searchString)
-        {
-            System.Console.WriteLine(searchString);
-
-            return Ok(_playService.GetSongs(page, searchString));
-        }
-
 
         [HttpGet]
         [Authorize]
