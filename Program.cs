@@ -99,7 +99,6 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(
         Directory.GetCurrentDirectory(),
         "Data")),
-    RequestPath = new PathString("/*")
 });
 
 app.UseSpaStaticFiles(new StaticFileOptions

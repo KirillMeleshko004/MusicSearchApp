@@ -5,7 +5,7 @@ import PlayBar from "./components/playBar.jsx";
 
 function App()
 {
-    const [song, setSong] = useState(null)
+    const [song, setSong] = useState(null);
     function play(song)
     {
         console.log(song)

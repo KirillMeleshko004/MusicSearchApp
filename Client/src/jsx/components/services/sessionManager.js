@@ -16,6 +16,7 @@ const SessionManager =
     
     getSession()
     {
+        if(!sessionStorage.getItem('jwt')) return null;
         return {
             token: sessionStorage.getItem('jwt'),
             userId: sessionStorage.getItem('userId'),
@@ -41,6 +42,12 @@ const SessionManager =
     getRole()
     {
         return sessionStorage.getItem('role');
+    },
+
+    redirectToLogin(navigate)
+    {
+        const currentPath = location.pathname;
+        navigate('/login', { state: { from: currentPath } });
     }
 }
 
