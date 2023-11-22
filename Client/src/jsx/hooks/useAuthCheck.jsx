@@ -17,7 +17,6 @@ export function useAuthCheck()
             SessionManager.redirectToLogin(navigate);
             redirected.current = true;
         }
-
         setSession(session);
 
     }, []);

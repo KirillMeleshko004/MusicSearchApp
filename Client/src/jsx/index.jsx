@@ -1,4 +1,4 @@
-import React, { StrictMode } from "react";
+import React, { StrictMode, createContext } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import "../scss/index.scss";
@@ -13,10 +13,8 @@ import Users from "./components/admin/users.jsx";
 import Explore from "./components/explore.jsx";
 import Library from "./components/Profile/library.jsx";
 import AlbumView from "./components/Music/albumView.jsx";
-import { createBrowserHistory } from "history";
 
 const root = createRoot(document.getElementById("root"));
-const hist = createBrowserHistory();
 
 
 
@@ -34,10 +32,10 @@ root.render(
           <Route path="users" element={<Users/>}/>
           <Route path="library" element={<Library/>}/>
           <Route path="album/:id" element={<AlbumView/>}/>
-        </Route>
+        </Route> 
         <Route path="*" element={<NotFound/>}/>
       </Routes>
 
-    </BrowserRouter>
+    </BrowserRouter>  
   </StrictMode>
 );

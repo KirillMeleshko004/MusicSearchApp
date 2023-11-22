@@ -3,6 +3,7 @@ import Search from "./search.jsx";
 import SongMinInfo from "./Explore/songMinInfo.jsx";
 import { OK, Result, getData } from "./services/accessAPI.js";
 import { useOutletContext } from "react-router";
+import FetchManager from "./services/fetchManager.js";
 
 function Explore()
 {
@@ -13,57 +14,23 @@ function Explore()
 
     useEffect(() => {
 
-        let ignore = false;
-        
-        async function startFetching() {
-            
-            let result = new Result();
-            result = await getData('/song/getsongs/' + page);
-            
-            if (!ignore) {
-                if(result.state === OK)
-                {
-                    setSongs([...songs, ...result.value.data]);
-                }
-                else
-                {
-                    alert(result.value.data.errorMessage);
-                }
-            }
-        }
+        FetchManager.getData({
+            path: ('/song/getsongs/' + page +'?' + new URLSearchParams({searchString: searchString })),
+            onSuccess: (data) => setSongs([...data]),
+            onFail: (data) => alert(data.errorMessage)
 
-        startFetching();
+        })
 
         return ()=>
         {
-            ignore = true;
+            FetchManager.ignore = true;
         };
-    }, []);
+        
+    }, [searchString]);
 
     async function search(search)
     {
         setSearchString(search);
-        await sendRequest(search);
-    }
-    
-    async function sendRequest(search)
-    {
-        let result = new Result();
-            result = await getData('/song/getsongs/' + page +'?' +
-                new URLSearchParams(
-                    {
-                        searchString: search 
-                    }
-                ));
-            
-            if(result.state === OK)
-            {
-                setSongs([...result.value.data]);
-            }
-            else
-            {
-                alert(result.value.data.errorMessage);
-            }
     }
 
     return (

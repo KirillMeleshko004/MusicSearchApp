@@ -13,13 +13,16 @@ function App()
     }
     // getData().then(res => console.log(res));
     return (
+        
         <div id="app" className="background medium-padded medium-gaped vertical">
             <div id="main" className="background medium-gaped horizontal fill-space">
                 <Navigation></Navigation>
+
                 <Outlet context={{play}}/>
             </div>
             <PlayBar trackInfo={song}></PlayBar>
         </div>
+        
     );
 }
 
