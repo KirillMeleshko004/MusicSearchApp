@@ -25,7 +25,7 @@ function Login()
 
         if(result.state == OK)
         {
-            SessionManager.setSession(result.value.data);
+            SessionManager.setSession(result.value);
 
             const state = location.state;
             if (state?.from) {

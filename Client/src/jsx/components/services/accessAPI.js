@@ -121,7 +121,12 @@ async function sendRequest(url, payload)
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1)
         {
-            res.value.data = await response.json();
+            const jsonRes = await response.json();
+
+            Object.keys(jsonRes).forEach(key => {
+                res.value[key] = jsonRes[key];
+            });
+            
         }
 
         if (!response.ok) 
@@ -155,7 +160,6 @@ class Value
 {
     constructor(){
         this.statusCode,
-        this.data,
         this.errorMessage;
     }
 }

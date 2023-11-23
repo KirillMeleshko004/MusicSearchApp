@@ -9,9 +9,9 @@ const FetchManager =
     {
         this.ignore = false;
 
-        let result = new Result();
+        // let result = new Result();
 
-        result = await getData(path);
+        let result = await getData(path);
         
         if (!this.ignore) {
             if(result.state === OK)
