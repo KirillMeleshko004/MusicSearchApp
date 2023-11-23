@@ -7,14 +7,9 @@ import SessionManager from "../services/sessionManager.js";
 import BorderedTextInput from "../textInput.jsx";
 import ImageInput from "../imageInput.jsx";
 import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
-import FetchManager from "../services/fetchManager.js";
 
 function Profile()
 {
-    const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [failMessage, setFailMessage] = useState(null);
-
     const [data, setData] = useState({loading: true, redirectToLogin: false});
 
     const [selectedImage, setSelectedImage] = useState(null);
@@ -41,7 +36,7 @@ function Profile()
                 (function set({profile, errorMessage, statusCode}){
                     setData({loading: false, profile: profile,
                         redirectToLogin: statusCode == 401, failMessage: errorMessage});
-                }(result.value));
+                }(result));
             }
         }
 
@@ -66,7 +61,7 @@ function Profile()
             if(message) alert(message);
             if(errorMessage) alert(errorMessage);
 
-        }(result.value));
+        }(result));
     }
 
     function imageChanged(event)

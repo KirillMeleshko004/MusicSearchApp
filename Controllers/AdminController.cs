@@ -4,6 +4,7 @@ using MusicSearchApp.Models.DB;
 using Microsoft.AspNetCore.Identity;
 using MusicSearchApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MusicSearchApp.Controllers
 {
@@ -22,15 +23,15 @@ namespace MusicSearchApp.Controllers
 
 
         [HttpGet]
-        [Route("users/{action}/{username}")]
+        [Route("users/{action}")]
         [Authorize]
-        public IActionResult Find(string username)
+        public IActionResult Find([FromQuery]string username)
         {
             IEnumerable<ProfileViewModel> users = _userManager.Users
-                .Where(u => u.UserName!.ToLower().Contains(username.ToLower()))
+                .Where(u => username.IsNullOrEmpty() || u.UserName!.ToLower().Contains(username.ToLower()))
                 .Select(u => new ProfileViewModel(u));
 
-            return Ok(users);
+            return Ok(new{users});
         }
 
         [HttpGet]

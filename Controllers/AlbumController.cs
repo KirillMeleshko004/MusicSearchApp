@@ -39,7 +39,7 @@ namespace MusicSearchApp.Controllers
 
             if(albumInfo == null) return BadRequest();
 
-            return Ok(albumInfo);
+            return Ok(new{album = albumInfo});
         }
 
         [HttpGet]

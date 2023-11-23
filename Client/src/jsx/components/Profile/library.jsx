@@ -3,50 +3,45 @@ import LibSong from "./libSong.jsx";
 import { OK, Result, getData } from "../services/accessAPI.js";
 import SessionManager from "../services/sessionManager.js";
 import { useNavigate } from "react-router";
+import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
 
 function Library()
 {
-    const [albums, setAlbums] = useState(['a']);
     const navigate = useNavigate();
+
+    const [data, setData] = useState({loading: true, redirectToLogin: false});
+
+    const session = useAuthCheck();
 
     useEffect(() => {
 
-        const session = SessionManager.getSession();
-        
-        if(!session)
-        {
-            //To implement
-            console.log("Redirect to login")
-            return;
-        }
+        if(!session) return;
 
         let ignore = false;
-        
-        async function startFetching() {
-            
-            let result = new Result();
-            result = await getData('/song/getlibrary/' + session.userId);
-            
+
+        async function fetchData()
+        {
+            let result = await getData('/song/getlibrary/' + session.userId);
             if (!ignore) {
-                if(result.state === OK)
-                {
-                    console.log(result.value.data);
-                    setAlbums([...result.value.data]);
-                }
-                else
-                {
-                    alert(result.value.data.errorMessage);
-                }
+                (function set({errorMessage, statusCode, library}){
+                    setData({loading: false, library: [...library],
+                        redirectToLogin: statusCode == 401, failMessage: errorMessage});
+                }(result));
             }
         }
 
-        startFetching();
+        fetchData();
 
         return ()=>
         {
             ignore = true;
         };
-    }, []);
+    }, [session]);
+
+    useEffect(() => {
+        if(!data.redirectToLogin) return;
+        SessionManager.redirectToLogin(navigate);
+    }, [data])
 
     return(
         <section className="panel large-padded large-gaped vertical fill-space full-height">
@@ -54,7 +49,7 @@ function Library()
                 <h1 className="horizontal title">My Library</h1>
                 <ul className="scrollable-y full-height "
                     style={{maxHeight:"97%"}}>
-                    {albums.map((album, index) =>
+                    {data.library?.map((album, index) =>
                     {
                         const id = album?.albumId;
                         return(

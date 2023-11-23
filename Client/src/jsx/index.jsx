@@ -8,7 +8,7 @@ import Register from "./register.jsx";
 import DataBlock from "./components/dataBlock.jsx";
 import Profile from "./components/Profile/profile.jsx";
 import NotFound from "./notFound.jsx";
-import Upload from "./components/Music/Upload.jsx";
+import Upload from "./components/Music/upload.jsx";
 import Users from "./components/admin/users.jsx";
 import Explore from "./components/explore.jsx";
 import Library from "./components/Profile/library.jsx";

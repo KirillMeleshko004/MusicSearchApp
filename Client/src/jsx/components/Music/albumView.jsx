@@ -6,43 +6,33 @@ function AlbumView()
 {
     const params = useParams();
 
-    const [album, setAlbum] = useState(null);
+    const [data, setData] = useState({loading: true, redirectToLogin: false});
 
     useEffect(() => {
 
         let ignore = false;
-        
-        async function startFetching() {
-            
-            let result = new Result();
-            result = await getData('/album/get/' + params?.id);
-            
+
+        async function fetchData()
+        {
+            let result = await getData('/album/get/' + params?.id);
             if (!ignore) {
-                if(result.state === OK)
-                {
-                    console.log(result.value.data);
-                    setAlbum(result.value.data);
-                }
-                else
-                {
-                    alert(result.value.data?.errorMessage);
-                }
+                (function set({errorMessage, statusCode, album}){
+                    setData({loading: false, album: album,
+                        redirectToLogin: statusCode == 401, failMessage: errorMessage});
+                }(result));
             }
         }
 
-        startFetching();
+        fetchData();
 
-        return ()=>
-        {
-            ignore = true;
-        };
+        return ()=> ignore = true;
     }, []);
 
     return(
         <section className="panel large-padded large-gaped vertical fill-space full-height">
             <article className="fill-space vertical full-height medium-gaped bordered-block medium-padded">
                 {params?.id}
-                <img src={album?.coverImage}
+                <img src={data.album?.coverImage}
                         className="rounded full-height full-width"
                         style={{objectFit:"cover"}}
                         alt={"Image"}></img>

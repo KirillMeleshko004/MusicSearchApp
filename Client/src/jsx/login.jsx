@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 import Logo from "./components/logo.jsx";
-import { OK, postData, Result } from "./components/services/accessAPI";
+import { FAIL, OK, postData, Result } from "./components/services/accessAPI";
 import SessionManager from "./components/services/sessionManager.js";
 import TextInput from "./components/textInput.jsx";
 
@@ -10,6 +10,8 @@ function Login()
     const usernameField = useRef(null);
     const passwordField = useRef(null);
     const errorLine = useRef(null);
+
+    const [data, setData] = useState({loading: true});
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -20,17 +22,27 @@ function Login()
             username: usernameField.current.value, 
             password: passwordField.current.value,};
 
-        let result = new Result();
-        result = await postData("/Account/Login", userData, false);
+        let result = await postData("/Account/Login", userData, false);
+        
 
-        if(result.state == OK)
+        (function set({session, errorMessage, state}){
+            setData({loading: false, session: session, state: state,
+                    failMessage: errorMessage});
+        }(result));
+    }
+
+    useEffect(() => {
+        if(!data?.state) return;
+        
+        if(data?.state == OK)
         {
-            SessionManager.setSession(result.value);
+            SessionManager.setSession(data?.session);
 
             const state = location.state;
             if (state?.from) {
                 const from = state?.from;
                 window.history.replaceState({}, document.title)
+
                 // Redirects back to the previous unauthenticated routes
                 navigate(from);
             }
@@ -40,14 +52,13 @@ function Login()
         }
         else
         {
-            console.log("fail");
-            console.log(result.value.data.errorMessage);
-
-            usernameField.current.parentElement.classList.add("error-border");
-            passwordField.current.parentElement.classList.add("error-border");
+            usernameField.current.classList.add("error-border");
+            passwordField.current.classList.add("error-border");
             errorLine.current.classList.remove("non-displayed");
         }
-    }
+    
+    }, [data]);
+    
 
     return (
         <div id="login-container" className="background full-width full-height center-justified center-aligned horizontal">

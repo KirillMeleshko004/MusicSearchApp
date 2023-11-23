@@ -5,7 +5,7 @@ import TextInput from "../textInput.jsx";
 import AddSong from "./addSong.jsx";
 import SongPopup from "./songPopup.jsx";
 import CheckBox from "../checkBox.jsx";
-import { OK, Result, postData, postFormData } from "../services/accessAPI.js";
+import { OK, postFormData } from "../services/accessAPI.js";
 import SessionManager from "../services/sessionManager.js";
 
 
@@ -39,16 +39,11 @@ function Upload()
         let formData = new FormData();
         
         formData.append("artistId", session.userId);
-
-        console.log(formData.get("artistId"));
         formData.append("albumTitle", form["albumTitle"].value);
 
         const coverImage =  form["coverImage"].files[0];
-
         formData.append("coverImage", coverImage, coverImage.name);
-
         formData.append("isPublic", form["publish"].checked);
-
         formData.append("downloadable", form["downloadable"].checked);
 
         songs.forEach(song =>
@@ -58,14 +53,14 @@ function Upload()
             formData.append("songFiles", song.file, song.file.name);
         })
 
-        let result = new Result();
+            
 
-        result = await postFormData("/album/upload/", formData);
+        let result = await postFormData("/album/upload/", formData);
 
-        if(result.state === OK)
-            alert(result.value.data.message);
+        if(result?.state === OK)
+            alert(result?.message);
         else
-            alert(result.value.errorMessage);
+            alert(result?.errorMessage);
     }
 
     

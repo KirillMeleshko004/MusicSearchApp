@@ -41,7 +41,7 @@ namespace MusicSearchApp.Controllers
         {
             System.Console.WriteLine(searchString);
 
-            return Ok(_playService.GetSongs(page, searchString));
+            return Ok(new{songs = _playService.GetSongs(page, searchString)});
         }
 
 
@@ -53,7 +53,7 @@ namespace MusicSearchApp.Controllers
             IEnumerable<AlbumInfoViewModel>? library = await _playService.GetLibrary(id);
             if(library == null) return BadRequest();
 
-            return Ok(library);
+            return Ok(new{library});
         }
     }
 }

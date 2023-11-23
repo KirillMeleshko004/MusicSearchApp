@@ -1,30 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Search from "./search.jsx";
 import SongMinInfo from "./Explore/songMinInfo.jsx";
-import { OK, Result, getData } from "./services/accessAPI.js";
+import { getData } from "./services/accessAPI.js";
 import { useOutletContext } from "react-router";
-import FetchManager from "./services/fetchManager.js";
 
 function Explore()
 {
-    const [songs, setSongs] = useState([]);
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
     const props = useOutletContext();
+    
+    const [data, setData] = useState({loading: true});
 
     useEffect(() => {
 
-        FetchManager.getData({
-            path: ('/song/getsongs/' + page +'?' + new URLSearchParams({searchString: searchString })),
-            onSuccess: (data) => setSongs([...data]),
-            onFail: (data) => alert(data.errorMessage)
+        let ignore = false;
 
-        })
-
-        return ()=>
+        async function fetchData()
         {
-            FetchManager.ignore = true;
-        };
+            let result = await getData('/song/getsongs/' + page +'?' +  new URLSearchParams({searchString: searchString}));
+            
+            if (!ignore) {
+                (function set({songs, errorMessage}){
+                    setData({loading: false, songs: songs,
+                         failMessage: errorMessage});
+                }(result));
+            }
+        }
+
+        fetchData();
+
+        return () => ignore = true;
         
     }, [searchString]);
 
@@ -39,7 +45,7 @@ function Explore()
             <article className="fill-space full-height">
                 <ul className="scrollable-y full-height"
                     style={{maxHeight:"87%"}}>
-                    {songs.map((song, index) =>
+                    {data?.songs?.map((song, index) =>
                     {
                         return(
                             <li key={index} className="gap-from-scroll list-gap red-border-on-hover

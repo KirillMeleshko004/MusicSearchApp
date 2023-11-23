@@ -116,15 +116,14 @@ async function sendRequest(url, payload)
 
         const response = await fetch(url, payload);
 
-        res.value.statusCode = response.status;
+        res.statusCode = response.status;
         
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.indexOf("application/json") !== -1)
         {
             const jsonRes = await response.json();
-
             Object.keys(jsonRes).forEach(key => {
-                res.value[key] = jsonRes[key];
+                res[key] = jsonRes[key];
             });
             
         }
@@ -132,7 +131,7 @@ async function sendRequest(url, payload)
         if (!response.ok) 
         {
             res.state = FAIL;
-            res.value.errorMessage = response.statusText;
+            res.errorMessage = response.statusText;
             console.log(res);
             throw Error(response.statusText);
         }
@@ -152,13 +151,6 @@ async function sendRequest(url, payload)
 export class Result {
     constructor() {
         this.state,
-        this.value = new Value();
-    }
-}
-
-class Value
-{
-    constructor(){
         this.statusCode,
         this.errorMessage;
     }

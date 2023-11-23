@@ -59,7 +59,7 @@ namespace MusicSearchApp.Controllers
                 if (session == null)
                     return BadRequest(new { errorMessage = "Incorrect login or password"});
 
-                return CreatedAtAction(nameof(Login), session );
+                return CreatedAtAction(nameof(Login), new{session} );
             }
             catch(Exception ex)
             {

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "./components/logo.jsx";
 import { useNavigate } from "react-router";
 import { OK, Result, postData } from "./components/services/accessAPI.js";
@@ -13,11 +13,12 @@ function Register()
     const errorLine = useRef(null);
     const successLine = useRef(null);
 
+    const [data, setData] = useState({loading: true});
+
     const navigate = useNavigate();
     
     async function register() 
     {
-        
         usernameField.current.parentElement.classList.remove("error-border");
         passwordField.current.parentElement.classList.remove("error-border");
         repeatPasswordField.current.parentElement.classList.remove("error-border");
@@ -29,10 +30,19 @@ function Register()
             passwordConfirm: repeatPasswordField.current.value
         };
 
-        let result = new Result();
-        result = await postData("/Account/Register", userData);
+        let result = await postData("/Account/Register", userData, false);
+        
 
-        if(result.state == OK)
+        (function set({errorMessage, state}){
+            setData({loading: false, state: state,
+                    failMessage: errorMessage});
+        }(result));
+    }
+
+    useEffect(() => {
+        if(!data?.state) return;
+        
+        if(data?.state == OK)
         {
             successLine.current.innerText = "Profile succesfully created!";
             successLine.current.classList.remove("non-displayed");
@@ -41,20 +51,18 @@ function Register()
         }
         else
         {
-            
-            console.log(result.value.data.errorMessage);
-
-            usernameField.current.parentElement.classList.add("error-border");
-            passwordField.current.parentElement.classList.add("error-border");
-            repeatPasswordField.current.parentElement.classList.add("error-border");
+            usernameField.current.classList.add("error-border");
+            passwordField.current.classList.add("error-border");
+            repeatPasswordField.current.classList.add("error-border");
 
             usernameField.current.value = "";
             passwordField.current.value = "";
             repeatPasswordField.current.value = "";
-            errorLine.current.innerText = result.value.data?.errorMessage ?? "Error";
+            errorLine.current.innerText = data?.errorMessage ?? "Error";
             errorLine.current.classList.remove("non-displayed");
         }
-    }
+    
+    }, [data])
 
     return (
         <div id="login-container" className="background full-width full-height center-justified center-aligned horizontal">

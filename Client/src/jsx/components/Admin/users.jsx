@@ -1,73 +1,63 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { OK, Result, changeData, getData } from "../services/accessAPI.js";
 import { useNavigate } from "react-router";
 import UsersList from "./usersList.jsx";
 import SessionManager from "../services/sessionManager.js";
+import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
 
 function Users()
 {
-    const [users, setUsers] = useState(null);
-
-    const searchField = useRef(null);
+    const [data, setData] = useState({loading: true, redirectToLogin: false});
+    const [searchString, setSearchString] = useState('');
 
     const navigate = useNavigate();
 
-    async function searchUsers()
-    {
-        const session = SessionManager.getSession();
-        
-        if(!session)
+    const session = useAuthCheck();
+
+    useEffect(() => {
+
+        if(!session) return;
+
+        let ignore = false;
+
+        async function fetchData()
         {
-            navigate("/login");
-            return;
-        }
-        let result = new Result();
-        result = await getData('/admin/users/find/' + searchField.current.value);
+            let result = await getData('/admin/users/find' +'?' + new URLSearchParams({username: searchString}));
             
-        console.log(result.value);
-        if(result.state === OK)
-        {
-            console.log(result.value.data);
-            setUsers(result.value.data);
+            if (!ignore) {
+                (function set({users, errorMessage, statusCode}){
+                    setData({loading: false, users: users,
+                        redirectToLogin: statusCode == 401, failMessage: errorMessage});
+                }(result));
+            }
         }
-        else if (result.value.statusCode == 401)
-        {
-            navigate("/login");
-        }
-        else if (result.value.statusCode == 403)
-        {
-            alert("Forbiden");
-        }
-        else
-        {
-            setUsers(null);
-        }
-    }
+
+        fetchData();
+
+        return () => ignore = true; 
+
+    }, [session, searchString]);
+
+    useEffect(() => {
+        if(!data.redirectToLogin) return;
+        SessionManager.redirectToLogin(navigate);
+    }, [data])
 
     async function changeStatus(user)
     {
-        const session = SessionManager.getSession();
-        
-        if(!session)
+        let result = await changeData('/admin/users/changeblock/' + user.userId);
+            
+        (function set({message, errorMessage, statusCode})
         {
-            navigate("/login");
-            return;
-        }
-        let result = new Result();
-        result = await changeData('/admin/users/changeblock/' + user.userId);
-        
-        if(result.state === OK)
-        {
-            await searchUsers();
-        }
-        else if (result.value.statusCode == 401)
-        {
-            navigate("/login");
-        }
-        else if (result.value.statusCode == 403)
-        {
-            alert("Forbiden");
-        }
+            const userInd = data?.users.findIndex((u => u.userId == user.userId));
+            const newUsers = [...data?.users];
+            newUsers[userInd].isBlocked = !data?.users[userInd].isBlocked;
+
+            setData({...data, users: newUsers, redirectToLogin: statusCode == 401});
+            if(message) alert(message);
+            if(errorMessage) alert(errorMessage);
+
+        }(result));
     }
 
 
@@ -75,8 +65,7 @@ function Users()
         <section className="panel large-padded medium-gaped vertical fill-space">
             <div id="search" className="bordered-block horizontal center-aligned medium-gaped x-medium-padded red-border-on-hover">
                 <img className="half-hieght" src="svg/Search.svg" alt="search"/>
-                <input ref={searchField}
-                onChange={searchUsers}
+                <input onChange={(e) => setSearchString(e.target.value)}
                     className="medium-spaced fill-space full-height above-normal" 
                     maxLength={40} 
                     type="text" 
@@ -84,7 +73,7 @@ function Users()
             </div>
             <article id="data-panel" className="panel bordered-block medium-padded medium-gaped vertical fill-space">
                 <div id="data-title" className="unselectable large-spaced largest">Search results</div>
-                <UsersList users={users} changeStatus={changeStatus}></UsersList>
+                <UsersList users={data?.users} changeStatus={changeStatus}></UsersList>
             </article>
         </section>
         
