@@ -11,10 +11,12 @@ namespace MusicSearchApp.Services
     {
         private readonly ApplicationContext _context;
         private readonly UserManager<User> _userManager;
-        public MusicPlayService(ApplicationContext context, UserManager<User> userManager)
+        private readonly FileService _fileService;
+        public MusicPlayService(ApplicationContext context, UserManager<User> userManager, FileService fileService)
         {
             _context = context;
             _userManager = userManager;
+            _fileService = fileService;
         }
 
         public SongInfoViewModel? GetSong(int id)
@@ -57,7 +59,29 @@ namespace MusicSearchApp.Services
             return albumViewModel;
         }
 
-        
+        public AlbumInfoViewModel? DeleteAlbum(int albumId)
+        {
+            Album? album = _context.Albums
+                .Where(a => a.AlbumId == albumId)
+                .Include(a => a.Artist)
+                .Include(a => a.Songs)
+                .FirstOrDefault();
+
+            if(album == null) return null;
+
+            AlbumInfoViewModel albumViewModel = new(album);
+
+            foreach(var song in album.Songs)
+            {
+                _fileService.DeleteFile(song.FilePath);
+            }
+            _fileService.DeleteFile(album.CoverImage);
+            
+            _context.Albums.Remove(album);
+            _context.SaveChanges();
+            
+            return albumViewModel;
+        }
 
         public async Task<IEnumerable<AlbumInfoViewModel>?> GetLibrary(int userId)
         {

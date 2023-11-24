@@ -60,7 +60,9 @@ function Library()
                                 onClick={async () => navigate(`../album/${id}`)}>
                                 <LibSong title={album?.title ?? "Title"} 
                                     artist={album?.artist?.displayedName ?? "Artist"}
-                                    coverImage={album?.coverImage}/>
+                                    coverImage={album?.coverImage}
+                                    status={album?.requestStatus}
+                                    isPublic={album?.isPublic}/>
                             </li>
                         )
                     })}

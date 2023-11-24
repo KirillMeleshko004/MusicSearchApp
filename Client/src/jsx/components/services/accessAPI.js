@@ -34,6 +34,21 @@ export async function postData(endPoint, data, useAuth = true) {
     return await sendRequest(serverApiURL + endPoint, payload);
 }
 
+export async function deleteData(endPoint) {
+
+    let token=SessionManager.getToken();
+
+    let payload = {
+        method: 'DELETE',
+        headers: {   
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token,
+        },
+    }
+    
+    return await sendRequest(serverApiURL + endPoint, payload);
+}
+
 export async function postFormData(endPoint, data, useAuth = true)
 {
     let token=SessionManager.getToken();
@@ -145,8 +160,6 @@ async function sendRequest(url, payload)
         return res;
     }
 }
-
-
 
 export class Result {
     constructor() {

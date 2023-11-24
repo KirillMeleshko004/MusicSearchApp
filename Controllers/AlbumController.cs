@@ -25,8 +25,10 @@ namespace MusicSearchApp.Controllers
         [HttpPost]
         [Authorize]
         [Route("{action}")]
+        [DisableRequestSizeLimit]
         public async Task<IActionResult> Upload([FromForm]AlbumViewModel album)
         {
+            if(!ModelState.IsValid) return BadRequest();
             await _uploadingService.UploadAlbum(album);
             return Ok(new {message = ModelState.IsValid});
         }
@@ -36,6 +38,17 @@ namespace MusicSearchApp.Controllers
         public IActionResult Get(int id)
         {
             AlbumInfoViewModel? albumInfo = _playService.GetAlbum(id);
+
+            if(albumInfo == null) return BadRequest();
+
+            return Ok(new{album = albumInfo});
+        }
+
+        [HttpDelete]
+        [Route("{action}/{id}")]
+        public IActionResult Delete(int id)
+        {
+            AlbumInfoViewModel? albumInfo = _playService.DeleteAlbum(id);
 
             if(albumInfo == null) return BadRequest();
 

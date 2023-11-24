@@ -20,8 +20,6 @@ function Upload()
     function addSong(song)
     {
         setSongs([...songs, song]);
-
-        console.log(song);
     }
 
     function removeSong(song)
@@ -48,14 +46,14 @@ function Upload()
 
         songs.forEach(song =>
         {  
-            formData.append("songNames", song.name);
+            formData.append('songNames', song.name);
             formData.append("genres", song.genre);
             formData.append("songFiles", song.file, song.file.name);
         })
 
             
-
-        let result = await postFormData("/album/upload/", formData);
+        console.log(formData.getAll("songNames[]"));
+        let result = await postFormData("/album/upload", formData);
 
         if(result?.state === OK)
             alert(result?.message);
@@ -109,7 +107,7 @@ function Upload()
                                     (
                                         <li key={index} className="gap-from-scroll list-gap 
                                             bordered-block  medium-padded">
-                                                {console.log(song)}
+                                            
                                             <AddSong key={index} title={song?.name}
                                                 audio={URL.createObjectURL(song?.file)} 
                                                 onRemove={() => removeSong(song)}/>
@@ -135,7 +133,7 @@ function Upload()
                 <input type="submit"
                     className="bordered-block horizontal center-aligned center-justified
                     red-border-on-hover sub-title large-spaced
-                    full-height medium-padded panel fill-space"
+                    full-height medium-padded panel fill-space no-outline"
                     value={"Upload"}></input>
             </form>
         </section>

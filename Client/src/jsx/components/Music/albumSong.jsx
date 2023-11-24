@@ -1,10 +1,10 @@
-import React from 'react'   
-import RequestStatus from './requestStatus.jsx';
+import React from 'react'
 
-function LibSong(props) {
+function AlbumSong(props) {
 
     return (
         <div className="horizontal center-aligned full-height medium-gaped full-width">
+                <div className=' above-normal'>{props?.index + 1}</div>
                 <img className="cover-image rounded" alt="cover image" 
                     src={props?.coverImage}
                     style={{height:"100px", width:"100px", objectFit:"cover",
@@ -12,19 +12,12 @@ function LibSong(props) {
                         maxWidth:"100px", maxHeight:"100px"}}/>
                 <div className="horizontal unselectable full-height full-width 
                     medium-padded center-aligned medium-gaped">
-                    <a className="above-normal"
-                        style={{width:"60%"}}>
+                    <a className="above-normal fill-space">
                         {props?.title}
                     </a>
-                    <div className='vertical full-height fill-space'
-                        style={{alignItems:"end"}}>
-                        
-                        <RequestStatus status={props?.isPublic} 
-                            text={props?.status ? props?.status : (props?.isPublic ? "Public" : "Private")}/>
-                    </div>
                 </div>
         </div>
     )
 }
 
-export default LibSong;
+export default AlbumSong;
