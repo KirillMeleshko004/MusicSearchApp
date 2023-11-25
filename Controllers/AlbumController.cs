@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Services;
+using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Controllers
@@ -15,11 +16,14 @@ namespace MusicSearchApp.Controllers
     {
         private readonly AlbumUploadingService _uploadingService;
         private readonly  MusicPlayService _playService;
+        private readonly MusicControlService _musicService;
 
-        public AlbumController(AlbumUploadingService uploadingService, MusicPlayService playService)
+        public AlbumController(AlbumUploadingService uploadingService, MusicPlayService playService,
+            MusicControlService musicService)
         {
             _uploadingService = uploadingService;
             _playService = playService;
+            _musicService = musicService;
         }
 
         [HttpPost]
@@ -29,30 +33,43 @@ namespace MusicSearchApp.Controllers
         public async Task<IActionResult> Upload([FromForm]AlbumViewModel album)
         {
             if(!ModelState.IsValid) return BadRequest();
-            await _uploadingService.UploadAlbum(album);
-            return Ok(new {message = ModelState.IsValid});
+            
+            IResponse<AlbumInfoViewModel> result = await _uploadingService.UploadAlbum(album);
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+            
+            return Ok(new { album = result.Data, message = result.Message });
         }
         
         [HttpGet]
         [Route("{action}/{id}")]
         public IActionResult Get(int id)
         {
-            AlbumInfoViewModel? albumInfo = _playService.GetAlbum(id);
+            IResponse<AlbumInfoViewModel> result = _playService.GetAlbum(id);
 
-            if(albumInfo == null) return BadRequest();
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
 
-            return Ok(new{album = albumInfo});
+            return Ok(new { album = result.Data, message = result.Message });
         }
 
         [HttpDelete]
         [Route("{action}/{id}")]
         public IActionResult Delete(int id)
         {
-            AlbumInfoViewModel? albumInfo = _playService.DeleteAlbum(id);
+            IResponse<AlbumInfoViewModel> result = _musicService.DeleteAlbum(id);
 
-            if(albumInfo == null) return BadRequest();
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
 
-            return Ok(new{album = albumInfo});
+            return Ok(new { album = result.Data, message = result.Message });
         }
 
         [HttpGet]
@@ -60,10 +77,14 @@ namespace MusicSearchApp.Controllers
         [Route("{action}/{id}")]
         public async Task<IActionResult> GetLibrary(int id)
         {
-            IEnumerable<AlbumInfoViewModel>? library = await _playService.GetLibrary(id);
-            if(library == null) return BadRequest();
+            IResponse<IEnumerable<AlbumInfoViewModel>> result = await _playService.GetLibrary(id);
 
-            return Ok(library);
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new { library = result.Data, message = result.Message });
         }
     }
 }

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using MusicSearchApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using MusicSearchApp.Services;
+using MusicSearchApp.Services.Interfaces;
 
 namespace MusicSearchApp.Controllers
 {
@@ -14,11 +16,14 @@ namespace MusicSearchApp.Controllers
         private readonly ApplicationContext _context;
 
         private readonly UserManager<User> _userManager;
+        private readonly AdminService _adminService;
 
-        public AdminController(ApplicationContext context, UserManager<User> userManager)
+        public AdminController(ApplicationContext context, UserManager<User> userManager,
+            AdminService adminService)
         {
             _context = context;
             _userManager = userManager;
+            _adminService = adminService;
         }
 
 
@@ -27,11 +32,15 @@ namespace MusicSearchApp.Controllers
         [Authorize]
         public IActionResult Find([FromQuery]string username)
         {
-            IEnumerable<ProfileViewModel> users = _userManager.Users
-                .Where(u => username.IsNullOrEmpty() || u.UserName!.ToLower().Contains(username.ToLower()))
-                .Select(u => new ProfileViewModel(u));
+            
+            IResponse<IEnumerable<ProfileViewModel>> result = _adminService.GetUsers(username);
 
-            return Ok(new{users});
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new { users = result.Data, message = result.Message });
         }
 
         [HttpGet]
@@ -39,11 +48,12 @@ namespace MusicSearchApp.Controllers
         [Authorize]
         public async Task<IActionResult> Get(int id)
         {
-            User? user = await _userManager.FindByIdAsync(id.ToString());
+            IResponse<ProfileViewModel> result = await _adminService.GetByIdAsync(id);
 
-            if(user == null) return NotFound(new {errorMessage = "User not found"});
-            
-            return Ok(new { user = new ProfileViewModel(user)});
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+
+            return Ok(new { user = result.Data, message = result.Message });
         }
 
         [HttpPatch]
@@ -53,16 +63,12 @@ namespace MusicSearchApp.Controllers
         {
             string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
 
-            User? user = await _userManager.FindByIdAsync(id.ToString());
+            IResponse<ProfileViewModel> result = await _adminService.ChangeBlockAsync(id, actorName);
 
-            if(actorName == user!.UserName) return BadRequest(new {errorMessage = "You can't block yourself"});
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
 
-            if(user == null) return NotFound(new {errorMessage = "User not found"});
-
-            user.IsBlocked = !user.IsBlocked;
-            await _userManager.UpdateAsync(user);
-
-            return Ok(new { message = "success"});
+            return Ok(new { profile = result.Data, message = result.Message });
         }
     }
 }

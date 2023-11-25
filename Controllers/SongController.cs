@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Services;
+using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Controllers
@@ -28,32 +29,28 @@ namespace MusicSearchApp.Controllers
         public IActionResult Get(int id)
         {
             
-            SongInfoViewModel? albumInfo = _playService.GetSong(id);
+            IResponse<SongInfoViewModel> result = _playService.GetSong(id);
 
-            if(albumInfo == null) return BadRequest();
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
 
-            return Ok(albumInfo);
+            return Ok(new { song = result.Data, message = result.Message });
         }
 
         [HttpGet]
-        [Route("{action}/{page}")]
-        public IActionResult GetSongs(int page, [FromQuery]string searchString)
+        [Route("{action}")]
+        public IActionResult Get([FromQuery]string searchString)
         {
-            System.Console.WriteLine(searchString);
+            IResponse<IEnumerable<SongInfoViewModel>> result = _playService.GetSongs(searchString);
 
-            return Ok(new{songs = _playService.GetSongs(page, searchString)});
-        }
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
 
-
-        [HttpGet]
-        [Authorize]
-        [Route("{action}/{id}")]
-        public async Task<IActionResult> GetLibrary(int id)
-        {
-            IEnumerable<AlbumInfoViewModel>? library = await _playService.GetLibrary(id);
-            if(library == null) return BadRequest();
-
-            return Ok(new{library});
+            return Ok(new { songs = result.Data, message = result.Message });
         }
     }
 }

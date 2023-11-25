@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Models.Static;
+using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.ViewModels;
 using NAudio.Wave;
 
@@ -23,8 +24,10 @@ namespace MusicSearchApp.Services
             _requestService = requestService;
         }
 
-        public async Task<bool> UploadAlbum(AlbumViewModel albumInfo)
+        public async Task<IResponse<AlbumInfoViewModel>> UploadAlbum(AlbumViewModel albumInfo)
         {
+            IResponse<AlbumInfoViewModel> response = new Response<AlbumInfoViewModel>();
+
             bool isSucceed = true;
             string? coverImageName = await _fileService.SaveFile(albumInfo.CoverImage, FileService.FileType.AlbumImage);
 
@@ -40,7 +43,6 @@ namespace MusicSearchApp.Services
 
 
             await _context.Albums.AddAsync(album);
-            await _context.SaveChangesAsync();
 
             album = _context.Albums
                 .Where(a => a.Title == albumInfo.AlbumTitle && a.ArtistId == albumInfo.ArtistId)
@@ -53,9 +55,22 @@ namespace MusicSearchApp.Services
                 isSucceed = await CreateSong(albumInfo.SongNames[i], album.AlbumId, album.ArtistId, 
                     albumInfo.SongFiles[i], albumInfo.Genres[i]);
             }
+            
+            if(!isSucceed)
+            {
+                response.Status = StatusCode.InternalError;
+                response.Message = "Internal server error while creating album";
+                return response;
+            }
 
-            return isSucceed;
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = new(album);
+
+            await _context.SaveChangesAsync();
+            return response;
         }
+
         private async Task<bool> CreateSong(string title, int albumId, int artistId, 
             IFormFile file, string genreName)
         {
@@ -72,8 +87,6 @@ namespace MusicSearchApp.Services
                 genre.SongCount += 1;
             }
 
-            await _context.SaveChangesAsync();
-
             Song song = new()
             {
                 Title = title,
@@ -87,7 +100,6 @@ namespace MusicSearchApp.Services
             };
             
             await _context.Songs.AddAsync(song);
-            await _context.SaveChangesAsync();
 
             return true;
         }

@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
+using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Services
@@ -19,81 +21,115 @@ namespace MusicSearchApp.Services
             _fileService = fileService;
         }
 
-        public SongInfoViewModel? GetSong(int id)
+        public IResponse<SongInfoViewModel> GetSong(int id)
         {
-            return _context.Songs.Where(s => s.SongId == id)
+            IResponse<SongInfoViewModel> response = new Response<SongInfoViewModel>();
+
+            Song? song = _context.Songs.Where(s => s.SongId == id)
                 .Include(s => s.Artist)
-                .Include(s => s.Album).ThenInclude(a => a.Artist)
-                .Select<Song, SongInfoViewModel>(s => new(s)).FirstOrDefault();
+                .Include(s => s.Album).ThenInclude(a => a.Artist).FirstOrDefault();
+
+            if(song == null)
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "Song not found";
+
+                return response;
+            }
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = new(song);
+
+            return response;
         }
 
-        const int pageCount = 10;
-        public IEnumerable<SongInfoViewModel> GetSongs(int page, string? searchString = null)
+        public IResponse<IEnumerable<SongInfoViewModel>> GetSongs(string? searchString = null)
         {
-            return _context.Songs
+            IResponse<IEnumerable<SongInfoViewModel>> response = 
+                new Response<IEnumerable<SongInfoViewModel>>();
+
+            IEnumerable<SongInfoViewModel> songs = _context.Songs
                     .Where(s=> searchString.IsNullOrEmpty() || s.Title.Contains(searchString!))
                     .Include(s => s.Artist)
                     .Include(s => s.Album).ThenInclude(a => a.Artist)
                     .Where(s => s.Album.IsPublic)
                     .OrderByDescending(s => s.ListenCount)
-                    .Skip(page * pageCount)
-                    .Take(pageCount)
                     .Select<Song, SongInfoViewModel>(s => new(s));
+
+            if(songs.IsNullOrEmpty())
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "No songs matching conditions";
+                return response;
+            }
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = songs;
+
+            return response;
         }
 
-        public AlbumInfoViewModel? GetAlbum(int albumId)
+        public IResponse<AlbumInfoViewModel> GetAlbum(int albumId)
         {
+            IResponse<AlbumInfoViewModel> response = new Response<AlbumInfoViewModel>();
+
             Album? album = _context.Albums
                 .Where(a => a.AlbumId == albumId)
                 .Include(a => a.Artist)
                 .Include(a => a.Songs)
                 .FirstOrDefault();
 
-            if(album == null) return null;
+            if(album == null)
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "Album not found";
+                return response;
+            }
 
-            AlbumInfoViewModel albumViewModel = new(album)
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = new(album)
             {
                 Songs = album.Songs.Select<Song, SongInfoViewModel>(s => new(s))
             };
 
-            return albumViewModel;
+            return response;
         }
 
-        public AlbumInfoViewModel? DeleteAlbum(int albumId)
+        public async Task<IResponse<IEnumerable<AlbumInfoViewModel>>> GetLibrary(int userId)
         {
-            Album? album = _context.Albums
-                .Where(a => a.AlbumId == albumId)
-                .Include(a => a.Artist)
-                .Include(a => a.Songs)
-                .FirstOrDefault();
+            IResponse<IEnumerable<AlbumInfoViewModel>> response = 
+                new Response<IEnumerable<AlbumInfoViewModel>>();
 
-            if(album == null) return null;
-
-            AlbumInfoViewModel albumViewModel = new(album);
-
-            foreach(var song in album.Songs)
-            {
-                _fileService.DeleteFile(song.FilePath);
-            }
-            _fileService.DeleteFile(album.CoverImage);
-            
-            _context.Albums.Remove(album);
-            _context.SaveChanges();
-            
-            return albumViewModel;
-        }
-
-        public async Task<IEnumerable<AlbumInfoViewModel>?> GetLibrary(int userId)
-        {
             if((await _userManager.FindByIdAsync(userId.ToString())) == null)
-                return null;
+            {
+                response.Status = StatusCode.Forbidden;
+                response.Message = "Forbidden";
+                return response;
+            }
 
-            return _context.Albums
+            IEnumerable<AlbumInfoViewModel> albums = _context.Albums
                 .Where(a => a.ArtistId == userId)
                 .Include(a => a.Artist)
                 .Include(a => a.Request)
                 .OrderBy(a => a.Request!.Date)
                 .Select<Album, AlbumInfoViewModel>(a => new(a));
+
+            if(albums.IsNullOrEmpty())
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "No albums in library";
+                return response;
+            }
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = albums;
+
+            return response;
         }
     }
 }

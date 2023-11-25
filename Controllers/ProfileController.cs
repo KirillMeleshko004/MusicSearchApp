@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models.Static;
 using MusicSearchApp.Services;
+using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.ViewModels;
 using NAudio.CoreAudioApi;
 
@@ -26,11 +27,12 @@ namespace MusicSearchApp.Controllers
         [Authorize]
         public async Task<IActionResult> GetUser(int id)
         {
-            ProfileViewModel? profile = await _editService.GetByIdAsync(id);
+            IResponse<ProfileViewModel> result = await _editService.GetByIdAsync(id);
 
-            if(profile == null) return NotFound(new {errorMessage = "User not found"});
-            
-            return Ok(new { profile});
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+
+            return Ok(new { profile = result.Data, message = result.Message });
         }
 
         [HttpPatch]
@@ -40,16 +42,16 @@ namespace MusicSearchApp.Controllers
         {
             string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
 
-            bool isAllowed = await _editService.IsChangeAllowed(id, actorName);
-            if(!isAllowed)
-            {
-                return Forbid();
-            }
-            
-            bool res = await _editService.ChangeAsync(id, displayedName, description, image);
-            if(!res) return NotFound();
+            IResponse<ProfileViewModel> result = 
+                await _editService.ChangeAsync(id, actorName, displayedName, description, image);
 
-            return Ok(new {message = "changed"});
+            
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new { profile = result.Data, message = result.Message });
         } 
     }
 }

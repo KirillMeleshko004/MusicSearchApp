@@ -21,10 +21,10 @@ function Library()
 
         async function fetchData()
         {
-            let result = await getData('/song/getlibrary/' + session.userId);
+            let result = await getData('/album/getlibrary/' + session.userId);
             if (!ignore) {
                 (function set({errorMessage, statusCode, library}){
-                    setData({loading: false, library: [...library],
+                    setData({loading: false, library: library && [...library],
                         redirectToLogin: statusCode == 401, failMessage: errorMessage});
                 }(result));
             }

@@ -18,7 +18,8 @@ function Explore()
 
         async function fetchData()
         {
-            let result = await getData('/song/getsongs/' + page +'?' +  new URLSearchParams({searchString: searchString}));
+            let result = await getData('/song/get' + '?' +  
+                new URLSearchParams({searchString: searchString}));
             
             if (!ignore) {
                 (function set({songs, errorMessage}){
