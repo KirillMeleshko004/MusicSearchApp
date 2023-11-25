@@ -104,6 +104,23 @@ namespace MusicSearchApp.Controllers
             return Ok(new{requests = result.Data, message = result.Message });
         }
 
+        [HttpPatch]
+        [Route("requests/{action}/{id}")]
+        public async Task<IActionResult> ChangeStatus(int id, string status)
+        {
+            if(!ModelState.IsValid) return BadRequest();
+
+            IResponse<RequestViewModel> result = 
+                await _requestService.ChangeStatus(id, status);
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new{request = result.Data, message = result.Message });
+        }
+        
         #endregion
     }
 }

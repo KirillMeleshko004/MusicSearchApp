@@ -15,7 +15,7 @@ function ResolveRequestPopup(props)
             </div>
 
             <div className="background rounded vertical center-aligned medium-padded large-gaped"
-                style={{width:"65%", height:"70%", zIndex:"1000"}}>
+                style={{width:"65%", height:"45%", zIndex:"1000"}}>
                 <div className="horizontal full-width unselectable center-justified"
                     style={{position:"relative"}}>
                     <div className="largest">Resolve request</div>
@@ -34,16 +34,16 @@ function ResolveRequestPopup(props)
                             maxWidth:"180px", maxHeight:"180px"}}/>
                     <div className="horizontal unselectable full-height full-width 
                         medium-padded center-aligned medium-gaped">
-                        <div className=" vertical medium-gaped" style={{width:"60%"}}>
-                            <div className="above-normal full-width">
-                                {props?.request.title}
+                        <div className=" vertical large-gaped" style={{width:"60%"}}>
+                            <div className=" sub-title full-width">
+                                {props?.request.album.title}
                             </div>
-                            <div className="normal full-width">
+                            <div className=" above-normal full-width">
                                 {props?.request.artist.displayedName}
                             </div>
                         </div>
                         <div className='vertical full-height fill-space'
-                            style={{alignItems:"end"}}>
+                            style={{alignItems:"end", height:"100px"}}>
                             
                             <RequestStatus status={false} 
                                 text={props?.request.status}/>
@@ -51,9 +51,21 @@ function ResolveRequestPopup(props)
                     </div>
                 </div>
                 
-                <div className=" horizontal space-between unselectable full-width medium-padded">
-                    <div>Accept</div>
-                    <div>Deny</div>
+                <div className=" horizontal space-between unselectable full-width medium-padded full-height 
+                    medium-gaped"
+                    style={{alignItems:"end"}}>
+                    <div className="bordered-block horizontal center-aligned center-justified
+                                red-border-on-hover normal large-spaced
+                                full-height medium-padded half-width"
+                                onClick={() => props?.accept(props?.request)}>
+                                    Accept
+                    </div>
+                    <div className="bordered-block horizontal center-aligned center-justified
+                                red-border-on-hover normal large-spaced
+                                full-height medium-padded half-width"
+                                onClick={() => props?.deny(props?.request)}>
+                                    Deny
+                    </div>
                 </div>
             </div>
 

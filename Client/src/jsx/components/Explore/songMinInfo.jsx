@@ -1,4 +1,5 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom';
 
 function SongMinInfo(props) {
 
@@ -8,18 +9,21 @@ function SongMinInfo(props) {
                     src={props?.coverImage}
                     style={{height:"100px", width:"100px", objectFit:"cover",
                         minWidth:"100px", minHeight:"100px",
-                        maxWidth:"100px", maxHeight:"100px"}}/>
+                        maxWidth:"100px", maxHeight:"100px"}}
+                    onClick={props?.play}/>
                 <div className="horizontal unselectable full-height full-width 
                     medium-padded center-aligned medium-gaped">
-                    <a className="above-normal"
-                        style={{width:"60%"}}>
+                    <div className="above-normal highlight-on-hover"
+                        style={{width:"60%"}}
+                        onClick={props?.play}>
                         {props?.title}
-                    </a>
+                    </div>
                     <div className="bordered-block full-height"></div>
-                    <a className="sub-title"
-                        style={{width:"30%"}}>
+                    <NavLink className="sub-title highlight-on-hover"
+                        style={{width:"30%", textDecoration:"none"}}
+                        to={props?.link}>
                         {props?.artist}
-                    </a>
+                    </NavLink>
                 </div>
         </div>
     )

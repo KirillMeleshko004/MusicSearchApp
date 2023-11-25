@@ -2,16 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import Search from "../search.jsx";
 import SongMinInfo from "./songMinInfo.jsx";
 import { getData } from "../services/accessAPI.js";
-import { useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { PlayContext } from "../Context/playContext.jsx";
 
 function Explore()
 {
-    const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
     
     const [data, setData] = useState({loading: true});
     const play = useContext(PlayContext);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -41,27 +42,50 @@ function Explore()
         setSearchString(search);
     }
 
+    //Render while fetching data
+    if(data.loading)
+    {
+        return (
+            <section className="panel large-padded large-gaped vertical fill-space full-height">
+                <Search search={search}/>
+                <div className=" largest">Loading...</div>
+            </section>
+        )
+    }
+
     return (
         <section className="panel large-padded large-gaped vertical fill-space full-height">
             <Search search={search}/>
-            <article className="fill-space full-height">
-                <ul className="scrollable-y full-height"
-                    style={{maxHeight:"87%"}}>
-                    {data?.songs?.map((song, index) =>
-                    {
-                        return(
-                            <li key={index} className="gap-from-scroll list-gap red-border-on-hover
-                                bordered-block  x-medium-padded"
-                                style={{height:"130px"}}
-                                onClick={() => play(song)}
-                                >
-                                <SongMinInfo title={song.title} artist={song.artist.displayedName}
-                                    coverImage={song.album.coverImage}/>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </article>
+            {data?.songs?.length > 0 ?
+            (
+                <article className="fill-space full-height">
+                    <ul className="scrollable-y full-height"
+                        style={{maxHeight:"87%"}}>
+                        {data?.songs?.map((song, index) =>
+                        {
+                            return(
+                                <li key={index} className="gap-from-scroll list-gap
+                                    bordered-block  x-medium-padded"
+                                    style={{height:"130px"}}
+                                    >
+                                    <SongMinInfo title={song.title} artist={song.artist.displayedName}
+                                        coverImage={song.album.coverImage}
+                                        link={(`/artist/${song.artist.userId}`)}
+                                        play={() => play(song)}/>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </article>
+            ) :
+            (
+                <section className="panel large-padded large-gaped vertical fill-space full-height 
+                    center-aligned center-justified">
+                    <div className=" largest">No results</div>
+                </section>
+            )
+            }
+            
         </section>
     )
 }

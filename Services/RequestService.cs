@@ -54,31 +54,69 @@ namespace MusicSearchApp.Services
             return true;
         }
         
-        public async Task<bool> AcceptRequest(int requestId)
+        private async Task<RequestViewModel?> AcceptRequest(int requestId)
         {
-            PublishRequest? request = await _context.PublishRequests.FindAsync(requestId);
-            if(request == null) return false;
+            PublishRequest? request = _context.PublishRequests
+                .Where(r => r.RequestId == requestId)
+                .Include(r => r.Album)
+                .Include(r => r.Artist)
+                .FirstOrDefault();
+
+            if(request == null) return null;
+
+
 
             RequestStatus accepted = await GetStatus(RequestStatuses.Accepted);
 
             request.StatusId = accepted.Id;
+            request.Album.IsPublic = true;
 
-            return true;
+            await _context.SaveChangesAsync();
+
+            return new(request);
         }
 
-        public async Task<bool> DenyRequest(int requestId)
+        private async Task<RequestViewModel?> DenyRequest(int requestId)
         {
-            PublishRequest? request = await _context.PublishRequests.FindAsync(requestId);
-            if(request == null) return false;
+            PublishRequest? request = _context.PublishRequests
+                .Where(r => r.RequestId == requestId)
+                .Include(r => r.Album)
+                .Include(r => r.Artist)
+                .FirstOrDefault();
+                
+            if(request == null) return null;
 
             RequestStatus deny = await GetStatus(RequestStatuses.Denied);
 
             request.StatusId = deny.Id;
 
-            return true;
+            await _context.SaveChangesAsync();
+
+            return new(request);
         }
     
-        
+        public async Task<IResponse<RequestViewModel>> ChangeStatus(int requestId, string status)
+        {
+            RequestViewModel? request = null;
+            if(status == RequestStatuses.Accepted) request = await AcceptRequest(requestId);
+            else if (status == RequestStatuses.Denied) request = await DenyRequest(requestId);
+
+            IResponse<RequestViewModel> response = 
+                new Response<RequestViewModel>();
+
+            if(request == null)
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "Request not found";
+                return response;
+            }
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = request;
+
+            return response;
+        }
 
         public async Task<IResponse<IEnumerable<RequestViewModel>>> GetPendingRequests()
         {
@@ -86,7 +124,7 @@ namespace MusicSearchApp.Services
                 new Response<IEnumerable<RequestViewModel>>();
 
             RequestStatus pending = await GetStatus(RequestStatuses.Pending);
-        
+
             IEnumerable<RequestViewModel> requests = _context.PublishRequests
                 .Where(r => r.StatusId == pending.Id)
                 .Include(r => r.Artist)

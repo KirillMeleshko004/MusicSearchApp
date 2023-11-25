@@ -5,6 +5,7 @@ import SongMinInfo from "../Explore/songMinInfo.jsx";
 import AlbumSong from "./albumSong.jsx";
 import SessionManager from "../services/sessionManager.js";
 import { PlayContext } from "../Context/playContext.jsx";
+import { NavLink } from "react-router-dom";
 
 function AlbumView()
 {
@@ -85,11 +86,13 @@ function AlbumView()
                                 className="rounded full-height full-width   "
                                 style={{objectFit:"cover", width: "330px", height: "330px"}}
                                 alt={"Image"}></img>
-                            <div className=" full-width sub-title horizontal center-aligned 
+                            <NavLink className=" full-width sub-title horizontal center-aligned 
                                 highlight-on-hover"
-                                style={{marginLeft:"20px"}}>
+                                style={{marginLeft:"20px", textDecoration:"none"}}
+                                to={(`/artist/${data.album?.artist.userId}`)}>
+                                    
                                 {data.album?.artist.displayedName}
-                            </div>
+                            </NavLink>
 
                             {deletable && 
                             (

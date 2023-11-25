@@ -1,5 +1,5 @@
 import React from "react";
-import RequestStatus from "../../Profile/requestStatus.jsx";
+import ActiveRequestStatus from "./activeRequestStatus.jsx";
 
 function Request(props)
 {
@@ -24,12 +24,9 @@ function Request(props)
                     <div className='vertical full-height fill-space'
                         style={{alignItems:"end"}}>
                         
-                        <div onClick={props?.changeStatus}
-                            className=" full-height red-border-on-hover rounded"
-                            style={{width:"200px", }}>
-                            <RequestStatus status={false} 
-                                text={props?.status}/>
-                        </div>
+                        <ActiveRequestStatus status={false} 
+                            statusText={props?.status}
+                            onClick={props?.changeStatus}/>
                     </div>
                 </div>
 
