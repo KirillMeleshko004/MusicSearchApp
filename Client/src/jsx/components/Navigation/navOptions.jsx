@@ -18,8 +18,8 @@ function NavOptions()
             {SessionManager.getRole() == "User" && 
                 (
                     <>
-                    <NavOption icon="AdminUser.svg" text="Users" link={"/users"}></NavOption>
-                    <NavOption icon="Approve.svg" text="Approve requests"></NavOption>
+                    <NavOption icon="AdminUser.svg" text="Users" link={"users"}></NavOption>
+                    <NavOption icon="Approve.svg" text="Approve requests" link={"requests"}></NavOption>
                     <NavOption icon="Actions.svg" text="Actions"></NavOption>
                     </>
                 )

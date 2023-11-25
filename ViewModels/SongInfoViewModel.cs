@@ -17,21 +17,25 @@ namespace MusicSearchApp.ViewModels
 
         public int ListenCount { get; set; }
         public string FilePath { get; set; } = null!;
-        public string CoverImage { get; set; } = null!;
+        public string? CoverImage { get; set; } = null!;
 
 
         public SongInfoViewModel(Song song)
         {
             SongId = song.SongId;
             Title = song.Title;
-            Album = new AlbumInfoViewModel(song.Album);
-            Artist = new ArtistViewModel(song.Artist);
+
+            if(song.Album != null)
+                Album = new AlbumInfoViewModel(song.Album);
+            if(song.Artist != null)
+                Artist = new ArtistViewModel(song.Artist);
+
             Length = song.Length;
             ReleaseDate = song.ReleaseDate;
             GenreName = song.GenreName;
             ListenCount = song.ListenCount;
             FilePath = song.FilePath;
-            CoverImage = song.Album.CoverImage;
+            CoverImage = song.Album?.CoverImage;
         }
     }
 }

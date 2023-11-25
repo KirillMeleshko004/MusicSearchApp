@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { OK, Result, deleteData, getData } from "../services/accessAPI";
 import SongMinInfo from "../Explore/songMinInfo.jsx";
 import AlbumSong from "./albumSong.jsx";
 import SessionManager from "../services/sessionManager.js";
+import { PlayContext } from "../Context/playContext.jsx";
 
 function AlbumView()
 {
@@ -14,6 +15,8 @@ function AlbumView()
     const [deletable, setDeletable] = useState(false);
 
     const navigate = useNavigate();
+
+    const play = useContext(PlayContext);
 
     useEffect(() => {
 
@@ -109,7 +112,7 @@ function AlbumView()
                                             <li key={ind} className="gap-from-scroll list-gap red-border-on-hover
                                                 bordered-block  x-medium-padded"
                                                 style={{height:"130px"}}
-                                                // onClick={() => props?.play(song)}
+                                                onClick={() => play(song)}
                                                 >
                                                 <AlbumSong title={song.title} index={ind}
                                                     coverImage={song.album.coverImage}/>

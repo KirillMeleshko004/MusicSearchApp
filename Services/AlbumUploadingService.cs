@@ -43,6 +43,7 @@ namespace MusicSearchApp.Services
 
 
             await _context.Albums.AddAsync(album);
+            await _context.SaveChangesAsync();
 
             album = _context.Albums
                 .Where(a => a.Title == albumInfo.AlbumTitle && a.ArtistId == albumInfo.ArtistId)
@@ -81,6 +82,7 @@ namespace MusicSearchApp.Services
             {
                 genre = new Genre() { Name = genreName, SongCount = 1 };
                 await _context.Genres.AddAsync(genre);
+                await _context.SaveChangesAsync();
             }
             else
             {
@@ -100,6 +102,7 @@ namespace MusicSearchApp.Services
             };
             
             await _context.Songs.AddAsync(song);
+            await _context.SaveChangesAsync();
 
             return true;
         }

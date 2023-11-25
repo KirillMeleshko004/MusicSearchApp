@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -110,11 +109,10 @@ namespace MusicSearchApp.Services
                 response.Message = "Forbidden";
                 return response;
             }
-
             IEnumerable<AlbumInfoViewModel> albums = _context.Albums
                 .Where(a => a.ArtistId == userId)
                 .Include(a => a.Artist)
-                .Include(a => a.Request)
+                .Include(a => a.Request).ThenInclude(r => r!.Status)
                 .OrderBy(a => a.Request!.Date)
                 .Select<Album, AlbumInfoViewModel>(a => new(a));
 

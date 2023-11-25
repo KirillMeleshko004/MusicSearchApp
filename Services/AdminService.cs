@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
+using MusicSearchApp.Models.Static;
 using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.ViewModels;
 
@@ -114,5 +115,6 @@ namespace MusicSearchApp.Services
             return new Response<ProfileViewModel>() 
                 { Status = StatusCode.Ok, Message = "Success", Data = new(user) };
         }
+
     }
 }

@@ -1,5 +1,5 @@
+using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Models;
-using MusicSearchApp.Models.Static;
 
 namespace MusicSearchApp.ViewModels
 {
@@ -27,10 +27,10 @@ namespace MusicSearchApp.ViewModels
             Downloadable = album.Downloadable;
             if(album.Artist != null)
                 Artist = new ArtistViewModel(album.Artist);
+                
             SongCount = album.SongCount;
             CoverImage = album.CoverImage;
             RequestStatus = album.Request?.Status.Status;
         }
-
     }
 }

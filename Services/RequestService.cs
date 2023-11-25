@@ -1,6 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Models.Static;
+using MusicSearchApp.Services.Interfaces;
+using MusicSearchApp.ViewModels;
 
 namespace MusicSearchApp.Services
 {
@@ -44,6 +48,9 @@ namespace MusicSearchApp.Services
                 StatusId = pending.Id,
             };
 
+            await _context.PublishRequests.AddAsync(request);
+            await _context.SaveChangesAsync();
+
             return true;
         }
         
@@ -69,6 +76,35 @@ namespace MusicSearchApp.Services
             request.StatusId = deny.Id;
 
             return true;
+        }
+    
+        
+
+        public async Task<IResponse<IEnumerable<RequestViewModel>>> GetPendingRequests()
+        {
+            IResponse<IEnumerable<RequestViewModel>> response = 
+                new Response<IEnumerable<RequestViewModel>>();
+
+            RequestStatus pending = await GetStatus(RequestStatuses.Pending);
+        
+            IEnumerable<RequestViewModel> requests = _context.PublishRequests
+                .Where(r => r.StatusId == pending.Id)
+                .Include(r => r.Artist)
+                .Include(r => r.Album)
+                .Select<PublishRequest, RequestViewModel>(r => new(r));
+            
+            if(requests.IsNullOrEmpty())
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "No pending requests";
+                return response;
+            }
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = requests;
+
+            return response;
         }
     }
 }

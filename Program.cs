@@ -74,6 +74,7 @@ builder.Services.AddScoped<MusicPlayService>();
 builder.Services.AddScoped<RequestService>();
 builder.Services.AddScoped<MusicControlService>();
 builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<RequestService>();
 
 #endregion
 

@@ -12,7 +12,7 @@ import SessionManager from "../services/sessionManager.js";
 function Upload()
 {
     const [songs, setSongs] = useState([]);
-    const [popupShown, setPopupShown] = useState(false)
+    const [popupShown, setPopupShown] = useState(false);
 
     const coverImage = useRef(null);
     const albumTitle = useRef(null);

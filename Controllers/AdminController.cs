@@ -4,32 +4,33 @@ using MusicSearchApp.Models.DB;
 using Microsoft.AspNetCore.Identity;
 using MusicSearchApp.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Services;
 using MusicSearchApp.Services.Interfaces;
 
 namespace MusicSearchApp.Controllers
 {
     [Route("api/{controller}")]
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly ApplicationContext _context;
-
         private readonly UserManager<User> _userManager;
         private readonly AdminService _adminService;
+        private readonly RequestService _requestService;
 
         public AdminController(ApplicationContext context, UserManager<User> userManager,
-            AdminService adminService)
+            AdminService adminService, RequestService requestService)
         {
             _context = context;
             _userManager = userManager;
             _adminService = adminService;
+            _requestService = requestService;
         }
 
+        #region User Management
 
         [HttpGet]
         [Route("users/{action}")]
-        [Authorize]
         public IActionResult Find([FromQuery]string username)
         {
             
@@ -45,7 +46,6 @@ namespace MusicSearchApp.Controllers
 
         [HttpGet]
         [Route("users/{action}/{id}")]
-        [Authorize]
         public async Task<IActionResult> Get(int id)
         {
             IResponse<ProfileViewModel> result = await _adminService.GetByIdAsync(id);
@@ -56,9 +56,9 @@ namespace MusicSearchApp.Controllers
             return Ok(new { user = result.Data, message = result.Message });
         }
 
+        //Change user status (active/blocked)
         [HttpPatch]
         [Route("users/{action}/{id}")]
-        [Authorize]
         public async Task<IActionResult> ChangeBlock(int id)
         {
             string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
@@ -73,7 +73,6 @@ namespace MusicSearchApp.Controllers
     
         [HttpDelete]
         [Route("users/{action}/{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
@@ -85,5 +84,26 @@ namespace MusicSearchApp.Controllers
 
             return Ok(new { user = result.Data, message = result.Message });
         }
+    
+        #endregion
+
+        #region Requests Management
+
+        [HttpGet]
+        [Route("requests/{action}")]
+        public async Task<IActionResult> GetPending()
+        {
+            IResponse<IEnumerable<RequestViewModel>> result = 
+                await _requestService.GetPendingRequests();
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new{requests = result.Data, message = result.Message });
+        }
+
+        #endregion
     }
 }

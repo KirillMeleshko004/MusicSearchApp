@@ -1,5 +1,6 @@
 namespace MusicSearchApp.ViewModels
 {
+    //Represent album that was sent by user
     public class AlbumViewModel
     {
         public int ArtistId { get; set; }

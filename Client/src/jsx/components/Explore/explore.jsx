@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
-import Search from "./search.jsx";
-import SongMinInfo from "./Explore/songMinInfo.jsx";
-import { getData } from "./services/accessAPI.js";
+import React, { useContext, useEffect, useState } from "react";
+import Search from "../search.jsx";
+import SongMinInfo from "./songMinInfo.jsx";
+import { getData } from "../services/accessAPI.js";
 import { useOutletContext } from "react-router";
+import { PlayContext } from "../Context/playContext.jsx";
 
 function Explore()
 {
     const [page, setPage] = useState(0);
     const [searchString, setSearchString] = useState('');
-    const props = useOutletContext();
     
     const [data, setData] = useState({loading: true});
+    const play = useContext(PlayContext);
 
     useEffect(() => {
 
@@ -52,7 +53,7 @@ function Explore()
                             <li key={index} className="gap-from-scroll list-gap red-border-on-hover
                                 bordered-block  x-medium-padded"
                                 style={{height:"130px"}}
-                                onClick={() => props?.play(song)}
+                                onClick={() => play(song)}
                                 >
                                 <SongMinInfo title={song.title} artist={song.artist.displayedName}
                                     coverImage={song.album.coverImage}/>
