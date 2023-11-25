@@ -145,8 +145,9 @@ async function sendRequest(url, payload)
 
         if (!response.ok) 
         {
+            const jsonRes = await response.json();
             res.state = FAIL;
-            res.errorMessage = response.statusText;
+            res.errorMessage = jsonRes.errorMessage ?? response.statusText;
             console.log(res);
             throw Error(response.statusText);
         }

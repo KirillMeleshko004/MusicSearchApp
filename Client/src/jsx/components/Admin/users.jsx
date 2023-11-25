@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { OK, Result, changeData, getData } from "../services/accessAPI.js";
+import { OK, Result, changeData, deleteData, getData } from "../services/accessAPI.js";
 import { useNavigate } from "react-router";
 import UsersList from "./usersList.jsx";
 import SessionManager from "../services/sessionManager.js";
@@ -51,9 +51,32 @@ function Users()
         {
             const userInd = data?.users.findIndex((u => u.userId == user.userId));
             const newUsers = [...data?.users];
-            newUsers[userInd].isBlocked = !data?.users[userInd].isBlocked;
+
+            if(statusCode == 200)
+                newUsers[userInd].isBlocked = !data?.users[userInd].isBlocked;
 
             setData({...data, users: newUsers, redirectToLogin: statusCode == 401});
+            if(message) alert(message);
+            if(errorMessage) alert(errorMessage);
+
+        }(result));
+    }
+
+    async function deleteUser(user)
+    {
+        let result = await deleteData('/admin/users/delete/' + user.userId);
+            
+        (function set({message, errorMessage, statusCode})
+        {
+            let newUsers = [...data?.users];
+
+            if(statusCode == 200)
+            {
+                newUsers = data?.users.filter((u) => u.userId != user.userId);
+            }
+
+            setData({...data, users: newUsers, redirectToLogin: statusCode == 401});
+
             if(message) alert(message);
             if(errorMessage) alert(errorMessage);
 
@@ -66,14 +89,15 @@ function Users()
             <div id="search" className="bordered-block horizontal center-aligned medium-gaped x-medium-padded red-border-on-hover">
                 <img className="half-hieght" src="svg/Search.svg" alt="search"/>
                 <input onChange={(e) => setSearchString(e.target.value)}
-                    className="medium-spaced fill-space full-height above-normal" 
+                    className="medium-spaced fill-space full-height above-normal no-outline no-border panel-color" 
                     maxLength={40} 
                     type="text" 
                     placeholder="Search..."></input>
             </div>
             <article id="data-panel" className="panel bordered-block medium-padded medium-gaped vertical fill-space">
                 <div id="data-title" className="unselectable large-spaced largest">Search results</div>
-                <UsersList users={data?.users} changeStatus={changeStatus}></UsersList>
+                <UsersList users={data?.users} changeStatus={changeStatus} 
+                    deleteUser={deleteUser}></UsersList>
             </article>
         </section>
         

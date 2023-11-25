@@ -50,13 +50,33 @@ namespace MusicSearchApp.Services
         }
 
 
-        public async Task<ProfileViewModel?> DeleteUserAsync(int id)
+        public async Task<IResponse<ProfileViewModel>> DeleteUserAsync(int id, string actorName)
         {
+            IResponse<ProfileViewModel> response = 
+                new Response<ProfileViewModel>();
+
             User? user = await _userManager.FindByIdAsync(id.ToString());
-            if(user == null) return null;
+
+            if(actorName == user!.UserName)
+            {   
+                response.Status = StatusCode.Forbidden;
+                response.Message = "You can not delete yourself";
+                return response;
+            }
+
+            if(user == null)
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "User not found";
+                return response;
+            }
 
             await _userManager.DeleteAsync(user);
-            return new ProfileViewModel(user);
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = new(user);
+            return response;
         }
 
         public IResponse<IEnumerable<ProfileViewModel>> GetUsers(string? searchString = null)

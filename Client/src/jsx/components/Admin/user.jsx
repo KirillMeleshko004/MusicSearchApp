@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import StatusBadge from "../statusBadge.jsx";
 import React from "react";
 
-function User({user, changeStatus})
+function User({user, changeStatus, deleteUser})
 {
 
     return (
@@ -21,6 +21,11 @@ function User({user, changeStatus})
                         className="bordered-block  horizontal center-justified center-aligned
                             full-height normal x-medium-padded red-border-on-hover unselectable medium-spaced">
                         Change Status
+                    </div>
+                    <div onClick={()=>{deleteUser(user)}}
+                        className="bordered-block  horizontal center-justified center-aligned
+                            full-height normal x-medium-padded red-border-on-hover unselectable medium-spaced">
+                        Delete
                     </div>
                 </div>
                 

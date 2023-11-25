@@ -1,13 +1,13 @@
 import React from "react";
 import User from "./user.jsx";
 
-function UsersList({users, changeStatus})
+function UsersList({users, changeStatus, deleteUser})
 {
     
     const usersList = users?.map(user =>
             <li key={user.userId} className="gap-from-scroll list-gap" 
                 style={{maxHeight:"200px"}}>
-                <User user={user} changeStatus={changeStatus}></User>
+                <User user={user} changeStatus={changeStatus} deleteUser={deleteUser}></User>
             </li>
         );
     return (

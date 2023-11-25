@@ -70,5 +70,20 @@ namespace MusicSearchApp.Controllers
 
             return Ok(new { profile = result.Data, message = result.Message });
         }
+    
+        [HttpDelete]
+        [Route("users/{action}/{id}")]
+        [Authorize]
+        public async Task<IActionResult> Delete(int id)
+        {
+            string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
+
+            IResponse<ProfileViewModel> result = await _adminService.DeleteUserAsync(id, actorName);
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+
+            return Ok(new { user = result.Data, message = result.Message });
+        }
     }
 }
