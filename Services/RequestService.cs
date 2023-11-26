@@ -11,9 +11,11 @@ namespace MusicSearchApp.Services
     public class RequestService
     {
         private readonly ApplicationContext _context;
-        public RequestService(ApplicationContext context)
+        private readonly NewsService _newsService;
+        public RequestService(ApplicationContext context, NewsService newsService)
         {
             _context = context;
+            _newsService = newsService;
         }
 
 
@@ -54,7 +56,7 @@ namespace MusicSearchApp.Services
             return true;
         }
         
-        private async Task<RequestViewModel?> AcceptRequest(int requestId)
+        private async Task<RequestViewModel?> AcceptRequestAsync(int requestId)
         {
             PublishRequest? request = _context.PublishRequests
                 .Where(r => r.RequestId == requestId)
@@ -64,7 +66,7 @@ namespace MusicSearchApp.Services
 
             if(request == null) return null;
 
-
+            if(!await _newsService.CreatePublishNews(request.Album)) return null;
 
             RequestStatus accepted = await GetStatus(RequestStatuses.Accepted);
 
@@ -76,7 +78,7 @@ namespace MusicSearchApp.Services
             return new(request);
         }
 
-        private async Task<RequestViewModel?> DenyRequest(int requestId)
+        private async Task<RequestViewModel?> DenyRequestAsync(int requestId)
         {
             PublishRequest? request = _context.PublishRequests
                 .Where(r => r.RequestId == requestId)
@@ -95,11 +97,11 @@ namespace MusicSearchApp.Services
             return new(request);
         }
     
-        public async Task<IResponse<RequestViewModel>> ChangeStatus(int requestId, string status)
+        public async Task<IResponse<RequestViewModel>> ChangeStatusAsync(int requestId, string status)
         {
             RequestViewModel? request = null;
-            if(status == RequestStatuses.Accepted) request = await AcceptRequest(requestId);
-            else if (status == RequestStatuses.Denied) request = await DenyRequest(requestId);
+            if(status == RequestStatuses.Accepted) request = await AcceptRequestAsync(requestId);
+            else if (status == RequestStatuses.Denied) request = await DenyRequestAsync(requestId);
 
             IResponse<RequestViewModel> response = 
                 new Response<RequestViewModel>();
@@ -118,7 +120,7 @@ namespace MusicSearchApp.Services
             return response;
         }
 
-        public async Task<IResponse<IEnumerable<RequestViewModel>>> GetPendingRequests()
+        public async Task<IResponse<IEnumerable<RequestViewModel>>> GetPendingRequestsAsync()
         {
             IResponse<IEnumerable<RequestViewModel>> response = 
                 new Response<IEnumerable<RequestViewModel>>();

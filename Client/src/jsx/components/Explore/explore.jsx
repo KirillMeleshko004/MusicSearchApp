@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import Search from "../search.jsx";
 import SongMinInfo from "./songMinInfo.jsx";
 import { getData } from "../services/accessAPI.js";
-import { useNavigate, useOutletContext } from "react-router";
 import { PlayContext } from "../Context/playContext.jsx";
 
 function Explore()
@@ -11,8 +10,6 @@ function Explore()
     
     const [data, setData] = useState({loading: true});
     const play = useContext(PlayContext);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
 

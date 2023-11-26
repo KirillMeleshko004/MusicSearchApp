@@ -26,7 +26,7 @@ function AlbumView()
         async function fetchData()
         {
             let result = await getData('/album/get/' + params?.id);
-            console.log(result.album);
+            
             if (!ignore) {
                 (function set({errorMessage, album}){
                     setData({loading: false, album: album, failMessage: errorMessage});

@@ -1,5 +1,6 @@
 import React from "react";
 import ActiveRequestStatus from "./activeRequestStatus.jsx";
+import { NavLink } from "react-router-dom";
 
 function Request(props)
 {
@@ -14,12 +15,16 @@ function Request(props)
                 <div className="horizontal unselectable full-height full-width 
                     medium-padded center-aligned medium-gaped">
                     <div className=" vertical medium-gaped" style={{width:"60%"}}>
-                        <div className="above-normal full-width">
+                        <NavLink className="above-normal full-width highlight-on-hover"
+                            to={props?.albumLink}
+                            style={{textDecoration:"none"}}>
                             {props?.title}
-                        </div>
-                        <div className="normal full-width">
+                        </NavLink>
+                        <NavLink className="normal full-width highlight-on-hover"
+                            to={props?.artistLink}
+                            style={{textDecoration:"none"}}>
                             {props?.artist}
-                        </div>
+                        </NavLink>
                     </div>
                     <div className='vertical full-height fill-space'
                         style={{alignItems:"end"}}>

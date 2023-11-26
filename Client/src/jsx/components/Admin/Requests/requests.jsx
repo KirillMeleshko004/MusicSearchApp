@@ -145,7 +145,9 @@ function Requests()
                                     status={request?.status} id={request?.requestId}
                                     title={request?.album.title}
                                     artist={request?.album.artist.displayedName}
-                                    changeStatus={() => resolve(request)}/>
+                                    changeStatus={() => resolve(request)}
+                                    artistLink={(`/artist/${request?.album?.artist.userId}`)}
+                                    albumLink={(`/album/${request?.album?.albumId}`)}/>
                             </li>
                         )
                     })}

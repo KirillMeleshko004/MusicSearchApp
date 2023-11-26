@@ -17,7 +17,7 @@ function ArtistPage()
         async function fetchData()
         {
             let result = await getData('/artist/get/' + params?.id);
-            console.log(result);
+
             if (!ignore) {
                 (function set({errorMessage, artist}){
                     setData({loading: false, artist: artist, failMessage: errorMessage});
@@ -69,7 +69,9 @@ function ArtistPage()
                             style={{height:"330px"}}>
                             <div className=" sub-title">Description</div>
                             <div className=" above-normal medium-spaced"
-                                style={{textAlign:"justify"}}>{data.artist?.description}</div>
+                                style={{textAlign:"justify", overflowY:"auto"}}>
+                                {data.artist?.description}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,8 +90,6 @@ function ArtistPage()
                                     >
                                     <img className=" full-height" src={album?.coverImage}
                                         style={{objectFit:"cover"}}/>
-                                    {/* <AlbumSong title={song.title} index={ind}
-                                        coverImage={song.album.coverImage}/> */}
                                 </li>
                             )
                         })}

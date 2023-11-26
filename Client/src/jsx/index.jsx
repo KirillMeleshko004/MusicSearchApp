@@ -5,7 +5,7 @@ import "../scss/index.scss";
 import App from "./app.jsx";
 import Login from "./login.jsx";
 import Register from "./register.jsx";
-import DataBlock from "./components/dataBlock.jsx";
+import NewsBlock from "./components/News/newsBlock.jsx";
 import Profile from "./components/Profile/profile.jsx";
 import NotFound from "./notFound.jsx";
 import Upload from "./components/Music/upload.jsx";
@@ -26,7 +26,7 @@ root.render(
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
           <Route path="/" element={<App/>}>
-            <Route index element={<DataBlock/>}/>
+            <Route index element={<NewsBlock/>}/>
             <Route path="explore" element={<Explore/>}/>
             <Route path="profile" element={<Profile/>}/>
             <Route path="upload" element={<Upload/>}/>

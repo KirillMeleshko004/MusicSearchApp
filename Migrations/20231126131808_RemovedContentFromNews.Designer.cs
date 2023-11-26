@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicSearchApp.Models.DB;
 
@@ -11,9 +12,11 @@ using MusicSearchApp.Models.DB;
 namespace MusicSearchApp.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20231126131808_RemovedContentFromNews")]
+    partial class RemovedContentFromNews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,10 +245,15 @@ namespace MusicSearchApp.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("NewsId");
 
                     b.HasIndex("AlbumId")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("News");
                 });
@@ -541,6 +549,10 @@ namespace MusicSearchApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MusicSearchApp.Models.User", null)
+                        .WithMany("News")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Album");
                 });
 
@@ -640,6 +652,8 @@ namespace MusicSearchApp.Migrations
                     b.Navigation("Actions");
 
                     b.Navigation("Albums");
+
+                    b.Navigation("News");
 
                     b.Navigation("Requests");
 

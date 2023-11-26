@@ -94,7 +94,7 @@ namespace MusicSearchApp.Controllers
         public async Task<IActionResult> GetPending()
         {
             IResponse<IEnumerable<RequestViewModel>> result = 
-                await _requestService.GetPendingRequests();
+                await _requestService.GetPendingRequestsAsync();
 
             if(result.Status != Services.Interfaces.StatusCode.Ok)
             {
@@ -111,7 +111,7 @@ namespace MusicSearchApp.Controllers
             if(!ModelState.IsValid) return BadRequest();
 
             IResponse<RequestViewModel> result = 
-                await _requestService.ChangeStatus(id, status);
+                await _requestService.ChangeStatusAsync(id, status);
 
             if(result.Status != Services.Interfaces.StatusCode.Ok)
             {

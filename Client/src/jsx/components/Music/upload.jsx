@@ -7,6 +7,7 @@ import SongPopup from "./songPopup.jsx";
 import CheckBox from "../checkBox.jsx";
 import { OK, postFormData } from "../services/accessAPI.js";
 import SessionManager from "../services/sessionManager.js";
+import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
 
 
 function Upload()
@@ -17,6 +18,8 @@ function Upload()
     const coverImage = useRef(null);
     const albumTitle = useRef(null);
 
+    const session = useAuthCheck();
+
     function addSong(song)
     {
         setSongs([...songs, song]);
@@ -24,14 +27,18 @@ function Upload()
 
     function removeSong(song)
     {
-        console.log(song);
         setSongs(songs.filter((s) => s != song));
     }
 
     async function submit(e)
     {
-        const session = SessionManager.getSession();
         e.preventDefault();
+
+        if(!session)
+        {
+            alert("Unauthorized");
+            return;
+        }
 
         const form = e.target;
         let formData = new FormData();
@@ -51,8 +58,6 @@ function Upload()
             formData.append("songFiles", song.file, song.file.name);
         })
 
-            
-        console.log(formData.getAll("songNames[]"));
         let result = await postFormData("/album/upload", formData);
 
         if(result?.state === OK)
