@@ -11,6 +11,7 @@ namespace MusicSearchApp.ViewModels
         public string ProfileImage { get; set; } = null!;
         public bool IsBlocked { get; set; }
         public int SubscribersCount { get; set; }
+        public IEnumerable<AlbumInfoViewModel>? Albums { get; set; }
 
         public ArtistViewModel(User user)
         {

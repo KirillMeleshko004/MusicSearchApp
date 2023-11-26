@@ -12,12 +12,10 @@ namespace MusicSearchApp.Services
     {
         private readonly ApplicationContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly FileService _fileService;
-        public MusicPlayService(ApplicationContext context, UserManager<User> userManager, FileService fileService)
+        public MusicPlayService(ApplicationContext context, UserManager<User> userManager)
         {
             _context = context;
             _userManager = userManager;
-            _fileService = fileService;
         }
 
         public IResponse<SongInfoViewModel> GetSong(int id)

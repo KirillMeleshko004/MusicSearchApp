@@ -11,7 +11,7 @@ function AlbumView()
 {
     const params = useParams();
 
-    const [data, setData] = useState({loading: true, redirectToLogin: false});
+    const [data, setData] = useState({loading: true});
 
     const [deletable, setDeletable] = useState(false);
 
@@ -28,9 +28,8 @@ function AlbumView()
             let result = await getData('/album/get/' + params?.id);
             console.log(result.album);
             if (!ignore) {
-                (function set({errorMessage, statusCode, album}){
-                    setData({loading: false, album: album,
-                        redirectToLogin: statusCode == 401, failMessage: errorMessage});
+                (function set({errorMessage, album}){
+                    setData({loading: false, album: album, failMessage: errorMessage});
                 }(result));
             }
         }
@@ -74,17 +73,17 @@ function AlbumView()
             <article className="fill-space vertical full-height large-gaped 
                 bordered-block large-padded unselectable">
                     <div className=" horizontal title">
-                        <div>
+                        <div style={{marginLeft:"30px"}}>
                             {data?.album?.title}
                         </div>
                         
                     </div>
-                    <div className=" horizontal fill-space full-width large-gaped">
+                    <div className=" horizontal fill-space full-width large-gaped hidden-overflow">
                         <div className=" vertical large-gaped center-aligned"
-                            style={{width: "30%"}}>
+                            style={{width: "330px", maxHeight:"80%", maxWidth:"330px", minWidth:"330px"}}>
                             <img src={data.album?.coverImage}
                                 className="rounded full-height full-width   "
-                                style={{objectFit:"cover", width: "330px", height: "330px"}}
+                                style={{objectFit:"cover", height: "330px"}}
                                 alt={"Image"}></img>
                             <NavLink className=" full-width sub-title horizontal center-aligned 
                                 highlight-on-hover"
