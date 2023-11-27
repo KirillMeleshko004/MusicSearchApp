@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getData } from "../services/accessAPI";
 import { useNavigate, useParams } from "react-router";
+import SessionManager from "../services/sessionManager.js";
 
 function ArtistPage()
 {
@@ -20,7 +21,8 @@ function ArtistPage()
 
             if (!ignore) {
                 (function set({errorMessage, artist}){
-                    setData({loading: false, artist: artist, failMessage: errorMessage});
+                    setData({loading: false, artist: artist, failMessage: errorMessage,
+                        session: SessionManager.getSession()});
                 }(result));
             }
         }
@@ -50,9 +52,19 @@ function ArtistPage()
                     <div style={{marginLeft:"30px"}}>
                         {data.artist?.displayedName}
                     </div>
-                    <div className=" sub-title" style={{marginRight:"10px"}}>
+                    {/* <div className=" sub-title" style={{marginRight:"10px"}}>
                         Subscribers: {data.artist?.subscribersCount}
-                    </div>
+                    </div> */}
+                    {
+                        data?.session &&
+                        (
+                            <div className=" normal bordered-block red-border-on-hover full-height horizontal center-aligned center-justified"
+                                style={{width:"160px"}}>
+                                Subscribe
+                            </div>
+                        )
+                    }
+                    
                 </div>
 
                 <div className=" horizontal fill-space full-width large-gaped"

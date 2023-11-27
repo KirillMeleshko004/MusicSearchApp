@@ -13,10 +13,15 @@ function SongMinInfo(props) {
                     onClick={props?.play}/>
                 <div className="horizontal unselectable full-height full-width 
                     medium-padded center-aligned medium-gaped">
-                    <div className="above-normal highlight-on-hover"
-                        style={{width:"60%"}}
-                        onClick={props?.play}>
-                        {props?.title}
+                    <div className=' vertical space-between full-height' 
+                        style={{width:"67%"}}>
+                        <div className="above-normal highlight-on-hover"
+                            onClick={props?.play}>
+                            {props?.title}
+                        </div>
+                        <div className=' normal'>
+                            Genre: {props?.genre}
+                        </div>
                     </div>
                     <div className="bordered-block full-height"></div>
                     <NavLink className="sub-title highlight-on-hover"

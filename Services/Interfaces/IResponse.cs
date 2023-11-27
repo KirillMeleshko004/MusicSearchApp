@@ -6,7 +6,8 @@ namespace MusicSearchApp.Services.Interfaces
         Created = 201,
         Ok = 200,
         InternalError = 500,
-        Forbidden = 403
+        Forbidden = 403,
+        BadRequest = 400,
     }
 
     public interface IResponse<T>

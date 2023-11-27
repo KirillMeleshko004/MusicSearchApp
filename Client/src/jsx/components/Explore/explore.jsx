@@ -60,13 +60,14 @@ function Explore()
                         style={{maxHeight:"87%"}}>
                         {data?.songs?.map((song, index) =>
                         {
+                            console.log(song);
                             return(
                                 <li key={index} className="gap-from-scroll list-gap
                                     bordered-block  x-medium-padded"
                                     style={{height:"130px"}}
                                     >
                                     <SongMinInfo title={song.title} artist={song.artist.displayedName}
-                                        coverImage={song.album.coverImage}
+                                        coverImage={song.album.coverImage} genre={song.genreName}
                                         link={(`/artist/${song.artist.userId}`)}
                                         play={() => play(song)}/>
                                 </li>
