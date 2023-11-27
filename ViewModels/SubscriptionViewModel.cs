@@ -11,8 +11,10 @@ namespace MusicSearchApp.ViewModels
 
         public SubsciptionViewModel(Subscription subscription)
         {
-            Subscriber = new(subscription.Subscriber);
-            Artist = new(subscription.Artist);
+            if(subscription.Subscriber != null)
+                Subscriber = new(subscription.Subscriber);
+            if(subscription.Artist != null)
+                Artist = new(subscription.Artist);
             StartDate = subscription.StartDate;
         }
     }

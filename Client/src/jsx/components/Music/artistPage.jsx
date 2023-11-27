@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getData } from "../services/accessAPI";
+import { OK, deleteData, getData, postData } from "../services/accessAPI";
 import { useNavigate, useParams } from "react-router";
 import SessionManager from "../services/sessionManager.js";
 
@@ -8,6 +8,7 @@ function ArtistPage()
     const params = useParams();
 
     const [data, setData] = useState({loading: true});
+    const [session, setSession] = useState(null)
 
     const navigate = useNavigate();
 
@@ -21,8 +22,8 @@ function ArtistPage()
 
             if (!ignore) {
                 (function set({errorMessage, artist}){
-                    setData({loading: false, artist: artist, failMessage: errorMessage,
-                        session: SessionManager.getSession()});
+                    setData({loading: false, artist: artist, failMessage: errorMessage});
+                    setSession(SessionManager.getSession())
                 }(result));
             }
         }
@@ -32,6 +33,51 @@ function ArtistPage()
         return ()=> ignore = true;
     }, []);
 
+    useEffect(() => {
+        if(!session) return;
+            
+        let ignore = false;
+        async function fetchData()
+        {
+            let result = await getData('/artist/getsubscribed/' + data.artist?.userId + '?' +
+                new URLSearchParams({subscriberId: session?.userId}));
+
+            if (!ignore) {
+                (function set({isSubscribed}){
+                    setData({...data, isSubscribed: isSubscribed});
+                }(result));
+            }
+        }
+
+        fetchData();
+        
+        return () => ignore = true;
+
+    }, [session])
+    
+    async function subscribe()
+    {
+        let result = await postData('/artist/subscribe/' + data.artist?.userId + '?' +
+            new URLSearchParams({subscriberId: session?.userId}));
+
+        console.log(result);
+        (function set({state, subscription}){
+            if(state == OK)
+                setData({...data, isSubscribed: true});
+        }(result));
+    }
+
+    async function unsubscribe()
+    {
+        let result = await deleteData('/artist/unsubscribe/' + data.artist?.userId + '?' +
+            new URLSearchParams({subscriberId: session?.userId}));
+
+        console.log(result);
+        (function set({state, subscription}){
+            if(state == OK)
+                setData({...data, isSubscribed: false});
+        }(result));
+    }
     
     //Render while fetching data
     if(data.loading)
@@ -56,13 +102,22 @@ function ArtistPage()
                         Subscribers: {data.artist?.subscribersCount}
                     </div> */}
                     {
-                        data?.session &&
+                        session &&  (data?.isSubscribed ?
                         (
                             <div className=" normal bordered-block red-border-on-hover full-height horizontal center-aligned center-justified"
-                                style={{width:"160px"}}>
-                                Subscribe
+                                style={{width:"160px"}}
+                                onClick={unsubscribe}>
+                                Unsubscribe
                             </div>
                         )
+                        :
+                        (
+                            <div className=" normal bordered-block red-border-on-hover full-height horizontal center-aligned center-justified"
+                                style={{width:"160px"}}
+                                onClick={subscribe}>
+                                Subscribe
+                            </div>
+                        ))
                     }
                     
                 </div>

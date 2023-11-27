@@ -15,6 +15,7 @@ import Library from "./components/Profile/library.jsx";
 import AlbumView from "./components/Music/albumView.jsx";
 import Requests from "./components/admin/Requests/requests.jsx";
 import ArtistPage from "./components/Music/artistPage.jsx";
+import Subscriptions from "./components/Subscriptions/subscriptions.jsx";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -35,6 +36,7 @@ root.render(
             <Route path="requests" element={<Requests/>}/>
             <Route path="album/:id" element={<AlbumView/>}/>
             <Route path="artist/:id" element={<ArtistPage/>}/>
+            <Route path="subscriptions" element={<Subscriptions/>}/>
           </Route> 
           <Route path="*" element={<NotFound/>}/>
         </Routes>

@@ -56,8 +56,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddControllersWithViews().AddJsonOptions(o => {
-    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;});
+builder.Services.AddControllersWithViews();
 
 //Configure root path for production client app
 builder.Services.AddSpaStaticFiles(configuration =>

@@ -43,6 +43,21 @@ function Library()
         SessionManager.redirectToLogin(navigate);
     }, [data])
 
+    if(!data?.library || data?.library?.length == 0)
+    {
+        return(
+            <section className="panel large-padded large-gaped vertical fill-space full-height">
+                <article className="fill-space vertical full-height medium-gaped bordered-block medium-padded">
+                    <h1 className="horizontal title">My Library</h1>
+                    <div className="fill-space full-width largest center-aligned
+                     center-justified horizontal">
+                        You haven't uploaded anything yet
+                    </div>
+                </article>  
+            </section>  
+        )
+    }
+
     return(
         <section className="panel large-padded large-gaped vertical fill-space full-height">
             <article className="fill-space vertical full-height medium-gaped bordered-block medium-padded">

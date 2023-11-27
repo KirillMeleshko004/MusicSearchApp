@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models;
 using MusicSearchApp.Services;
@@ -33,35 +34,57 @@ namespace MusicSearchApp.Controllers
         }
     
         [HttpPost]
+        [Authorize]
         [Route("{action}/{id}")]
-        public async Task<IActionResult> Subscribe(int id, [FromQuery]int userId)
+        public async Task<IActionResult> Subscribe(int id, [FromQuery]int subscriberId)
         {
             if(!ModelState.IsValid) return BadRequest();
 
-            IResponse<SubsciptionViewModel> result = await _subscriptionService.SubscribeAsync(userId, id);
+            IResponse<SubsciptionViewModel> result = 
+                await _subscriptionService.SubscribeAsync(subscriberId, id);
 
             if(result.Status != Services.Interfaces.StatusCode.Created)
             {
                 return StatusCode((int)result.Status, new { errorMessage = result.Message });
             }
 
-            return Ok(new { artist = result.Data, message = result.Message });
+            return Ok(new { subscription = result.Data, message = result.Message });
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("{action}/{id}")]
-        public async Task<IActionResult> Unsubscribe(int id, [FromQuery]int userId)
+        public async Task<IActionResult> Unsubscribe(int id, [FromQuery]int subscriberId)
         {
             if(!ModelState.IsValid) return BadRequest();
 
-            IResponse<SubsciptionViewModel> result = await _subscriptionService.UnsubscribeAsync(userId, id);
+            IResponse<SubsciptionViewModel> result = 
+                await _subscriptionService.UnsubscribeAsync(subscriberId, id);
 
             if(result.Status != Services.Interfaces.StatusCode.Ok)
             {
                 return StatusCode((int)result.Status, new { errorMessage = result.Message });
             }
 
-            return Ok(new { artist = result.Data, message = result.Message });
+            return Ok(new { subscription = result.Data, message = result.Message });
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("{action}/{id}")]
+        public async Task<IActionResult> GetSubscribed(int id, [FromQuery]int subscriberId)
+        {
+            if(!ModelState.IsValid) return BadRequest();
+
+            IResponse<bool> result = 
+                await _subscriptionService.IsSubscribedAsync(subscriberId, id);
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new { isSubscribed = result.Data, message = result.Message });
         }
     }
 }

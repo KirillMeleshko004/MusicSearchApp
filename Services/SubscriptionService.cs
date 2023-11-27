@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Services.Interfaces;
@@ -63,14 +64,6 @@ namespace MusicSearchApp.Services
             IResponse<SubsciptionViewModel> response = 
                 new Response<SubsciptionViewModel>();
 
-            if(!await _context.Subscriptions
-                .AnyAsync(s => s.SubscriberId == userId && s.ArtistId == artistId))
-            {
-                response.Status = StatusCode.NotFound;
-                response.Message = "Subscription not found";
-                return response;
-            }
-
             Subscription? subscription = await _context.Subscriptions.AsNoTracking()
                 .Include(s => s.Artist)
                 .Include(s => s.Subscriber)
@@ -89,6 +82,48 @@ namespace MusicSearchApp.Services
             response.Status = StatusCode.Ok;
             response.Message = "Success";
             response.Data = new(subscription);
+
+            return response;
+        }
+    
+        public IResponse<IEnumerable<SubsciptionViewModel>> GetSubscriptions(int userId)
+        {
+            IResponse<IEnumerable<SubsciptionViewModel>> response = 
+                new Response<IEnumerable<SubsciptionViewModel>>();
+
+            IEnumerable<SubsciptionViewModel> subscriptions = 
+                _context.Subscriptions.AsNoTracking()
+                    .Where(s => s.SubscriberId == userId)
+                    .Include(s => s.Artist)
+                    .Select<Subscription, SubsciptionViewModel>(s => new(s));
+
+            if(subscriptions.IsNullOrEmpty())
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "Subscriptions not found";
+                return response;
+            }
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = subscriptions;
+
+            return response;
+        }
+
+        public async Task<IResponse<bool>> IsSubscribedAsync(int subscriberId, int artistId)
+        {
+            IResponse<bool> response = 
+                new Response<bool>();
+
+            Subscription? subscription = await _context.Subscriptions.AsNoTracking()
+                .Include(s => s.Artist)
+                .Include(s => s.Subscriber)
+                .FirstOrDefaultAsync(s => s.SubscriberId == subscriberId && s.ArtistId == artistId);
+
+            response.Status = StatusCode.Ok;
+            response.Message = "Success";
+            response.Data = subscription != null;
 
             return response;
         }

@@ -15,11 +15,14 @@ namespace MusicSearchApp.Controllers
     {
         private readonly ProfileEditService _editService;
         private readonly FileService _fileService;
+        private readonly SubscriptionService _subscriptionService;
 
-        public ProfileController(ProfileEditService editService, FileService fileService)
+        public ProfileController(ProfileEditService editService, FileService fileService,
+            SubscriptionService subscriptionService)
         {
             _editService = editService;
             _fileService = fileService;
+            _subscriptionService = subscriptionService;
         }
 
         [HttpGet]
@@ -53,5 +56,21 @@ namespace MusicSearchApp.Controllers
 
             return Ok(new { profile = result.Data, message = result.Message });
         } 
+    
+        [HttpGet]
+        [Authorize]
+        [Route("subscriptions/{id}")]
+        public IActionResult GetSubscriptions(int id)
+        {
+            IResponse<IEnumerable<SubsciptionViewModel>> result = 
+                _subscriptionService.GetSubscriptions(id);
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new { subscriptions = result.Data, message = result.Message });
+        }
     }
 }

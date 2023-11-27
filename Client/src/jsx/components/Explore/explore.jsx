@@ -60,7 +60,6 @@ function Explore()
                         style={{maxHeight:"87%"}}>
                         {data?.songs?.map((song, index) =>
                         {
-                            console.log(song);
                             return(
                                 <li key={index} className="gap-from-scroll list-gap
                                     bordered-block  x-medium-padded"

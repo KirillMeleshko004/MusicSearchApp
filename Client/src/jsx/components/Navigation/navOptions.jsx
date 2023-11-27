@@ -14,7 +14,7 @@ function NavOptions()
             <NavOption icon="Profile.svg" text="Profile" link={"profile"}></NavOption>
             <NavOption icon="Favourites.svg" text="My Library" link={"library"}></NavOption>
             <NavOption icon="Upload.svg" text="Upload Music" link={"upload"}></NavOption>
-            <NavOption icon="Subscriptions.svg" text="Subscriptions"></NavOption>
+            <NavOption icon="Subscriptions.svg" text="Subscriptions" link={"subscriptions"}></NavOption>
             {SessionManager.getRole() == "User" && 
                 (
                     <>
