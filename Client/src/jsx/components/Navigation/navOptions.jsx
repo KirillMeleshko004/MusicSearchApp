@@ -20,7 +20,7 @@ function NavOptions()
                     <>
                     <NavOption icon="AdminUser.svg" text="Users" link={"users"}></NavOption>
                     <NavOption icon="Approve.svg" text="Approve requests" link={"requests"}></NavOption>
-                    <NavOption icon="Actions.svg" text="Actions"></NavOption>
+                    <NavOption icon="Actions.svg" text="Actions" link={"actions"}></NavOption>
                     </>
                 )
             }

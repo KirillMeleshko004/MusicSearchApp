@@ -12,10 +12,13 @@ namespace MusicSearchApp.Services
     {
         private readonly ApplicationContext _context;
         private readonly NewsService _newsService;
-        public RequestService(ApplicationContext context, NewsService newsService)
+        private readonly ActionService _actionService;
+        public RequestService(ApplicationContext context, NewsService newsService,
+            ActionService actionService)
         {
             _context = context;
             _newsService = newsService;
+            _actionService = actionService;
         }
 
 
@@ -97,7 +100,8 @@ namespace MusicSearchApp.Services
             return new(request);
         }
     
-        public async Task<IResponse<RequestViewModel>> ChangeStatusAsync(int requestId, string status)
+        public async Task<IResponse<RequestViewModel>> ChangeStatusAsync(int requestId, string status,
+            string actorName)
         {
             RequestViewModel? request = null;
             if(status == RequestStatuses.Accepted) request = await AcceptRequestAsync(requestId);
@@ -112,6 +116,9 @@ namespace MusicSearchApp.Services
                 response.Message = "Request not found";
                 return response;
             }
+    
+            await _actionService.CreateAction(actorName, 
+                "Changed status of album " + request?.Album.Title + " to " + status);
 
             response.Status = StatusCode.Ok;
             response.Message = "Success";

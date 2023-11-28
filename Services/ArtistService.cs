@@ -40,7 +40,6 @@ namespace MusicSearchApp.Services
             response.Status = StatusCode.Ok;
             response.Message = "Success";
             response.Data = artist;
-
             return response;
         }
     }

@@ -17,14 +17,16 @@ namespace MusicSearchApp.Controllers
         private readonly UserManager<User> _userManager;
         private readonly AdminService _adminService;
         private readonly RequestService _requestService;
+        private readonly ActionService _actionService;
 
         public AdminController(ApplicationContext context, UserManager<User> userManager,
-            AdminService adminService, RequestService requestService)
+            AdminService adminService, RequestService requestService, ActionService actionService)
         {
             _context = context;
             _userManager = userManager;
             _adminService = adminService;
             _requestService = requestService;
+            _actionService = actionService;
         }
 
         #region User Management
@@ -110,8 +112,10 @@ namespace MusicSearchApp.Controllers
         {
             if(!ModelState.IsValid) return BadRequest();
 
+            string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
+
             IResponse<RequestViewModel> result = 
-                await _requestService.ChangeStatusAsync(id, status);
+                await _requestService.ChangeStatusAsync(id, status, actorName);
 
             if(result.Status != Services.Interfaces.StatusCode.Ok)
             {
@@ -121,6 +125,27 @@ namespace MusicSearchApp.Controllers
             return Ok(new{request = result.Data, message = result.Message });
         }
         
+        #endregion
+    
+        #region Actions Management
+
+        [HttpGet]
+        [Route("actions/get")]
+        public IActionResult GetActions([FromQuery]int start, [FromQuery]int count)
+        {
+            if(!ModelState.IsValid) return BadRequest();
+
+            IResponse<IEnumerable<ActionViewModel>> result = 
+                _actionService.GetActions(start, count);
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new{actions = result.Data, message = result.Message });
+        }
+
         #endregion
     }
 }

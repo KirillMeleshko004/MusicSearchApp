@@ -56,7 +56,11 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 //Configure root path for production client app
 builder.Services.AddSpaStaticFiles(configuration =>
@@ -79,6 +83,7 @@ builder.Services.AddScoped<RequestService>();
 builder.Services.AddScoped<ArtistService>();
 builder.Services.AddScoped<NewsService>();
 builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<ActionService>();
 
 #endregion
 

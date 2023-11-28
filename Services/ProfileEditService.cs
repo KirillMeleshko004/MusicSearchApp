@@ -11,10 +11,13 @@ namespace MusicSearchApp.Services
         private const string defaultProfileImage = "Images/Profile/default_profile_img.svg";
         private readonly UserManager<User> _userManager;
         private readonly FileService _fileService;
-        public ProfileEditService(UserManager<User> userManager,FileService fileService)
+        private readonly ActionService _actionService;
+        public ProfileEditService(UserManager<User> userManager, FileService fileService, 
+            ActionService actionService)
         {
             _userManager = userManager;
             _fileService = fileService;
+            _actionService = actionService;
         }
 
         private async Task<bool> IsChangeAllowed(int changedId, string actorName)
@@ -75,6 +78,9 @@ namespace MusicSearchApp.Services
             response.Status = StatusCode.Ok;
             response.Message = "Success";
             response.Data = new(user);
+
+            await _actionService.CreateAction(actorName, 
+                "Changed profile");
 
             return response;
         }

@@ -16,6 +16,7 @@ import AlbumView from "./components/Music/albumView.jsx";
 import Requests from "./components/admin/Requests/requests.jsx";
 import ArtistPage from "./components/Music/artistPage.jsx";
 import Subscriptions from "./components/Subscriptions/subscriptions.jsx";
+import Actions from "./components/admin/Actions/actions.jsx";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -37,6 +38,7 @@ root.render(
             <Route path="album/:id" element={<AlbumView/>}/>
             <Route path="artist/:id" element={<ArtistPage/>}/>
             <Route path="subscriptions" element={<Subscriptions/>}/>
+            <Route path="actions" element={<Actions/>}/>
           </Route> 
           <Route path="*" element={<NotFound/>}/>
         </Routes>

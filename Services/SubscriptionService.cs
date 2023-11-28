@@ -11,15 +11,24 @@ namespace MusicSearchApp.Services
     {
         
         private readonly ApplicationContext _context;
-        public SubscriptionService(ApplicationContext context)
+        private readonly ActionService _actionService;
+        public SubscriptionService(ApplicationContext context, ActionService actionService)
         {
             _context = context;
+            _actionService = actionService;
         }
 
         public async Task<IResponse<SubsciptionViewModel>> SubscribeAsync(int userId, int artistId)
         {
             IResponse<SubsciptionViewModel> response = 
                 new Response<SubsciptionViewModel>();
+
+            if(userId == artistId)
+            {
+                response.Status = StatusCode.Forbidden;
+                response.Message = "You can not subscribe to yourself";
+                return response;
+            }
 
             if(await _context.Subscriptions
                 .AnyAsync(s => s.SubscriberId == userId && s.ArtistId == artistId))
@@ -52,6 +61,10 @@ namespace MusicSearchApp.Services
                 .Include(s => s.Subscriber)
                 .FirstOrDefaultAsync(s => s.SubscriberId == userId && s.ArtistId == artistId))!;
 
+                 
+            await _actionService.CreateAction(userId, 
+                "Subscribed to " + subscription.Artist.UserName);
+
             response.Status = StatusCode.Created;
             response.Message = "Success";
             response.Data = new(subscription);
@@ -78,6 +91,10 @@ namespace MusicSearchApp.Services
 
             _context.Subscriptions.Remove(subscription);
             await _context.SaveChangesAsync();
+
+                 
+            await _actionService.CreateAction(userId, 
+                "Unsubscribed from " + subscription.Artist.UserName);
             
             response.Status = StatusCode.Ok;
             response.Message = "Success";

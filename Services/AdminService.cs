@@ -12,11 +12,14 @@ namespace MusicSearchApp.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly ApplicationContext _context;
+        private readonly ActionService _actionService;
 
-        public AdminService(UserManager<User> userManager, ApplicationContext applicationContext)
+        public AdminService(UserManager<User> userManager, ApplicationContext applicationContext,
+            ActionService actionService)
         {
             _userManager = userManager;
             _context = applicationContext;
+            _actionService = actionService;
         }
 
         public async Task<IResponse<ProfileViewModel>> ChangeBlockAsync(int id, string actorName)
@@ -42,6 +45,9 @@ namespace MusicSearchApp.Services
 
             user.IsBlocked = !user.IsBlocked;
             await _userManager.UpdateAsync(user);
+
+            await _actionService.CreateAction(actorName, 
+                ChangedBlockMessage(user.UserName!, user.IsBlocked));
 
             response.Status = StatusCode.Ok;
             response.Message = "Success";
@@ -73,6 +79,9 @@ namespace MusicSearchApp.Services
             }
 
             await _userManager.DeleteAsync(user);
+
+            await _actionService.CreateAction(actorName, 
+                "Deleted " + user.UserName);
 
             response.Status = StatusCode.Ok;
             response.Message = "Success";
@@ -115,6 +124,14 @@ namespace MusicSearchApp.Services
             return new Response<ProfileViewModel>() 
                 { Status = StatusCode.Ok, Message = "Success", Data = new(user) };
         }
+
+        private static string ChangedBlockMessage(string userName, bool newStatus)
+        {
+            return "Changed user status " + userName + " from " + (newStatus ?
+            "active to blocked" :
+            "blocked to active");
+        }
+
 
     }
 }

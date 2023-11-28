@@ -21,7 +21,6 @@ function Requests()
                 
 
                 if (!ignore) {
-                    console.log(result);
                     (function set({requests, errorMessage, statusCode}){
                         setData({loading: false, requests: requests,
                             failMessage: errorMessage, redirectToLogin: statusCode == 401});
@@ -135,7 +134,6 @@ function Requests()
                     style={{maxHeight:"97%"}}>
                     {data.requests?.map((request, index) =>
                     {
-                        console.log(request)
                         return(
                             <li key={request?.requestId} className="gap-from-scroll list-gap
                                 bordered-block  x-medium-padded"

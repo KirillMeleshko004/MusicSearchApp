@@ -59,10 +59,13 @@ namespace MusicSearchApp.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("{action}/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            IResponse<AlbumInfoViewModel> result = _musicService.DeleteAlbum(id);
+            string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
+
+            IResponse<AlbumInfoViewModel> result = await _musicService.DeleteAlbum(id, actorName);
 
             if(result.Status != Services.Interfaces.StatusCode.Ok)
             {

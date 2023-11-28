@@ -14,14 +14,16 @@ namespace MusicSearchApp.Services
         private readonly ApplicationContext _context;
         private readonly FileService _fileService;
         private readonly RequestService _requestService;
+        private readonly ActionService _actionService;
 
         public AlbumUploadingService(UserManager<User> userManager, ApplicationContext context, 
-            FileService fileService, RequestService requestService)
+            FileService fileService, RequestService requestService, ActionService actionService)
         {
             _userManager = userManager;
             _context = context;
             _fileService = fileService;
             _requestService = requestService;
+            _actionService = actionService;
         }
 
         public async Task<IResponse<AlbumInfoViewModel>> UploadAlbum(AlbumViewModel albumInfo)
@@ -49,7 +51,7 @@ namespace MusicSearchApp.Services
                 .Where(a => a.Title == albumInfo.AlbumTitle && a.ArtistId == albumInfo.ArtistId)
                 .First();
 
-            if(albumInfo.IsPublic) isSucceed = await _requestService.CreatePublishRequest(album);
+            
 
             for(int i = 0; i < albumInfo.SongFiles.Length; i++)
             {
@@ -63,6 +65,16 @@ namespace MusicSearchApp.Services
                 response.Message = "Internal server error while creating album";
                 return response;
             }
+
+            await _actionService.CreateAction(albumInfo.ArtistId, 
+                "Added album " + albumInfo.AlbumTitle);
+
+            if(albumInfo.IsPublic) 
+            {
+                isSucceed = await _requestService.CreatePublishRequest(album);
+                await _actionService.CreateAction(albumInfo.ArtistId, 
+                    "Created publish request for album " + albumInfo.AlbumTitle);
+            }    
 
             response.Status = StatusCode.Ok;
             response.Message = "Success";
@@ -107,7 +119,7 @@ namespace MusicSearchApp.Services
             return true;
         }
 
-        private double GetAudionLength(string path)
+        private static double GetAudionLength(string path)
         {
             Mp3FileReader reader = new Mp3FileReader(
                 Path.Combine(Directory.GetCurrentDirectory(), "Data", path));

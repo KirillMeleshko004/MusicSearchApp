@@ -51,7 +51,7 @@ namespace MusicSearchApp.Services
             return true;
         }
 
-        private string GenerateUniqueFileName(IFormFile file)
+        private static string GenerateUniqueFileName(IFormFile file)
         {
             return Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
         }
