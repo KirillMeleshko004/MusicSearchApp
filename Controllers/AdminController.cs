@@ -6,11 +6,12 @@ using MusicSearchApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using MusicSearchApp.Services;
 using MusicSearchApp.Services.Interfaces;
+using MusicSearchApp.Models.Static;
 
 namespace MusicSearchApp.Controllers
 {
     [Route("api/{controller}")]
-    [Authorize]
+    [Authorize(Roles = UserRoles.Admin)]
     public class AdminController : Controller
     {
         private readonly ApplicationContext _context;

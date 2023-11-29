@@ -17,6 +17,7 @@ import Requests from "./components/admin/Requests/requests.jsx";
 import ArtistPage from "./components/Music/artistPage.jsx";
 import Subscriptions from "./components/Subscriptions/subscriptions.jsx";
 import Actions from "./components/admin/Actions/actions.jsx";
+import ProtectedRoot from "./components/admin/protectedRoot.jsx";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -25,6 +26,7 @@ root.render(
   <StrictMode>
       <BrowserRouter>
         <Routes>
+          <></>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
           <Route path="/" element={<App/>}>
@@ -32,13 +34,23 @@ root.render(
             <Route path="explore" element={<Explore/>}/>
             <Route path="profile" element={<Profile/>}/>
             <Route path="upload" element={<Upload/>}/>
-            <Route path="users" element={<Users/>}/>
+            <Route path="users" element={
+              <ProtectedRoot>
+                <Users/>
+              </ProtectedRoot>}/>
             <Route path="library" element={<Library/>}/>
-            <Route path="requests" element={<Requests/>}/>
+            <Route path="requests" element={
+              <ProtectedRoot>
+                <Requests/>
+              </ProtectedRoot>
+            }/>
             <Route path="album/:id" element={<AlbumView/>}/>
             <Route path="artist/:id" element={<ArtistPage/>}/>
             <Route path="subscriptions" element={<Subscriptions/>}/>
-            <Route path="actions" element={<Actions/>}/>
+            <Route path="actions" element={
+              <ProtectedRoot>
+                <Actions/>
+              </ProtectedRoot>}/>
           </Route> 
           <Route path="*" element={<NotFound/>}/>
         </Routes>

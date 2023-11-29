@@ -28,7 +28,6 @@ function Profile()
         async function fetchData()
         {
             let result = await getData(('/profile/get/' + session?.userId));
-            
             if (!ignore) {
                 (function set({profile, errorMessage, statusCode}){
                     setData({loading: false, profile: profile,
@@ -96,7 +95,7 @@ function Profile()
                 <div className="horizontal large-gaped full-height">
                     <div className="vertical large-gaped">
                         <div className="horizontal medium-gaped center-aligned">
-                            <StatusBadge status={profile?.isBlocked}
+                            <StatusBadge status={!profile?.isBlocked}
                                 posStatus={"ACTIVE"}
                                 negStatus={"BLOCKED"}></StatusBadge>
                             <div className="largest unselectable">Profile</div>

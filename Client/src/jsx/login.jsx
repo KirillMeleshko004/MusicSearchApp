@@ -10,6 +10,7 @@ function Login()
     const usernameField = useRef(null);
     const passwordField = useRef(null);
     const errorLine = useRef(null);
+    const blockedLine = useRef(null)
 
     const [data, setData] = useState({loading: true});
 
@@ -23,7 +24,6 @@ function Login()
             password: passwordField.current.value,};
 
         let result = await postData("/Account/Login", userData, false);
-        
 
         (function set({session, errorMessage, state}){
             setData({loading: false, session: session, state: state,
@@ -34,8 +34,14 @@ function Login()
     useEffect(() => {
         if(!data?.state) return;
         
-        if(data?.state == OK)
+        if(data?.state == OK && !data.isBlocked)
         {
+            if(data?.session.isBlocked)
+            {
+                blockedLine.current.classList.remove("non-displayed");
+                return;
+            }
+            
             SessionManager.setSession(data?.session);
 
             const state = location.state;
@@ -59,7 +65,6 @@ function Login()
     
     }, [data]);
     
-
     return (
         <div id="login-container" className="background full-width full-height center-justified center-aligned horizontal">
             <div id="login-panel" className="panel vertical center-aligned full-width full-height large-padded xx-large-gaped">
@@ -83,6 +88,7 @@ function Login()
                                 height="16%"
                                 type="password"/>
                                 
+                            <div ref={blockedLine} className="error non-displayed">This user is blocked</div>
                             <div ref={errorLine} className="error non-displayed">Incorrect username or password</div>
                             <button onClick={login} id="submit" className="panel bordered-block center-justified red-border-on-hover">
                                 <p className="above-normal">Log In</p>

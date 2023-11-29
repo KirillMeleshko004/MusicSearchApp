@@ -20,7 +20,6 @@ function App()
     const redirected = useRef(false);
 
     useEffect(() => {
-        console.log("Here")
         if(redirected.current) return;
         const session = SessionManager.getSession();
         
@@ -29,6 +28,7 @@ function App()
             redirectToLogin(navigate);
             redirected.current = true;
         }
+        
         setSession(session);
 
     }, []);

@@ -131,13 +131,13 @@ function ArtistPage()
                             style={{objectFit:"cover"}}
                             alt={"Image"}></img>
                     </div>
-                    <div className=" vertical large-gaped space-between">
+                    <div className=" vertical large-gaped space-between fill-space">
                         <div className=" bordered-block medium-padded vertical medium-gaped hidden-overflow"
                             style={{height:"330px"}}>
                             <div className=" sub-title">Description</div>
                             <div className=" above-normal medium-spaced"
                                 style={{textAlign:"justify", overflowY:"auto"}}>
-                                {data.artist?.description}
+                                {data.artist?.description ?? "No descirption yet..."}
                             </div>
                         </div>
                     </div>

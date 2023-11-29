@@ -5,10 +5,16 @@ function UsersList({users, changeStatus, deleteUser})
 {
     
     const usersList = users?.map(user =>
-            <li key={user.userId} className="gap-from-scroll list-gap" 
-                style={{maxHeight:"200px"}}>
-                <User user={user} changeStatus={changeStatus} deleteUser={deleteUser}></User>
-            </li>
+        {
+            return(
+                <li key={user.userId} className="gap-from-scroll list-gap" 
+                    style={{maxHeight:"200px"}}>
+                    <User user={user} changeStatus={changeStatus} deleteUser={deleteUser}
+                        link={(`/artist/${user.userId}`)}></User>
+                </li>
+            )
+        }
+            
         );
     return (
         

@@ -17,7 +17,7 @@ function NavOptions()
             <NavOption icon="Favourites.svg" text="My Library" link={"library"}></NavOption>
             <NavOption icon="Upload.svg" text="Upload Music" link={"upload"}></NavOption>
             <NavOption icon="Subscriptions.svg" text="Subscriptions" link={"subscriptions"}></NavOption>
-            {session?.role == "User" && 
+            {session?.role == "Admin" && 
                 (
                     <>
                     <NavOption icon="AdminUser.svg" text="Users" link={"users"}></NavOption>

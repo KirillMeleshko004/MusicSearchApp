@@ -96,7 +96,8 @@ namespace MusicSearchApp.Services
                 UserId = user.Id,
                 Username = user.UserName!,
                 Role = user.Role!,
-                Token = token
+                Token = token,
+                IsBlocked = user.IsBlocked
             };
 
             return session;
