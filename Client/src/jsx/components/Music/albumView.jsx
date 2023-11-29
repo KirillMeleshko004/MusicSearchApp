@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { OK, Result, deleteData, getData } from "../services/accessAPI";
-import SongMinInfo from "../Explore/songMinInfo.jsx";
+import { OK, deleteData, getData } from "../services/accessAPI";
 import AlbumSong from "./albumSong.jsx";
-import SessionManager from "../services/sessionManager.js";
 import { PlayContext } from "../Context/playContext.jsx";
 import { NavLink } from "react-router-dom";
+import { SessionContext } from "../Context/sessionContext.jsx";
 
 function AlbumView()
 {
@@ -18,6 +17,9 @@ function AlbumView()
     const navigate = useNavigate();
 
     const play = useContext(PlayContext);
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
+
 
     useEffect(() => {
 
@@ -39,9 +41,7 @@ function AlbumView()
         return ()=> ignore = true;
     }, []);
 
-    useEffect(() => {
-        const session = SessionManager.getSession();
-        
+    useEffect(() => {       
         if(!session) return;
 
         const deletable = session?.userId == data?.album?.artist.userId || session?.role == "Admin";
@@ -53,8 +53,6 @@ function AlbumView()
     async function deleteAlbum()
     {
         let result = await deleteData('/album/delete/' + params?.id);
-
-        console.log(result.album);
 
         if(result.state == OK)
         {

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useAuthCheck } from "../../../hooks/useAuthCheck.jsx";
+import React, { useContext, useEffect, useState } from "react";
 import { changeData, getData } from "../../services/accessAPI";
 import Request from "./request.jsx";
 import ResolveRequestPopup from "./resolveRequestPopup.jsx";
+import { SessionContext } from "../../Context/sessionContext.jsx";
 
 function Requests()
 {
@@ -10,7 +10,7 @@ function Requests()
     const [popupShown, setPopupShown] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState(null);
 
-    const session = useAuthCheck();
+    const session = useContext(SessionContext);
 
     useEffect(() => {
         let ignore = false;
@@ -35,8 +35,10 @@ function Requests()
     }, [session])
 
     useEffect(() => {
-        if(!data.redirectToLogin) return;
-        SessionManager.redirectToLogin(navigate);
+        if(data.redirectToLogin)
+        {
+            session.redirectToLogin();
+        }
     }, [data])
 
     function resolve(request)

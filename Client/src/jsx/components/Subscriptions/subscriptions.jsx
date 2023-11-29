@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
+import React, { useContext, useEffect, useState } from "react";
 import { getData } from "../services/accessAPI";
 import Subscription from "./subscription.jsx";
-import SessionManager from "../services/sessionManager.js";
-import { useNavigate } from "react-router";
+import { SessionContext } from "../Context/sessionContext.jsx";
 
 function Subscriptions()
 {
-    const navigate = useNavigate();
     const [data, setData] = useState({loading: true, redirectToLogin: false});
-    const session = useAuthCheck();
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
 
     useEffect(() => {
 
@@ -19,7 +17,7 @@ function Subscriptions()
 
         async function fetchData()
         {
-            let result = await getData('/profile/subscriptions/' + session.userId);
+            let result = await getData('/profile/subscriptions/' + session?.userId);
             console.log(result)
             if (!ignore) {
                 (function set({errorMessage, statusCode, subscriptions}){
@@ -35,12 +33,10 @@ function Subscriptions()
         {
             ignore = true;
         };
-    }, [session]);
+    }, [sessionData]);
     
     useEffect(() => {
-        if(!data.redirectToLogin) return;
-        SessionManager.redirectToLogin(navigate);
-
+        if(data.redirectToLogin) sessionData.redirectToLogin();
     }, [data])
 
     //Render while fetching data

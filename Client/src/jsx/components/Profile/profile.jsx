@@ -1,12 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
-import { changeData, getData, Result, OK } from "../services/accessAPI.js";
+import React, { useState, useRef, useEffect, useContext } from "react";
+import { changeData, getData } from "../services/accessAPI.js";
 import StatusBadge from "../statusBadge.jsx";
-import { Navigate, useNavigate } from "react-router";
-import Logout from "../logout.jsx";
-import SessionManager from "../services/sessionManager.js";
+import Logout from "./logout.jsx";
 import BorderedTextInput from "../textInput.jsx";
 import ImageInput from "../imageInput.jsx";
-import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
+import { SessionContext } from "../Context/sessionContext.jsx";
 
 function Profile()
 {
@@ -17,10 +15,9 @@ function Profile()
     const descriptionField = useRef(null);
     const displayedNameField = useRef(null);
     const imageField = useRef(null);
-    
-    const navigate = useNavigate();
 
-    const session = useAuthCheck();
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
 
     useEffect(() => {
 
@@ -44,7 +41,7 @@ function Profile()
 
         return () => ignore = true; 
 
-    }, [session]);
+    }, [sessionData]);
 
     async function saveChanges()
     {
@@ -70,9 +67,7 @@ function Profile()
     }
     
     useEffect(() => {
-        if(!data.redirectToLogin) return;
-        SessionManager.redirectToLogin(navigate);
-
+        if(data.redirectToLogin) sessionData.redirectToLogin();
     }, [data])
 
     //Render while fetching data

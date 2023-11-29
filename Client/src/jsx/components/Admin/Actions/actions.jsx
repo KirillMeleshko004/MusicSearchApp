@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useAuthCheck } from "../../../hooks/useAuthCheck.jsx";
+import React, { useContext, useEffect, useState } from "react";
 import { getData } from "../../services/accessAPI.js";
 import Action from "./action.jsx";
+import { SessionContext } from "../../Context/sessionContext.jsx";
 
 function Actions()
 {
     const [data, setData] = useState({loading: true});
 
-    const session = useAuthCheck();
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
 
     useEffect(() => {
         let ignore = false;
@@ -31,7 +32,15 @@ function Actions()
     
         return () => ignore = true;
 
-    }, [session])
+    }, [sessionData])
+
+    useEffect(() => {
+        if(data.redirectToLogin)
+        {
+            sessionData.redirectToLogin();
+        }
+    }, [data])
+    
 
     return(
         <section className="panel large-padded large-gaped vertical fill-space full-height">

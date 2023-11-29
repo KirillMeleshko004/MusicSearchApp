@@ -1,24 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
-import BorderedTextInput from "../textInput.jsx";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import ImageInput from "../imageInput.jsx";
 import TextInput from "../textInput.jsx";
 import AddSong from "./addSong.jsx";
 import SongPopup from "./songPopup.jsx";
 import CheckBox from "../checkBox.jsx";
 import { OK, postFormData } from "../services/accessAPI.js";
-import SessionManager from "../services/sessionManager.js";
-import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
+import { SessionContext } from "../Context/sessionContext.jsx";
 
 
 function Upload()
 {
     const [songs, setSongs] = useState([]);
     const [popupShown, setPopupShown] = useState(false);
+    const [redirectToLogin, setRedirectToLogin] = useState(false)
 
     const coverImage = useRef(null);
     const albumTitle = useRef(null);
 
-    const session = useAuthCheck();
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
 
     function addSong(song)
     {
@@ -60,11 +60,21 @@ function Upload()
 
         let result = await postFormData("/album/upload", formData);
 
+        setRedirectToLogin(result.statusCode == 401);
+
         if(result?.state === OK)
             alert(result?.message);
         else
             alert(result?.errorMessage);
     }
+
+    useEffect(() => {
+        if(redirectToLogin)
+        {
+            sessionData.redirectToLogin(); 
+        }
+    }, [redirectToLogin])
+    
 
     
     return (

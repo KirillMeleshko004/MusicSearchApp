@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LibSong from "./libSong.jsx";
-import { OK, Result, getData } from "../services/accessAPI.js";
-import SessionManager from "../services/sessionManager.js";
+import { getData } from "../services/accessAPI.js";
 import { useNavigate } from "react-router";
-import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
+import { SessionContext } from "../Context/sessionContext.jsx";
 
 function Library()
 {
@@ -11,7 +10,8 @@ function Library()
 
     const [data, setData] = useState({loading: true, redirectToLogin: false});
 
-    const session = useAuthCheck();
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
 
     useEffect(() => {
 
@@ -36,11 +36,10 @@ function Library()
         {
             ignore = true;
         };
-    }, [session]);
+    }, [sessionData]);
 
     useEffect(() => {
-        if(!data.redirectToLogin) return;
-        SessionManager.redirectToLogin(navigate);
+        if(data.redirectToLogin)   sessionData.redirectToLogin();
     }, [data])
 
     if(!data?.library || data?.library?.length == 0)

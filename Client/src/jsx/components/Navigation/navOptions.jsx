@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import NavOption from "./navOption.jsx";
-import SessionManager from "../services/sessionManager.js";
+import { SessionContext } from "../Context/sessionContext.jsx";
 
 
 function NavOptions()
 {
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
 
     return (
         <div id="options-list" className="vertical center-aligned fill-space"
@@ -15,7 +17,7 @@ function NavOptions()
             <NavOption icon="Favourites.svg" text="My Library" link={"library"}></NavOption>
             <NavOption icon="Upload.svg" text="Upload Music" link={"upload"}></NavOption>
             <NavOption icon="Subscriptions.svg" text="Subscriptions" link={"subscriptions"}></NavOption>
-            {SessionManager.getRole() == "User" && 
+            {session?.role == "User" && 
                 (
                     <>
                     <NavOption icon="AdminUser.svg" text="Users" link={"users"}></NavOption>

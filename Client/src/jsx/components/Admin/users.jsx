@@ -1,22 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
-import { OK, Result, changeData, deleteData, getData } from "../services/accessAPI.js";
-import { useNavigate } from "react-router";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { changeData, deleteData, getData } from "../services/accessAPI.js";
 import UsersList from "./usersList.jsx";
-import SessionManager from "../services/sessionManager.js";
-import { useAuthCheck } from "../../hooks/useAuthCheck.jsx";
+import { SessionContext } from "../Context/sessionContext.jsx";
 
 function Users()
 {
     const [data, setData] = useState({loading: true, redirectToLogin: false});
     const [searchString, setSearchString] = useState('');
 
-    const navigate = useNavigate();
-
-    const session = useAuthCheck();
+    const sessionData = useContext(SessionContext);
+    const session = sessionData.session;
 
     useEffect(() => {
 
-        if(!session) return;
+        if(!session) {
+            setData({...data,redirectToLogin: true});
+            return;
+        }
 
         let ignore = false;
 
@@ -36,11 +36,13 @@ function Users()
 
         return () => ignore = true; 
 
-    }, [session, searchString]);
+    }, [sessionData, searchString]);
 
     useEffect(() => {
-        if(!data.redirectToLogin) return;
-        SessionManager.redirectToLogin(navigate);
+        if(data.redirectToLogin)
+        {
+            sessionData.redirectToLogin();
+        }
     }, [data])
 
     async function changeStatus(user)
