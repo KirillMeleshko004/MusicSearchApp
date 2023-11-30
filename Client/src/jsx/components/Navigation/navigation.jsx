@@ -7,7 +7,7 @@ function Navigation()
 
     return (
         <nav id="nav-panel" className="panel vertical center-aligned medium-padded">
-            <Logo></Logo>
+            <Logo redirectToHome={true}></Logo>
             <NavOptions/>
         </nav>
     )

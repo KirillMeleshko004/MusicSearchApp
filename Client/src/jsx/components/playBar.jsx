@@ -1,45 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Player from "./player.jsx";
-import { OK, Result, getData, getFile } from "./services/accessAPI";
 
 function PlayBar({trackInfo})
 {
-    const [song, setSong] = useState(null);
+    const image = useRef(null);
 
-    // useEffect(() => {
-        
-    //     let ignore = false;
-        
-    //     async function startFetching() {
-            
-    //         let result = new Result();
-    //         result = await getData('/song/get/1');
-            
-    //         if (!ignore) {
-    //             if(result.state === OK)
-    //             {
-    //                 setSong(result);
-    //             }
-    //         }
-    //     }
-
-    //     startFetching();
-
-    //     return ()=>
-    //     {
-    //         ignore = true;
-    //     };
-    // }, []);
+    useEffect(() =>
+    {
+        if(!image.current) return;
+        image.current.width = image.current.height;
+    },[])
 
     return (
         <div id="play-bar" className="panel center-aligned horizontal medium-padded medium-gaped full-width">
-            <img src={trackInfo?.album.coverImage} alt="current playing" id="curr-play-image" className="rounded full-height"></img>
-            <div className="track-info vertical normal unselectable fill-space xx-small-gaped"
-                style={{maxWidth:"60%"}}>
-                <a id="curr-track" className="title">{trackInfo?.title}</a>
-                <a id="curr-artists" className="artist-name">{trackInfo?.artist.displayedName}</a>
-            </div>
-            <Player song={trackInfo?.filePath}></Player>
+            {
+                trackInfo ?
+                (
+                    <>
+                    <img ref={image} src={trackInfo?.album.coverImage} alt="current playing" id="curr-play-image" 
+                        className="rounded full-height"
+                        style={{objectFit:"cover"}}>
+                    </img>
+                    <div className="track-info vertical normal unselectable fill-space xx-small-gaped"
+                        style={{maxWidth:"60%"}}>
+                        <a id="curr-track" className="title">{trackInfo?.title}</a>
+                        <a id="curr-artists" className="artist-name">{trackInfo?.artist.displayedName}</a>
+                    </div>
+                    <Player song={trackInfo?.filePath}></Player>
+                    </>
+                    
+                ) :
+                (
+                    <div className="normal horizontal center-aligned center-justified fill-space">No track is playing</div>
+                )
+            }
+            
         </div>
     )
 }

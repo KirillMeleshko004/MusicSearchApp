@@ -63,7 +63,10 @@ function Upload()
         setRedirectToLogin(result.statusCode == 401);
 
         if(result?.state === OK)
+        {
             alert(result?.message);
+            location.reload();
+        }
         else
             alert(result?.errorMessage);
     }
@@ -112,7 +115,7 @@ function Upload()
                                 ref={albumTitle} name={"albumTitle"}></TextInput>
                         </div>
                         <div className="horizontal">
-                            <CheckBox name={"publish"} label={"Send publich request"} checked={false}/>
+                            <CheckBox name={"publish"} label={"Send publish request"} checked={false}/>
                             <CheckBox name={"downloadable"} label={"Downloadable"} checked={false}/>
                         </div>
                         <div className="vertical bordered-block fill-space medium-padded medium-gaped"

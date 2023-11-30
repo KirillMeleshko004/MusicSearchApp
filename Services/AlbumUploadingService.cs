@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MusicSearchApp.Models;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Models.Static;
@@ -31,6 +32,14 @@ namespace MusicSearchApp.Services
             IResponse<AlbumInfoViewModel> response = new Response<AlbumInfoViewModel>();
 
             bool isSucceed = true;
+
+            if(await _context.Albums.AnyAsync(a => a.Title == albumInfo.AlbumTitle && a.ArtistId == albumInfo.ArtistId))
+            {
+                response.Status = StatusCode.BadRequest;
+                response.Message = "You already have an album with the same name!";
+                return response;
+            }
+
             string? coverImageName = await _fileService.SaveFile(albumInfo.CoverImage, FileService.FileType.AlbumImage);
 
             Album album = new()
@@ -50,8 +59,6 @@ namespace MusicSearchApp.Services
             album = _context.Albums
                 .Where(a => a.Title == albumInfo.AlbumTitle && a.ArtistId == albumInfo.ArtistId)
                 .First();
-
-            
 
             for(int i = 0; i < albumInfo.SongFiles.Length; i++)
             {

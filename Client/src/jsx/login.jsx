@@ -12,13 +12,15 @@ function Login()
     const errorLine = useRef(null);
     const blockedLine = useRef(null)
 
-    const [data, setData] = useState({loading: true});
+    const [data, setData] = useState({loading: false});
 
     const navigate = useNavigate();
     const location = useLocation();
     
-    async function login() 
+    async function login(e) 
     {
+        e.preventDefault();
+
         const userData = {
             username: usernameField.current.value, 
             password: passwordField.current.value,};
@@ -73,27 +75,31 @@ function Login()
                     <p id="title" className="largest unselectable">Login</p>
                     <div id="form-container" className="fill-space vertical full-width xx-small-gaped">
                         <div id="signup-redirect" className="unselectable">New To Solar Sound? <NavLink className="highlight-on-hover" to={"/register"}>Sign Up</NavLink></div>
-                        <div id="auth-form" className="full-width vertical fill-space medium-gaped">
+                        <form id="auth-form" onSubmit={login}
+                            className="full-width vertical fill-space medium-gaped">
                             {/* Login field */}
                             <TextInput ref={usernameField} 
                                 placeholder="login"
                                 addClasses="x-large-padded"
                                 font="above-normal"
-                                height="16%"/>
+                                height="16%"
+                                required={true}/>
                             {/* Password field */}
                             <TextInput ref={passwordField} 
                                 placeholder="password"
                                 addClasses="x-large-padded"
                                 font="above-normal"
                                 height="16%"
-                                type="password"/>
+                                type="password"
+                                required={true}/>
                                 
                             <div ref={blockedLine} className="error non-displayed">This user is blocked</div>
                             <div ref={errorLine} className="error non-displayed">Incorrect username or password</div>
-                            <button onClick={login} id="submit" className="panel bordered-block center-justified red-border-on-hover">
-                                <p className="above-normal">Log In</p>
-                            </button>
-                        </div> 
+                            <input type="submit" id="submit" disabled={data.loading} 
+                                className="panel bordered-block center-justified red-border-on-hover above-normal"
+                                value="Log In">
+                            </input>
+                        </form> 
                     </div>  
                 </div>
             </div>

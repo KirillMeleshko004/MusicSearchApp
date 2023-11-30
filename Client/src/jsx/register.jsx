@@ -13,12 +13,14 @@ function Register()
     const errorLine = useRef(null);
     const successLine = useRef(null);
 
-    const [data, setData] = useState({loading: true});
+    const [data, setData] = useState({loading: false});
 
     const navigate = useNavigate();
     
-    async function register() 
+    async function register(e) 
     {
+        console.log("here")
+        e.preventDefault();
         usernameField.current.parentElement.classList.remove("error-border");
         passwordField.current.parentElement.classList.remove("error-border");
         repeatPasswordField.current.parentElement.classList.remove("error-border");
@@ -72,7 +74,7 @@ function Register()
                     <p id="title" className="largest unselectable">Register</p>
                     <div id="form-container" className="fill-space vertical full-width xx-small-gaped">
                         <div id="signup-redirect" className="unselectable">Already has account? <NavLink className="highlight-on-hover" to={"/login"}>Login</NavLink></div>
-                        <div id="auth-form" className="full-width vertical fill-space medium-gaped">
+                        <form onSubmit={register} id="auth-form" className="full-width vertical fill-space medium-gaped">
                             
 
                             {/* Login field */}
@@ -81,7 +83,8 @@ function Register()
                                 addClasses="x-large-padded"
                                 font="above-normal"
                                 name="login"
-                                height="16%"/>
+                                height="16%"
+                                required={true}/>
 
                             {/* Password field */}
                             <TextInput ref={passwordField} 
@@ -90,7 +93,8 @@ function Register()
                                 font="above-normal"
                                 height="16%"
                                 type="password"
-                                name="password"/>
+                                name="password"
+                                required={true}/>
 
                             {/* Repeat password field */}
                             <TextInput ref={repeatPasswordField} 
@@ -99,16 +103,18 @@ function Register()
                                 font="above-normal"
                                 height="16%"
                                 type="password"
-                                name="repeat-password"/>
+                                name="repeat-password"
+                                required={true}/>
 
                             <div ref={errorLine} className="error non-displayed">
                                 </div>
                             <div ref={successLine} className="accept non-displayed">
                                 </div>
-                            <button onClick={register} id="submit" className="panel bordered-block center-justified red-border-on-hover">
-                                <p className="above-normal">Register</p>
-                            </button>
-                        </div> 
+                            <input type="submit" id="submit" disabled={data.loading}
+                                className="panel bordered-block center-justified red-border-on-hover above-normal"
+                                value={"Register"}>
+                            </input>
+                        </form> 
                     </div>  
                 </div>
             </div>
