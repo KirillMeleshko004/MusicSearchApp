@@ -70,7 +70,8 @@ namespace MusicSearchApp.Models.DB
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Subsribers)
                 .WithOne(s => s.Artist)
-                .HasForeignKey(s => s.ArtistId);
+                .HasForeignKey(s => s.ArtistId)
+                .OnDelete(DeleteBehavior.ClientCascade);
             
             //User - Album
             modelBuilder.Entity<User>()

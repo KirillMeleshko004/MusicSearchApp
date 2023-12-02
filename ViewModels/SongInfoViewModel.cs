@@ -18,9 +18,10 @@ namespace MusicSearchApp.ViewModels
         public int ListenCount { get; set; }
         public string FilePath { get; set; } = null!;
         public string? CoverImage { get; set; } = null!;
+        public bool Downloadable { get; set; }
 
 
-        public SongInfoViewModel(Song song)
+        public SongInfoViewModel(Song song, bool downloadable = false)
         {
             SongId = song.SongId;
             Title = song.Title;
@@ -36,6 +37,7 @@ namespace MusicSearchApp.ViewModels
             ListenCount = song.ListenCount;
             FilePath = song.FilePath;
             CoverImage = song.Album?.CoverImage;
+            Downloadable = downloadable || song.Album?.Downloadable == true;
         }
     }
 }

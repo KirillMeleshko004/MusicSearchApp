@@ -17,6 +17,7 @@ namespace MusicSearchApp.Services
         };
 
         private const string root = "Data";
+        private const string defaultProfileImage = "Images/Profile/default_profile_img.svg";
 
         public async Task<string?> SaveFile(IFormFile file, FileType type)
         {
@@ -35,6 +36,7 @@ namespace MusicSearchApp.Services
 
         public bool DeleteFile(string filePath)
         {
+            if(filePath == defaultProfileImage) return true;
             try {
                 if (File.Exists(Path.Combine(root, filePath))) {
                     File.Delete(Path.Combine(root, filePath));

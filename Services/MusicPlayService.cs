@@ -52,7 +52,7 @@ namespace MusicSearchApp.Services
                     .Include(s => s.Album).ThenInclude(a => a.Artist)
                     .Where(s => s.Album.IsPublic)
                     .OrderByDescending(s => s.ListenCount)
-                    .Select<Song, SongInfoViewModel>(s => new(s));
+                    .Select<Song, SongInfoViewModel>(s => new(s, s.Album.Downloadable));
 
             if(songs.IsNullOrEmpty())
             {
@@ -90,7 +90,7 @@ namespace MusicSearchApp.Services
             response.Message = "Success";
             response.Data = new(album)
             {
-                Songs = album.Songs.Select<Song, SongInfoViewModel>(s => new(s))
+                Songs = album.Songs.Select<Song, SongInfoViewModel>(s => new(s, album.Downloadable))
             };
 
             return response;

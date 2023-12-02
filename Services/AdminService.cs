@@ -78,6 +78,8 @@ namespace MusicSearchApp.Services
                 return response;
             }
 
+            await _context.Users.Entry(user).Collection(u => u.Subscriptions).LoadAsync();
+            await _context.Users.Entry(user).Collection(u => u.Subsribers).LoadAsync();
             await _userManager.DeleteAsync(user);
 
             await _actionService.CreateAction(actorName, 
