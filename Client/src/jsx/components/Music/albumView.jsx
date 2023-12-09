@@ -28,7 +28,6 @@ function AlbumView()
         async function fetchData()
         {
             let result = await getData('/album/get/' + params?.id);
-            
             if (!ignore) {
                 (function set({errorMessage, album}){
                     setData({loading: false, album: album, failMessage: errorMessage});
@@ -117,7 +116,7 @@ function AlbumView()
                                                 onClick={() => play(song)}
                                                 >
                                                 <AlbumSong title={song.title} index={ind}
-                                                    coverImage={song.album.coverImage}/>
+                                                    coverImage={song.coverImage}/>
                                             </li>
                                         )
                                     })}

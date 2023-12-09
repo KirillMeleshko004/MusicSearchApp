@@ -145,12 +145,10 @@ async function sendRequest(url, payload)
         }
 
 
-        console.log(res)
         if (!response.ok) 
         {
             res.state = FAIL;
             res.errorMessage = jsonRes.errorMessage ?? response.statusText;
-            console.log(res);
             throw Error(response.statusText);
         }
         

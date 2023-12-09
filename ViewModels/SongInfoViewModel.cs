@@ -7,8 +7,8 @@ namespace MusicSearchApp.ViewModels
         public int SongId { get; set; }
         public string Title { get; set; } = null!;
 
-        public AlbumInfoViewModel Album { get; set; } = null!;
-        public ArtistViewModel Artist { get; set; } = null!;
+        public AlbumInfoViewModel? Album { get; set; } = null!;
+        public ArtistViewModel? Artist { get; set; } = null!;
 
         public double Length { get; set; }
         public DateTime ReleaseDate { get; set; }
@@ -21,22 +21,23 @@ namespace MusicSearchApp.ViewModels
         public bool Downloadable { get; set; }
 
 
-        public SongInfoViewModel(Song song, bool downloadable = false)
+        public SongInfoViewModel(Song song, bool downloadable = false, 
+            AlbumInfoViewModel? albumInfoViewModel = null, ArtistViewModel? artistViewModel = null)
         {
             SongId = song.SongId;
             Title = song.Title;
 
-            if(song.Album != null)
-                Album = new AlbumInfoViewModel(song.Album);
-            if(song.Artist != null)
-                Artist = new ArtistViewModel(song.Artist);
+            Album = albumInfoViewModel ?? 
+                (song.Album != null ? new(song.Album) : null);
+            Artist = artistViewModel ?? 
+                (song.Album != null ? new(song.Artist) : null);
 
             Length = song.Length;
             ReleaseDate = song.ReleaseDate;
             GenreName = song.GenreName;
             ListenCount = song.ListenCount;
             FilePath = song.FilePath;
-            CoverImage = song.Album?.CoverImage;
+            CoverImage = Album?.CoverImage;
             Downloadable = downloadable || song.Album?.Downloadable == true;
         }
     }

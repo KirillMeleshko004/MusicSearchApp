@@ -17,7 +17,7 @@ function PlayBar({trackInfo})
                 trackInfo ?
                 (
                     <>
-                    <img ref={image} src={trackInfo?.album.coverImage} alt="current playing" id="curr-play-image" 
+                    <img ref={image} src={trackInfo?.coverImage} alt="current playing" id="curr-play-image" 
                         className="rounded full-height"
                         style={{objectFit:"cover"}}>
                     </img>
@@ -26,7 +26,7 @@ function PlayBar({trackInfo})
                         <a id="curr-track" className="title">{trackInfo?.title}</a>
                         <a id="curr-artists" className="artist-name">{trackInfo?.artist.displayedName}</a>
                     </div>
-                    <Player song={trackInfo?.filePath}></Player>
+                    <Player song={trackInfo?.filePath} downloadable={trackInfo?.downloadable}></Player>
                     </>
                     
                 ) :

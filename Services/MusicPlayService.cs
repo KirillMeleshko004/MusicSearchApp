@@ -46,20 +46,30 @@ namespace MusicSearchApp.Services
             IResponse<IEnumerable<SongInfoViewModel>> response = 
                 new Response<IEnumerable<SongInfoViewModel>>();
 
-            IEnumerable<SongInfoViewModel> songs = _context.Songs
-                    .Where(s=> searchString.IsNullOrEmpty() || s.Title.Contains(searchString!))
-                    .Include(s => s.Artist)
-                    .Include(s => s.Album).ThenInclude(a => a.Artist)
-                    .Where(s => s.Album.IsPublic)
-                    .OrderByDescending(s => s.ListenCount)
-                    .Select<Song, SongInfoViewModel>(s => new(s, s.Album.Downloadable));
-
-            if(songs.IsNullOrEmpty())
+            Song? song = _context.Songs
+                .Where(s=> searchString.IsNullOrEmpty() || s.Title.Contains(searchString!))
+                .Include(s => s.Album)
+                .Where(s => s.Album.IsPublic)
+                .Include(s => s.Artist)
+                .FirstOrDefault();
+                
+            if(song == null)
             {
                 response.Status = StatusCode.NotFound;
                 response.Message = "No songs matching conditions";
                 return response;
             }
+
+            song.Album.Artist = song.Artist;
+            ArtistViewModel artist = new(song.Artist);
+            AlbumInfoViewModel album = new(song.Album);
+
+            IEnumerable<SongInfoViewModel> songs = _context.Songs
+                    .Where(s=> searchString.IsNullOrEmpty() || s.Title.Contains(searchString!))
+                    .Where(s => s.Album.IsPublic)
+                    .OrderByDescending(s => s.ListenCount)
+                    .Select<Song, SongInfoViewModel>(s => 
+                        new(s, s.Album.Downloadable, album, artist));
 
             response.Status = StatusCode.Ok;
             response.Message = "Success";
@@ -88,10 +98,11 @@ namespace MusicSearchApp.Services
 
             response.Status = StatusCode.Ok;
             response.Message = "Success";
-            response.Data = new(album)
-            {
-                Songs = album.Songs.Select<Song, SongInfoViewModel>(s => new(s, album.Downloadable))
-            };
+            AlbumInfoViewModel albumInfo = new(album);
+            albumInfo.Songs = album.Songs.Select<Song, SongInfoViewModel>(s => 
+                    new(s, album.Downloadable, albumInfo, albumInfo.Artist));
+
+            response.Data = albumInfo;
 
             return response;
         }
