@@ -12,7 +12,9 @@ function Upload()
 {
     const [songs, setSongs] = useState([]);
     const [popupShown, setPopupShown] = useState(false);
-    const [redirectToLogin, setRedirectToLogin] = useState(false)
+    const [noSongs, setNoSongs] = useState(false);
+    const [redirectToLogin, setRedirectToLogin] = useState(false);
+    const [isPublic, setIsPublic] = useState(false);
 
     const coverImage = useRef(null);
     const albumTitle = useRef(null);
@@ -39,6 +41,17 @@ function Upload()
             alert("Unauthorized");
             return;
         }
+        
+        if(songs.length == 0)
+        {
+            setNoSongs(true);
+            setTimeout(() => setNoSongs(false), 1500);
+            return;
+        }
+
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
+
 
         const form = e.target;
         let formData = new FormData();
@@ -49,14 +62,14 @@ function Upload()
         const coverImage =  form["coverImage"].files[0];
         formData.append("coverImage", coverImage, coverImage.name);
         formData.append("isPublic", form["publish"].checked);
-        formData.append("downloadable", form["downloadable"].checked);
+        formData.append("downloadable", form["downloadable"].checked && isPublic);
 
         songs.forEach(song =>
         {  
             formData.append('songNames', song.name);
             formData.append("genres", song.genre);
             formData.append("songFiles", song.file, song.file.name);
-        })
+        })  
 
         let result = await postFormData("/album/upload", formData);
 
@@ -115,10 +128,13 @@ function Upload()
                                 ref={albumTitle} name={"albumTitle"}></TextInput>
                         </div>
                         <div className="horizontal">
-                            <CheckBox name={"publish"} label={"Send publish request"} checked={false}/>
-                            <CheckBox name={"downloadable"} label={"Downloadable"} checked={false}/>
+                            <CheckBox name={"publish"} label={"Send publish request"} checked={false}
+                                onCheck={(val) => setIsPublic(val)}/>
+                            <CheckBox name={"downloadable"} label={"Downloadable"} checked={false}
+                                hide={!isPublic}/>
                         </div>
-                        <div className="vertical bordered-block fill-space medium-padded medium-gaped"
+                        <div className={"vertical bordered-block fill-space medium-padded medium-gaped " +
+                            (noSongs && " error-border ")}
                             style={{height:"200px"}}>
                             <ol className="scrollable-y fill-space">
                                 {songs.map((song, index) =>

@@ -134,18 +134,20 @@ async function sendRequest(url, payload)
         res.statusCode = response.status;
         
         const contentType = response.headers.get("content-type");
+        const jsonRes = await response.json();
+
         if (contentType && contentType.indexOf("application/json") !== -1)
         {
-            const jsonRes = await response.json();
             Object.keys(jsonRes).forEach(key => {
                 res[key] = jsonRes[key];
             });
             
         }
 
+
+        console.log(res)
         if (!response.ok) 
         {
-            const jsonRes = await response.json();
             res.state = FAIL;
             res.errorMessage = jsonRes.errorMessage ?? response.statusText;
             console.log(res);
@@ -156,8 +158,6 @@ async function sendRequest(url, payload)
         return res;
 
     } catch (error) {
-
-
         return res;
     }
 }

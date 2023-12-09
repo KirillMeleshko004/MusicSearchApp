@@ -9,12 +9,16 @@ const CheckBox = forwardRef(function (props, ref)
 
     function checkHandler(e){
         setChecked(e.currentTarget.checked);
+        if (typeof props?.onCheck === 'function')
+        {
+            props.onCheck(e.currentTarget.checked)
+        }
     };
     
 
     return(
-        <label className="normal full-width horizontal center-aligned xx-small-gaped 
-            checkbox-container unselectable">
+        <label className={" normal full-width horizontal center-aligned xx-small-gaped " + 
+            " checkbox-container unselectable " + (props?.hide && "non-displayed")}>
             <input onChange={checkHandler} ref={ref} type="checkbox" 
                 name={props?.name}
                 defaultChecked={checked}/>

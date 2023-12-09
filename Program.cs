@@ -91,21 +91,13 @@ builder.Services.AddScoped<ActionService>();
 
 var app = builder.Build();
 
-// app.Use(async (context, next) =>
-// {
-//     System.Console.WriteLine(context.Request.Path);
-//     System.Console.WriteLine(context.Request.PathBase);
-//     await next();
-// });
-
 #region Configure application
 
 app.UseAuthentication();
-
 //Authenticated, but not authorized HERE
-
 app.UseAuthorization();
 
+//Setting middleware for handling static files
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(
@@ -113,6 +105,7 @@ app.UseStaticFiles(new StaticFileOptions
         "Data")),
 });
 
+//Setting middleware for handling spa static files. Disabling caching for index.html
 app.UseSpaStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = context =>
@@ -126,7 +119,6 @@ app.UseSpaStaticFiles(new StaticFileOptions
 });
 
 app.MapControllers();
-
 
 //Array of path strings
 var excludedPaths = new PathString[] { "/api" };

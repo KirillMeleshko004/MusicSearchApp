@@ -5,7 +5,7 @@ const TextInput = forwardRef(
     function (props, ref)
     {
         return (
-            <input type={props?.type ?? "text"}
+            <input type={props?.type ?? "text"} id={props?.id}
                 className={"full-width panel-color bordered-block " +
                     "medium-padded red-border-on-hover no-outline " 
                     + (props?.font ?? " normal ") + " " +

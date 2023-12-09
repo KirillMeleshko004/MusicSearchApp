@@ -47,6 +47,9 @@ function Users()
 
     async function changeStatus(user)
     {
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
+        
         let result = await changeData('/admin/users/changeblock/' + user.userId);
             
         (function set({message, errorMessage, statusCode})
@@ -66,6 +69,9 @@ function Users()
 
     async function deleteUser(user)
     {
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
+
         let result = await deleteData('/admin/users/delete/' + user.userId);
             
         (function set({message, errorMessage, statusCode})
@@ -99,7 +105,7 @@ function Users()
             <article id="data-panel" className="panel bordered-block medium-padded medium-gaped vertical fill-space">
                 <div id="data-title" className="unselectable large-spaced largest">Search results</div>
                 <UsersList users={data?.users} changeStatus={changeStatus} 
-                    deleteUser={deleteUser}></UsersList>
+                    deleteUser={deleteUser} selfId={session.userId}></UsersList>
             </article>
         </section>
         

@@ -192,6 +192,10 @@ $block-gap: 20px;
 {
     border: values.$border-width solid colors.$selected-color;
 }
+.red-border-on-hover:focus
+{
+    border: values.$border-width solid colors.$selected-color;
+}
 
 .error-border
 {

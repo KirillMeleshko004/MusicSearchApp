@@ -1,0 +1,9 @@
+Confirm popups:
+
+profile.jsx
+logout.jsx
+upload.jsx
+changepassword.jsx
+albumview.jsx
+users.jsx
+requests.jsx

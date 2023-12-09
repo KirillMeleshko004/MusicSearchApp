@@ -83,7 +83,8 @@ function Login()
                                 addClasses="x-large-padded"
                                 font="above-normal"
                                 height="16%"
-                                required={true}/>
+                                required={true}
+                                maxLength={24}/>
                             {/* Password field */}
                             <TextInput ref={passwordField} 
                                 placeholder="password"
@@ -91,7 +92,8 @@ function Login()
                                 font="above-normal"
                                 height="16%"
                                 type="password"
-                                required={true}/>
+                                required={true}
+                                maxLength={24}/>
                                 
                             <div ref={blockedLine} className="error non-displayed">This user is blocked</div>
                             <div ref={errorLine} className="error non-displayed">Incorrect username or password</div>

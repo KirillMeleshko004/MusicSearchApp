@@ -102,6 +102,43 @@ namespace MusicSearchApp.Services
 
             return session;
         }
-       
+
+
+        public async Task<IResponse<bool>> ChangePassword(ChangePasswordViewModel model)
+        {
+            
+            IResponse<bool> response = 
+                new Response<bool>();
+
+            var user = await userManager.FindByNameAsync(model.UserName);
+            if (user == null)
+            {
+                response.Status = StatusCode.NotFound;
+                response.Message = "User not found";
+                return response;
+            }
+
+            IdentityResult res = await userManager
+                .ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            if (!res.Succeeded)
+            {
+                response.Status = StatusCode.Forbidden;
+                response.Message = res.Errors
+                    .Select(e => e.Description)
+                    .Aggregate((d1, d2) => d1 + "\n" + d2);
+
+                response.Data = false;
+            }
+            else
+            {
+                response.Status = StatusCode.Ok;
+                response.Message = "Success";
+                response.Data = true;
+
+            }
+
+            return response;
+        }
     }
 }

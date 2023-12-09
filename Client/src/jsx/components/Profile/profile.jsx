@@ -5,12 +5,14 @@ import Logout from "./logout.jsx";
 import BorderedTextInput from "../textInput.jsx";
 import ImageInput from "../imageInput.jsx";
 import { SessionContext } from "../Context/sessionContext.jsx";
+import ChangePasswordPopup from "./changePasswordPopup.jsx";
 
 function Profile()
 {
     const [data, setData] = useState({loading: true, redirectToLogin: false});
 
     const [selectedImage, setSelectedImage] = useState(null);
+    const [popupShown, setPopupShown] = useState(false);
 
     const descriptionField = useRef(null);
     const displayedNameField = useRef(null);
@@ -44,6 +46,9 @@ function Profile()
 
     async function saveChanges()
     {
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
+        
         let formData = new FormData();
         formData.append("displayedName", displayedNameField.current.value);
         formData.append("description", descriptionField.current.value);
@@ -92,6 +97,11 @@ function Profile()
         const profile = data?.profile;
         return (
             <section className="panel large-padded large-gaped vertical fill-space full-height">
+
+                {popupShown && (<ChangePasswordPopup close={()=>setPopupShown(!popupShown)}
+                    userName={session.username}/>)
+                }
+
                 <div className="horizontal large-gaped full-height">
                     <div className="vertical large-gaped">
                         <div className="horizontal medium-gaped center-aligned">
@@ -126,7 +136,15 @@ function Profile()
                             <div className="largest" style={{fontWeight:"bold"}}>
                                 {profile?.userName}
                             </div>
-                            <Logout></Logout>
+                            <div className=" horizontal large-gaped">
+                                <div onClick={()=>setPopupShown(!popupShown)}
+                                    className="bordered-block horizontal center-justified center-aligned
+                                        full-height normal x-medium-padded red-border-on-hover unselectable medium-spaced">
+                                    Change password
+                                </div>
+                                <Logout></Logout>
+
+                            </div>
                         </div>
                         
                         <div className="bordered-block full-width full-height y-large-padded x-medium-padded

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MusicSearchApp.Models.DB;
 using MusicSearchApp.Services.Interfaces;
 using MusicSearchApp.Models.Static;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MusicSearchApp.Controllers
 {
@@ -68,5 +69,29 @@ namespace MusicSearchApp.Controllers
                         new { errorMessage = ex.Message});
             }
         }
+    
+        [HttpPost]  
+        [Authorize]
+        [Route("{action}")]  
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel userData)  
+        {  
+            if (!ModelState.IsValid)
+                return BadRequest(new { errorMessage = "Invalid payload" });
+
+            string actorName = ControllerContext.HttpContext.User.Identity!.Name!;
+
+            if(actorName != userData.UserName)
+                return Forbid();
+
+            IResponse<bool> result = await _authService.ChangePassword(userData);
+
+            if(result.Status != Services.Interfaces.StatusCode.Ok)
+            {
+                return StatusCode((int)result.Status, new { errorMessage = result.Message });
+            }
+
+            return Ok(new { library = result.Data, message = result.Message });
+        }
+         
     }
 }

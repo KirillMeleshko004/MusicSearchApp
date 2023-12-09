@@ -7,5 +7,6 @@ namespace MusicSearchApp.Services.Interfaces
     {
         Task<(bool isSucceed, string message)> Registration(RegistrationViewModel model, string role);
         Task<SessionDto?> Login(AuthorizationViewModel model);
+        public Task<IResponse<bool>> ChangePassword(ChangePasswordViewModel model);
     }
 }

@@ -49,6 +49,8 @@ function Requests()
 
     async function accept(request)
     {
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
         const formData = new FormData();
         formData.append("status", "Accepted");
         
@@ -76,6 +78,8 @@ function Requests()
 
     async function deny(request)
     {
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
         const formData = new FormData();
         formData.append("status", "Denied");
         

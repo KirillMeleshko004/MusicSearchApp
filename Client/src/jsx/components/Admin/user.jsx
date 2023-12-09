@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import StatusBadge from "../statusBadge.jsx";
 import React from "react";
 
-function User({user, changeStatus, deleteUser, link})
+function User({user, changeStatus, deleteUser, link, self})
 {
 
     return (
@@ -35,12 +35,17 @@ function User({user, changeStatus, deleteUser, link})
                                 Delete
                             </div>
                         </div>
-                    ):
+                    ): self ?
+                    (
+                        <div className="horizontal fill-space full-height center-aligned center-justified sub-title">
+                            This is you
+                        </div>
+                    ) :
                     (
                         <div className="horizontal fill-space full-height center-aligned center-justified sub-title">
                             This user is admin
                         </div>
-                    )
+                    ) 
                 }
                 
                 

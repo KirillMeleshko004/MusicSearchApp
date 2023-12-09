@@ -84,7 +84,8 @@ function Register()
                                 font="above-normal"
                                 name="login"
                                 height="16%"
-                                required={true}/>
+                                required={true}
+                                maxLength={24}/>
 
                             {/* Password field */}
                             <TextInput ref={passwordField} 
@@ -94,7 +95,8 @@ function Register()
                                 height="16%"
                                 type="password"
                                 name="password"
-                                required={true}/>
+                                required={true}
+                                maxLength={24}/>
 
                             {/* Repeat password field */}
                             <TextInput ref={repeatPasswordField} 
@@ -104,7 +106,8 @@ function Register()
                                 height="16%"
                                 type="password"
                                 name="repeat-password"
-                                required={true}/>
+                                required={true}
+                                maxLength={24}/>
 
                             <div ref={errorLine} className="error non-displayed">
                                 </div>

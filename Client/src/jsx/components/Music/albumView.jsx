@@ -52,6 +52,8 @@ function AlbumView()
 
     async function deleteAlbum()
     {
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
         let result = await deleteData('/album/delete/' + params?.id);
 
         if(result.state == OK)

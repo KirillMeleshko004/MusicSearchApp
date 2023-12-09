@@ -9,6 +9,8 @@ function Logout()
 
     function logout()
     {
+        const ok = confirm("Are you sure?");
+        if(!ok) return;
         SessionManager.removeSession();
         navigate("/login");
     }
