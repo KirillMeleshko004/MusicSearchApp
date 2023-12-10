@@ -60,16 +60,14 @@ namespace MusicSearchApp.Services
                 return response;
             }
 
-            song.Album.Artist = song.Artist;
-            ArtistViewModel artist = new(song.Artist);
-            AlbumInfoViewModel album = new(song.Album);
-
             IEnumerable<SongInfoViewModel> songs = _context.Songs
                     .Where(s=> searchString.IsNullOrEmpty() || s.Title.Contains(searchString!))
                     .Where(s => s.Album.IsPublic)
+                    .Include(s => s.Artist)
+                    .Include(s => s.Album).ThenInclude(a => a.Artist)
                     .OrderByDescending(s => s.ListenCount)
                     .Select<Song, SongInfoViewModel>(s => 
-                        new(s, s.Album.Downloadable, album, artist));
+                        new(s, s.Album.Downloadable));
 
             response.Status = StatusCode.Ok;
             response.Message = "Success";
@@ -100,7 +98,7 @@ namespace MusicSearchApp.Services
             response.Message = "Success";
             AlbumInfoViewModel albumInfo = new(album);
             albumInfo.Songs = album.Songs.Select<Song, SongInfoViewModel>(s => 
-                    new(s, album.Downloadable, albumInfo, albumInfo.Artist));
+                    new(s, albumInfo, albumInfo.Artist, album.Downloadable));
 
             response.Data = albumInfo;
 

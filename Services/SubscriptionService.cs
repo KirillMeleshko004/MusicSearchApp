@@ -38,8 +38,10 @@ namespace MusicSearchApp.Services
                 return response;
             }
 
-            if(!await _context.Users.AnyAsync(u => u.Id == userId) ||
-                !await _context.Users.AnyAsync(u => u.Id == artistId))
+            User? user = await _context.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            User? artist = await _context.Users.Where(u => u.Id == artistId).FirstOrDefaultAsync();
+
+            if(user == null || artist == null)
             {
                 response.Status = StatusCode.NotFound;
                 response.Message = "User not found";
@@ -54,6 +56,7 @@ namespace MusicSearchApp.Services
             };
 
             await _context.Subscriptions.AddAsync(subscription);
+            artist.SubscribersCount++;
             await _context.SaveChangesAsync();
 
             subscription = (await _context.Subscriptions.AsNoTracking()
@@ -90,6 +93,7 @@ namespace MusicSearchApp.Services
             }
 
             _context.Subscriptions.Remove(subscription);
+            subscription.Artist.SubscribersCount--;
             await _context.SaveChangesAsync();
 
                  

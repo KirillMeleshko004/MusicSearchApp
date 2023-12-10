@@ -19,7 +19,6 @@ function ArtistPage()
         async function fetchData()
         {
             let result = await getData('/artist/get/' + params?.id);
-
             if (!ignore) {
                 (function set({errorMessage, artist}){
                     setData({loading: false, artist: artist, failMessage: errorMessage});
@@ -60,7 +59,6 @@ function ArtistPage()
         let result = await postData('/artist/subscribe/' + data.artist?.userId + '?' +
             new URLSearchParams({subscriberId: session?.userId}));
 
-        console.log(result);
         (function set({state, subscription}){
             if(state == OK)
                 setData({...data, isSubscribed: true});
@@ -72,7 +70,6 @@ function ArtistPage()
         let result = await deleteData('/artist/unsubscribe/' + data.artist?.userId + '?' +
             new URLSearchParams({subscriberId: session?.userId}));
 
-        console.log(result);
         (function set({state, subscription}){
             if(state == OK)
                 setData({...data, isSubscribed: false});
@@ -102,7 +99,7 @@ function ArtistPage()
                         Subscribers: {data.artist?.subscribersCount}
                     </div> */}
                     {
-                        session &&  (data?.isSubscribed ?
+                        session && (data?.artist.userId != session.userId) &&  (data?.isSubscribed ?
                         (
                             <div className=" normal bordered-block red-border-on-hover full-height horizontal center-aligned center-justified"
                                 style={{width:"160px"}}

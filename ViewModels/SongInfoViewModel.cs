@@ -20,9 +20,25 @@ namespace MusicSearchApp.ViewModels
         public string? CoverImage { get; set; } = null!;
         public bool Downloadable { get; set; }
 
+        public SongInfoViewModel(Song song, bool downloadable = false)
+        {
+            SongId = song.SongId;
+            Title = song.Title;
 
-        public SongInfoViewModel(Song song, bool downloadable = false, 
-            AlbumInfoViewModel? albumInfoViewModel = null, ArtistViewModel? artistViewModel = null)
+            Album = song.Album != null ? new(song.Album) : null;
+            Artist = song.Album != null ? new(song.Artist) : null;
+
+            Length = song.Length;
+            ReleaseDate = song.ReleaseDate;
+            GenreName = song.GenreName;
+            ListenCount = song.ListenCount;
+            FilePath = song.FilePath;
+            CoverImage = Album?.CoverImage;
+            Downloadable = downloadable || song.Album?.Downloadable == true;
+        }
+
+        public SongInfoViewModel(Song song, AlbumInfoViewModel? albumInfoViewModel,
+             ArtistViewModel? artistViewModel, bool downloadable = false)
         {
             SongId = song.SongId;
             Title = song.Title;

@@ -30,6 +30,7 @@ function Profile()
         async function fetchData()
         {
             let result = await getData(('/profile/get/' + session?.userId));
+            console.log(result)
             if (!ignore) {
                 (function set({profile, errorMessage, statusCode}){
                     setData({loading: false, profile: profile,
